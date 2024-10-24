@@ -1,0 +1,19 @@
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# VSCode
+.vscode/
+.history/
+
+# Eclipse
+.classpath
+.project
+.settings/
+target/
+
+# macOS
+.DS_Store
