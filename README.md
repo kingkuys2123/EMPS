@@ -4,12 +4,12 @@
 
 <!-- Project Title -->
 
-<h1 align="center">EMPS</h1>
+<h1 align="center">WILD-UP EVENTS</h1>
 
 <!-- Project Descripton -->
 
 <p align="justify">
-    EMPS is a full stack Event Management and Planner Web Application developed using ReactJS and Springboot.
+    EMPS is a full stack Event Management and Booking Web Application developed using ReactJS and Springboot.
 </p>
 
 <br>
