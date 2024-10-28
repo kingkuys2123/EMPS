@@ -9,7 +9,7 @@
 <!-- Project Descripton -->
 
 <p align="justify">
-    EMPS is a full stack Event Management and Booking Web Application developed using ReactJS and Springboot.
+    WUE is a full stack Event Management and Booking Web Application developed using ReactJS and Springboot.
 </p>
 
 <br>
