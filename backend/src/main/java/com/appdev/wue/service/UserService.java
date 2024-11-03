@@ -4,6 +4,7 @@ import com.appdev.wue.entity.UserEntity;
 import com.appdev.wue.repository.UserRepository;
 import com.appdev.wue.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NameNotFoundException;
@@ -14,6 +15,9 @@ public class UserService {
 
     @Autowired
     private UserRepository uRepo;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -86,6 +90,30 @@ public class UserService {
             msg = "User with ID " + id + " not found!";
         }
         return msg;
+    }
+
+    // Register User
+    public UserEntity registerUser(UserEntity user) {
+        if (uRepo.findByUsername(user.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already taken!");
+        }
+        if (uRepo.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already taken!");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return uRepo.save(user);
+    }
+
+    // Login User
+    public String loginUser(String username, String password) {
+        UserEntity user = findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("User not found!");
+        }
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid credentials!");
+        }
+        return jwtUtil.generateToken(username);
     }
 
 }
