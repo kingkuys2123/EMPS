@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { Modal, Box, Typography, TextField, Button, Link } from "@mui/material";
+import {Modal, Box, Typography, TextField, Button, Link} from "@mui/material";
 import "./styles/FontStyle.css";
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import UserService from "../services/UserService.jsx";

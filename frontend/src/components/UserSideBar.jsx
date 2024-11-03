@@ -8,21 +8,20 @@ import RegisterModal from "./RegisterModal.jsx";
 function UserSideBar() {
     const nav = useNavigate();
 
-    const [user, setuser] = React.useState(null);
+    const [currentUser, setCurrentUser] = React.useState(null);
     const [openModal, setOpenModal] = useState(null);
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem('user');
         if(loggedInUser) {
-            setuser(JSON.parse(loggedInUser));
+            setCurrentUser(JSON.parse(loggedInUser));
         }
     }, []);
 
     const handleLoginLogoutButton = () => {
-        if(user) {
+        if(currentUser) {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            setuser(null);
             nav("/");
         }
         else{
@@ -77,7 +76,7 @@ function UserSideBar() {
                     </ListItem>
                     <hr style={{ width: '100%', margin: '0 auto', marginTop: 'auto' }}/>
                     <ListItem>
-                        { user ? (
+                        { currentUser ? (
                                 <>
                                     <ListItemButton onClick={handleLoginLogoutButton}>
                                         <ListItemText>
@@ -97,7 +96,7 @@ function UserSideBar() {
                     </ListItem>
                 </List>
             </Drawer>
-            <LoginModal open={openModal === 'loginModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('registerModal')} propSetUser={setuser}/>
+            <LoginModal open={openModal === 'loginModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('registerModal')} propSetUser={setCurrentUser}/>
             <RegisterModal open={openModal === 'registerModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('loginModal')} label={"Register"}/>
         </div>
     );

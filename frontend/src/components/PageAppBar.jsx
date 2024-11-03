@@ -1,16 +1,16 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/FontStyle.css";
 import { AppBar, Box, Button, Toolbar, Typography, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function PageAppBar({ title }) {
-    const [currentUser, setCurrentUser] = useState({});
+    const [currentUser, setCurrentUser] = useState(null);
 
     const [anchorEl, setAnchorEl] = useState(null);
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem('user');
-        if(loggedInUser) {
+        if (loggedInUser) {
             setCurrentUser(JSON.parse(loggedInUser));
         }
     }, []);
@@ -32,11 +32,11 @@ function PageAppBar({ title }) {
                             <span>{title}</span>
                         </Typography>
                         <Box sx={{ padding: '25px' }}>
-                            <Button sx={{ borderRadius: '50%' }} onClick={handleOpenMenu}>
+                            <Button sx={{ borderRadius: '50%' }} onClick={handleOpenMenu} aria-haspopup="true" aria-expanded={Boolean(anchorEl) ? 'true' : 'false'}>
                                 <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '50px', height: '50px', borderRadius: '50%' }}/>
                             </Button>
                             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-                                <MenuItem onClick={handleCloseMenu}>
+                                <MenuItem onClick={(event) => {event.stopPropagation();handleCloseMenu();}}>
                                     <Link to="/my_account" style={{ textDecoration: 'none', color: 'inherit' }}>
                                         <span>My Account</span>
                                     </Link>
