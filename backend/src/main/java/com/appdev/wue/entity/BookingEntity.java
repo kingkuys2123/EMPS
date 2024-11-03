@@ -30,7 +30,7 @@ public class BookingEntity {
     @Column(name = "datetime_paid")
     private LocalDateTime datetime_paid;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private UserEntity user;
