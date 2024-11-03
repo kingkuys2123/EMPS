@@ -35,7 +35,7 @@ function RegisterModal({ open, onClose, switchModal, label }) {
         setOpenSnackbar(false);
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -72,12 +72,17 @@ function RegisterModal({ open, onClose, switchModal, label }) {
             return;
         }
 
-        register();
+        try {
+            await register();
+        } catch (e) {
+            setSnackbarMessage(e.message || 'Registration failed.');
+            setOpenSnackbar(true);
+        }
     };
 
     const register = async () => {
         try {
-            const response = await UserService.registerUser({ firstName, lastName, username, email, password });
+            await UserService.registerUser({ firstName, lastName, username, email, password });
             setSnackbarMessage('Registration successful!');
             setOpenSnackbar(true);
             onClose();

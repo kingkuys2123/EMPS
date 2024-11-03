@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 function LoginModal({ open, onClose, switchModal, propSetUser }) {
     const nav = useNavigate();
 
-    const [username, setusername] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -25,7 +25,7 @@ function LoginModal({ open, onClose, switchModal, propSetUser }) {
 
     useEffect(() => {
         if(!open){
-            setusername('');
+            setUsername('');
             setPassword('');
             setErrors({});
         }
@@ -63,7 +63,7 @@ function LoginModal({ open, onClose, switchModal, propSetUser }) {
             return false;
         }
 
-        login();
+        await login();
     };
 
     const login = async () => {
@@ -109,7 +109,7 @@ function LoginModal({ open, onClose, switchModal, propSetUser }) {
                             </Typography>
 
                             <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
-                                <TextField fullWidth label="Username" variant="outlined" value={username} error={!!errors.username} onChange={(e) => setusername(e.target.value)} margin="normal"/>
+                                <TextField fullWidth label="Username" variant="outlined" value={username} error={!!errors.username} onChange={(e) => setUsername(e.target.value)} margin="normal"/>
                                 <TextField fullWidth label="Password" type="password" variant="outlined" value={password} error={!!errors.password} onChange={(e) => setPassword(e.target.value)} margin="normal"/>
 
                                 <Button type="submit" fullWidth variant="contained" sx={{ marginTop: 2, backgroundColor: '#C63f47', borderRadius: 0 }}>
