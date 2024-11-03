@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping(method = RequestMethod.GET, path = "api/user")
 public class UserController {
 
@@ -44,6 +45,12 @@ public class UserController {
             newUserDetails.setPassword(passwordEncoder.encode(newUserDetails.getPassword()));
         }
         return uServ.updateUser(id, newUserDetails);
+    }
+
+    // Update Profile By ID
+    @PutMapping("/updateProfile")
+    public UserEntity updateProfile(@RequestParam int id, @RequestBody UserEntity newUserDetails) {
+        return uServ.updateProfile(id, newUserDetails);
     }
 
     // Delete User By ID

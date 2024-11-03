@@ -2,6 +2,7 @@ package com.appdev.wue.service;
 
 import com.appdev.wue.entity.UserEntity;
 import com.appdev.wue.repository.UserRepository;
+import com.appdev.wue.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ public class UserService {
 
     @Autowired
     private UserRepository uRepo;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // Get User By Username
     public UserEntity findByUsername(String username) {
