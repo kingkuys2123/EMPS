@@ -49,7 +49,7 @@ function LoginModal({ open, onClose, switchModal, propSetUser }) {
             if (!username) validErrors.username = true;
 
             setErrors(validErrors);
-            setSnackbarMessage('Please enter in your username.');
+            setSnackbarMessage('Please enter your username.');
             setOpenSnackbar(true);
             return false;
         }
@@ -58,15 +58,15 @@ function LoginModal({ open, onClose, switchModal, propSetUser }) {
             if (!password) validErrors.password = true;
 
             setErrors(validErrors);
-            setSnackbarMessage('Please enter in your password.');
+            setSnackbarMessage('Please enter your password.');
             setOpenSnackbar(true);
             return false;
         }
 
-        await login();
+        await handleLogin();
     };
 
-    const login = async () => {
+    const handleLogin = async () => {
         try {
             const response = await UserService.loginUser(username, password);
             const { user, token } = response;

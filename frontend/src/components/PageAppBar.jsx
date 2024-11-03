@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
 import "./styles/FontStyle.css";
 import { AppBar, Box, Button, Toolbar, Typography, Menu, MenuItem } from "@mui/material";
-import {useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function PageAppBar({ title }) {
-    const nav = useNavigate();
-
     const [currentUser, setCurrentUser] = useState({});
 
     const [anchorEl, setAnchorEl] = useState(null);
@@ -17,11 +15,11 @@ function PageAppBar({ title }) {
         }
     }, []);
 
-    const handleClick = (event) => {
+    const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleCloseMenu = () => {
         setAnchorEl(null);
     };
 
@@ -34,12 +32,14 @@ function PageAppBar({ title }) {
                             <span>{title}</span>
                         </Typography>
                         <Box sx={{ padding: '25px' }}>
-                            <Button sx={{ borderRadius: '50%' }} onClick={handleClick}>
+                            <Button sx={{ borderRadius: '50%' }} onClick={handleOpenMenu}>
                                 <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '50px', height: '50px', borderRadius: '50%' }}/>
                             </Button>
-                            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                                <MenuItem>
-                                    <span>My Account</span>
+                            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
+                                <MenuItem onClick={handleCloseMenu}>
+                                    <Link to="/my_account" style={{ textDecoration: 'none', color: 'inherit' }}>
+                                        <span>My Account</span>
+                                    </Link>
                                 </MenuItem>
                             </Menu>
                         </Box>

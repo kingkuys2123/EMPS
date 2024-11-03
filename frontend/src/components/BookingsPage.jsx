@@ -18,7 +18,7 @@ function BookingsPage() {
                 const data = await BookingService.getAllBookings(token);
                 setBookings(data);
             } catch (error) {
-                console.error("Failed to fetch bookings:", error);
+                console.error("Failed to fetch bookings.", error);
             }
         };
         fetchData();
@@ -31,11 +31,7 @@ function BookingsPage() {
         setOpenSnackbar(false);
     }
 
-    const handleEdit = async (bookingId) => {
-
-    };
-
-    const handleDelete = async (bookingId) => {
+    const handleDeleteBooking = async (bookingId) => {
         try {
             const token = localStorage.getItem('token');
             await BookingService.deleteBooking(bookingId, token);
@@ -44,16 +40,20 @@ function BookingsPage() {
                 prevBookings.filter((booking) => booking.bookingID !== bookingId)
             );
 
-            setSnackbarMessage(`Booking with ID ${bookingId} has been deleted successfully.`);
+            setSnackbarMessage(`Booking has been deleted successfully.`);
             setOpenSnackbar(true);
 
         } catch (e) {
-            setSnackbarMessage("Failed to delete booking:", e);
+            setSnackbarMessage("Failed to delete booking.", e);
             setOpenSnackbar(true);
         }
     };
 
     const handleAddBooking = async () => {
+
+    };
+
+    const handleEditBooking = async (bookingId) => {
 
     };
 
@@ -87,10 +87,10 @@ function BookingsPage() {
                                                 </Box>
                                             </div>
                                             <Box>
-                                                <Button variant="contained" onClick={() => handleEdit(booking.bookingID)} sx={{ borderRadius: '0', backgroundColor: "#C63f47", color: 'white' }}>
+                                                <Button variant="contained" onClick={() => handleEditBooking(booking.bookingID)} sx={{ borderRadius: '0', backgroundColor: "#C63f47", color: 'white' }}>
                                                     Edit
                                                 </Button>
-                                                <Button variant="contained" onClick={() => handleDelete(booking.bookingID)} sx={{ borderRadius: '0', backgroundColor: "#CFCFC4", color: 'white' }}>
+                                                <Button variant="contained" onClick={() => handleDeleteBooking(booking.bookingID)} sx={{ borderRadius: '0', backgroundColor: "#CFCFC4", color: 'white' }}>
                                                     Delete
                                                 </Button>
                                             </Box>

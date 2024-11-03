@@ -50,7 +50,7 @@ function RegisterModal({ open, onClose, switchModal, label }) {
             if (!confirmPassword) validErrors.confirmPassword = true;
 
             setErrors(validErrors);
-            setSnackbarMessage('Please fill in all fields.');
+            setSnackbarMessage('Please type in all fields.');
             setOpenSnackbar(true);
             return;
         }
@@ -72,15 +72,10 @@ function RegisterModal({ open, onClose, switchModal, label }) {
             return;
         }
 
-        try {
-            await register();
-        } catch (e) {
-            setSnackbarMessage(e.message || 'Registration failed.');
-            setOpenSnackbar(true);
-        }
+        await handleRegister();
     };
 
-    const register = async () => {
+    const handleRegister = async () => {
         try {
             await UserService.registerUser({ firstName, lastName, username, email, password });
             setSnackbarMessage('Registration successful!');
