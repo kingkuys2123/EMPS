@@ -18,7 +18,7 @@ function UserSideBar() {
         }
     }, []);
 
-    const handleLoginLogoutButton = (modal, event) => {
+    const handleLoginLogoutButton = () => {
         if(user) {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
@@ -87,7 +87,7 @@ function UserSideBar() {
                                 </>
                             ):
                             <>
-                                <ListItemButton onClick={(e) => handleOpenModal('loginModal')}>
+                                <ListItemButton onClick={() => handleOpenModal('loginModal')}>
                                     <ListItemText>
                                         <span>LOG IN</span>
                                     </ListItemText>

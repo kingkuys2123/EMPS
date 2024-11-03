@@ -1,5 +1,5 @@
 import React from "react";
-import {Typography, Box} from "@mui/material";
+import {Box} from "@mui/material";
 import "./styles/FontStyle.css";
 import UserSideBar from "./UserSideBar.jsx";
 import PageAppBar from "./PageAppBar.jsx";
