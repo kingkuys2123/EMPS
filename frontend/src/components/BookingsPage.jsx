@@ -60,10 +60,14 @@ function BookingsPage() {
     return (
         <div className="home">
             <Box sx={{ display: "flex" }}>
+
                 <UserSideBar />
+
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
+
                     <PageAppBar title={"Bookings"} />
-                    <Box sx={{ flexGrow: 1, padding: "25px" }}>
+
+                    <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Box sx={{ backgroundColor: "#FFFFFF", width: "100%", height: "100%", boxShadow: "5px 5px 5px #aaaaaa", position: "relative", overflowY: "auto" }}>
                             <Box sx={{ padding: "50px" }}>
                                 <ul style={{ listStyleType: "none", padding: 0 }}>

@@ -129,8 +129,8 @@ function MyAccountPage() {
 
                     <PageAppBar title={"My Account"}/>
 
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", padding: "25px", height: "100vh" }}>
-                        <Box sx={{ flexDirection: 'column', backgroundColor: "#FFFFFF", width: "75%", minHeight: "100%", boxShadow: "2px 2px 5px #aaaaaa", position: "relative", overflowY: "auto" }}>
+                    <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
+                        <Box sx={{ backgroundColor: "#FFFFFF", width: "100%", height: "100%", boxShadow: "5px 5px 5px #aaaaaa", position: "relative", overflowY: "auto" }}>
                             <Box sx={{ padding: '25px', display: 'flex' }}>
                                 <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '100px', height: '100px', borderRadius: '50%' }}/>
                                 <Box sx={{ paddingLeft: "15px", flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
@@ -192,7 +192,6 @@ function MyAccountPage() {
                                         <TextField fullWidth disabled label="Password" type="password" value="nothingtoseehere" variant="outlined" margin="normal" />
                                     </Box>
                                 </Box>
-
                                 <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: '20px 0' }}>
                                     <Box sx={{ display: 'flex', paddingTop: '20px' }}>
                                         <Button variant="contained" onClick={handleSubmit} sx={{ width: "100%", backgroundColor: "#C63f47", color: "#FFFFFF", textTransform: 'none', borderRadius: "0", marginRight: '10px' }}>
