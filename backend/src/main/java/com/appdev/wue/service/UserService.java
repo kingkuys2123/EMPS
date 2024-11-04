@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.naming.NameNotFoundException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -55,7 +56,7 @@ public class UserService {
             user.setLastName(newUserDetails.getLastName());
             user.setAccountType(newUserDetails.getAccountType());
             user.setPhoneNumber(newUserDetails.getPhoneNumber());
-            user.setDateCreated(newUserDetails.getDateCreated());
+            user.setDateTimeCreated(newUserDetails.getDateTimeCreated());
         } catch (Exception e) {
             throw new NameNotFoundException("User with ID " + id + " not found!");
         } finally {
@@ -92,7 +93,6 @@ public class UserService {
         return msg;
     }
 
-    // Register User
     public UserEntity registerUser(UserEntity user) {
         if (uRepo.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username already taken!");
@@ -100,6 +100,11 @@ public class UserService {
         if (uRepo.findByEmail(user.getEmail()).isPresent()) {
             throw new RuntimeException("Email already taken!");
         }
+
+        user.setAccountType("user");
+        user.setDateTimeCreated(LocalDateTime.now());
+        user.setPhoneNumber("");
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return uRepo.save(user);
     }

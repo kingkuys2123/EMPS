@@ -79,8 +79,7 @@ function MyAccountPage() {
 
     const handleUpdateUser = async () => {
         try {
-            const token = localStorage.getItem('token');
-            await UserService.updateProfile(currentUser.userID, token, { username, firstName, lastName, phoneNumber });
+            await UserService.updateProfile(currentUser.userID, { username, firstName, lastName, phoneNumber });
 
             const updatedUser = { ...currentUser, username, firstName, lastName, phoneNumber };
             localStorage.setItem('user', JSON.stringify(updatedUser));
@@ -95,8 +94,7 @@ function MyAccountPage() {
 
     const handleDeleteUser = async () => {
         try{
-            const token = localStorage.getItem('token');
-            await UserService.deleteUser(currentUser.userID, token);
+            await UserService.deleteUser(currentUser.userID);
 
             setSnackbarMessage('User deleted successfully.');
             setOpenSnackbar(true);

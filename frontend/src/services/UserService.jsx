@@ -1,16 +1,10 @@
-import axios from 'axios';
-
-const API_URL = 'http://localhost:8080/api/user';
+import axios from '../utils/AxiosConfig.jsx';
 
 const UserService = {
     // Create User
-    createUser: async (userData, token) => {
+    createUser: async (userData) => {
         try {
-            const response = await axios.post(`${API_URL}/createUser`, userData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.post(`/user/createUser`, userData);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;
@@ -18,13 +12,9 @@ const UserService = {
     },
 
     // Get all Users
-    getAllUsers: async (token) => {
+    getAllUsers: async () => {
         try {
-            const response = await axios.get(`${API_URL}/getAllUsers`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.get(`/user/getAllUsers`);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;
@@ -32,13 +22,9 @@ const UserService = {
     },
 
     // Get User by ID
-    getUser: async (userId, token) => {
+    getUser: async (userId) => {
         try {
-            const response = await axios.get(`${API_URL}/getUser/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.get(`/user/getUser/${userId}`);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;
@@ -46,13 +32,9 @@ const UserService = {
     },
 
     // Update User
-    updateUser: async (userId, token, newUserDetails) => {
+    updateUser: async (userId, newUserDetails) => {
         try {
-            const response = await axios.put(`${API_URL}/updateUser?id=${userId}`, newUserDetails, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.put(`/user/updateUser?id=${userId}`, newUserDetails);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;
@@ -60,13 +42,9 @@ const UserService = {
     },
 
     // Update Profile
-    updateProfile: async (userId, token, newUserDetails) => {
+    updateProfile: async (userId, newUserDetails) => {
         try {
-            const response = await axios.put(`${API_URL}/updateProfile?id=${userId}`, newUserDetails, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.put(`/user/updateProfile?id=${userId}`, newUserDetails);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;
@@ -74,13 +52,9 @@ const UserService = {
     },
 
     // Delete User
-    deleteUser: async (userId, token) => {
+    deleteUser: async (userId) => {
         try {
-            const response = await axios.delete(`${API_URL}/deleteUser/${userId}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const response = await axios.delete(`/user/deleteUser/${userId}`);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;
@@ -90,7 +64,7 @@ const UserService = {
     // Register
     registerUser: async (userData) => {
         try {
-            const response = await axios.post(`${API_URL}/register`, userData);
+            const response = await axios.post(`/user/register`, userData);
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;
@@ -100,7 +74,7 @@ const UserService = {
     // Login
     loginUser: async (username, password) => {
         try {
-            const response = await axios.post(`${API_URL}/login`, { username, password });
+            const response = await axios.post(`/user/login`, { username, password });
             return response.data;
         } catch (error) {
             throw error.response ? error.response.data : error.message;

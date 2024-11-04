@@ -33,8 +33,8 @@ public class UserEntity {
     @Column(name = "phone_number")
     private String phone_number;
 
-    @Column(name = "date_created")
-    private LocalDateTime date_created;
+    @Column(name = "datetime_created")
+    private LocalDateTime datetime_created;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<BookingEntity> bookings;
@@ -103,12 +103,12 @@ public class UserEntity {
         this.phone_number = phone_number;
     }
 
-    public LocalDateTime getDateCreated() {
-        return date_created;
+    public LocalDateTime getDateTimeCreated() {
+        return datetime_created;
     }
 
-    public void setDateCreated(LocalDateTime date_created) {
-        this.date_created = date_created;
+    public void setDateTimeCreated(LocalDateTime datetime_created) {
+        this.datetime_created = datetime_created;
     }
 
     public List<BookingEntity> getBookings() {

@@ -14,8 +14,7 @@ function BookingsPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('token');
-                const data = await BookingService.getAllBookings(token);
+                const data = await BookingService.getAllBookings();
                 setBookings(data);
             } catch (error) {
                 console.error("Failed to fetch bookings.", error);
@@ -33,8 +32,7 @@ function BookingsPage() {
 
     const handleDeleteBooking = async (bookingId) => {
         try {
-            const token = localStorage.getItem('token');
-            await BookingService.deleteBooking(bookingId, token);
+            await BookingService.deleteBooking(bookingId);
 
             setBookings((prevBookings) =>
                 prevBookings.filter((booking) => booking.bookingID !== bookingId)
