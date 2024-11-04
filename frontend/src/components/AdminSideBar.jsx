@@ -14,10 +14,10 @@ function UserSideBar() {
 
     return (
         <div>
-            <Drawer sx={{ width: 275, flexShrink: 0, "& .MuiDrawer-paper": {width: 275, boxSizing: "border-box", color: "white", backgroundColor: "#A72F36", overflow: "hidden" } }} variant="permanent" anchor="left">
+            <Drawer sx={{ width: 200, flexShrink: 0, "& .MuiDrawer-paper": {width: 200, boxSizing: "border-box", color: "white", backgroundColor: "#A72F36", overflow: "hidden" } }} variant="permanent" anchor="left">
                 <AppBar sx={{ backgroundColor: '#A72F36', color: '#000000', boxShadow: 'none' }} position="static">
                     <Box>
-                        <Toolbar disableGutters sx={{ height: '105px', alignItems: 'center'}}>
+                        <Toolbar disableGutters sx={{ height: '80px', alignItems: 'center'}}>
                             <Typography variant="h6">
                                 <Box sx={{ flex: 1, display: "flex", justifyContent: "center", overflow: "hidden", padding: "30px" }}>
                                     <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image"/>
@@ -58,7 +58,7 @@ function UserSideBar() {
                     </ListItem>
                     <hr style={{ width: '100%', margin: '0 auto', marginTop: 'auto' }}/>
                     <ListItem>
-                        <ListItemButton onClick={handleLogOutButton}>
+                        <ListItemButton onClick={handleLogOutButton} sx={{ paddingTop: '0', paddingBottom: '0'}}>
                             <ListItemText>
                                 <span>LOG OUT</span>
                             </ListItemText>
