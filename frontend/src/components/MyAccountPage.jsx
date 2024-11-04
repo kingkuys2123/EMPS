@@ -1,17 +1,18 @@
 import './styles/FontStyle.css';
-import {Box, Button, TextField, Typography} from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import UserSideBar from "./UserSideBar.jsx";
 import PageAppBar from "./PageAppBar.jsx";
 import './styles/FontStyle.css';
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import UserService from "../services/UserService.jsx";
 import CustomSnackbar from "./CustomSnackbar.jsx";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "../utils/AuthContext";
 
 function MyAccountPage() {
     const nav = useNavigate();
 
-    const [currentUser, setCurrentUser] = React.useState({});
+    const { currentUser, setCurrentUser } = getAuth();
 
     const [username, setUsername] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
@@ -32,15 +33,15 @@ function MyAccountPage() {
     }
 
     useEffect(() => {
-        const loggedInUser = localStorage.getItem('user');
-        if (loggedInUser) {
-            const user = JSON.parse(loggedInUser);
-            setCurrentUser(user);
-            setUsername(user.username || '');
-            setFirstName(user.firstName || '');
-            setLastName(user.lastName || '');
-            setPhoneNumber(user.phoneNumber || '');
-            setEmail(user.email || '');
+        if (!currentUser) {
+            nav("/");
+        } else {
+            setUsername(currentUser.username);
+            setFirstName(currentUser.firstName);
+            setLastName(currentUser.lastName);
+            setPhoneNumber(currentUser.phoneNumber);
+            setEmail(currentUser.email);
+            setErrors({});
         }
     }, []);
 
@@ -56,7 +57,7 @@ function MyAccountPage() {
             // if (!phoneNumber) validErrors.phoneNumber = true;
 
             setErrors(validErrors);
-            setSnackbarMessage('Please type in all fields.');
+            setSnackbarMessage('Please fill out all required fields.');
             setOpenSnackbar(true);
             return;
         }
@@ -86,6 +87,8 @@ function MyAccountPage() {
 
             setSnackbarMessage('User updated successfully.');
             setOpenSnackbar(true);
+
+            setErrors({});
         } catch (e) {
             setSnackbarMessage(e.message || 'Failed updating user.');
             setOpenSnackbar(true);
@@ -119,6 +122,7 @@ function MyAccountPage() {
     }
 
     return (
+        <div className="my-account-page">
             <Box sx={{ display: "flex" }}>
 
                 <UserSideBar />
@@ -212,6 +216,7 @@ function MyAccountPage() {
 
                 <CustomSnackbar open={openSnackbar} message={snackbarMessage} onClose={handleCloseSnackbar}/>
             </Box>
+        </div>
     );
 }
 

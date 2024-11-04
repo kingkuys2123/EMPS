@@ -1,26 +1,32 @@
-import {Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar} from "@mui/material";
-import React from "react";
+import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar } from "@mui/material";
+import React, {useContext} from "react";
 import "./styles/SideBar.css";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "../utils/AuthContext.jsx";
 
 function UserSideBar() {
     const nav = useNavigate();
 
+    const { currentUser, setCurrentUser } = getAuth();
+
     const handleLogOutButton = () => {
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        nav("/home");
-    }
+        if (currentUser) {
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            setCurrentUser(null);
+            nav("/");
+        }
+    };
 
     return (
-        <div>
+        <div className="admin-side-bar">
             <Drawer sx={{ width: 200, flexShrink: 0, "& .MuiDrawer-paper": {width: 200, boxSizing: "border-box", color: "white", backgroundColor: "#A72F36", overflow: "hidden" } }} variant="permanent" anchor="left">
                 <AppBar sx={{ backgroundColor: '#A72F36', color: '#000000', boxShadow: 'none' }} position="static">
                     <Box>
                         <Toolbar disableGutters sx={{ height: '80px', alignItems: 'center'}}>
                             <Typography variant="h6">
                                 <Box sx={{ flex: 1, display: "flex", justifyContent: "center", overflow: "hidden", padding: "30px" }}>
-                                    <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image"/>
+                                    <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image" style={{width: '150px'}}/>
                                 </Box>
                             </Typography>
                         </Toolbar>

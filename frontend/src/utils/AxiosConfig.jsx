@@ -1,16 +1,19 @@
 import axios from "axios";
 
-const instance = axios.create({
+function getToken() {
+    return localStorage.getItem("token");
+}
+
+const AxiosConfig = axios.create({
     baseURL: "http://localhost:8080/api",
 });
 
-// Implement ug request interceptor para automatic ang pag attach sa token as a header if mu require ug authentication ang endpoint
-instance.interceptors.request.use(config => {
-    const token = localStorage.getItem("token");
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+// Implement ug request interceptor para automatic ang pag attach sa token as a header if mu require ug authorization ang endpoint
+AxiosConfig.interceptors.request.use((config) => {
+    if (getToken()) {
+        config.headers.Authorization = `Bearer ${getToken()}`;
     }
     return config;
 });
 
-export default instance;
+export default AxiosConfig;

@@ -1,17 +1,26 @@
-import React, {useEffect, useState} from "react";
-import {Button, Box} from "@mui/material";
+import React, { useEffect, useState} from "react";
+import { Button, Box } from "@mui/material";
 import BookingService from '../services/BookingService.jsx';
 import UserSideBar from "./UserSideBar.jsx";
 import PageAppBar from "./PageAppBar.jsx";
 import CustomSnackbar from "./CustomSnackbar.jsx";
+import { getAuth } from "../utils/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 function BookingsPage() {
+    const nav = useNavigate();
+
+    const { currentUser, setCurrentUser } = getAuth();
+
     const [bookings, setBookings] = useState([]);
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
     useEffect(() => {
+        if(!currentUser){
+            nav('/home');
+        }
         const fetchData = async () => {
             try {
                 const data = await BookingService.getAllBookings();
@@ -56,7 +65,7 @@ function BookingsPage() {
     };
 
     return (
-        <div className="home">
+        <div className="bookings-page">
             <Box sx={{ display: "flex" }}>
 
                 <UserSideBar />

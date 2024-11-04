@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Modal, Box, Typography, TextField, Button, Link } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Modal, Box, Typography, TextField, Button, Link } from "@mui/material";
 import './styles/LandingPage.css'
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import UserService from "../services/UserService.jsx";
@@ -50,7 +50,7 @@ function RegisterModal({ open, onClose, switchModal, label }) {
             if (!confirmPassword) validErrors.confirmPassword = true;
 
             setErrors(validErrors);
-            setSnackbarMessage('Please type in all fields.');
+            setSnackbarMessage('Please fill out all fields.');
             setOpenSnackbar(true);
             return;
         }
@@ -58,7 +58,7 @@ function RegisterModal({ open, onClose, switchModal, label }) {
         if (!emailRegex.test(email)) {
             validErrors.email = true;
             setErrors(validErrors);
-            setSnackbarMessage('The email is not valid.');
+            setSnackbarMessage('Invalid email address.');
             setOpenSnackbar(true);
             return;
         }
@@ -83,8 +83,24 @@ function RegisterModal({ open, onClose, switchModal, label }) {
             onClose();
         }
         catch (e) {
-            setSnackbarMessage(e);
-            setOpenSnackbar(true);
+            const validErrors = {};
+
+            if (e === 'Username already taken!') {
+                validErrors.username = true;
+                setErrors(validErrors);
+
+                setSnackbarMessage(e);
+                setOpenSnackbar(true);
+            } else if (e === 'Email already taken!') {
+                validErrors.email = true;
+                setErrors(validErrors);
+
+                setSnackbarMessage(e);
+                setOpenSnackbar(true);
+            } else {
+                setSnackbarMessage('An unexpected error occurred. Please try again.');
+                setOpenSnackbar(true);
+            }
         }
     }
 

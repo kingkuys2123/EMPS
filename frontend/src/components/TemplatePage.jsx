@@ -1,12 +1,12 @@
 import React from "react";
-import {Typography, Box} from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import "./styles/FontStyle.css";
 import UserSideBar from "./UserSideBar.jsx";
 import PageAppBar from "./PageAppBar.jsx";
 
-function HomePage() {
+function TemplatePage() {
     return (
-        <div className="home">
+        <div className="template-page">
             <Box sx={{ display: "flex" }}>
 
                 {/*  ilisa ni into either <UserSideBar>, <OrganizerSideBar> or <AdminSideBar>   */}
@@ -18,7 +18,7 @@ function HomePage() {
                     <PageAppBar title={"Page Name"}/>
 
                     {/* BODY SA IMONG PAGE, INSIDE SA BOX */}
-                    <Box sx={{ flexGrow: 1, padding: "25px" }}>
+                    <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Typography variant="body1">
                             <span>Template Page Body</span>
                         </Typography>
@@ -30,4 +30,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default TemplatePage;

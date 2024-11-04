@@ -1,5 +1,5 @@
 import React from "react";
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 import "./styles/FontStyle.css";
 import UserSideBar from "./UserSideBar.jsx";
 import PageAppBar from "./PageAppBar.jsx";
@@ -15,7 +15,7 @@ function HomePage() {
 
                     <PageAppBar title={"Home"}/>
 
-                    <Box sx={{ flexGrow: 1, padding: "25px" }}>
+                    <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Box>
                             TEST NI
                         </Box>

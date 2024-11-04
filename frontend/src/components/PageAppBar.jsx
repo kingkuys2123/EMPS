@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./styles/FontStyle.css";
 import { AppBar, Box, Button, Toolbar, Typography, Menu, MenuItem } from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getAuth } from "../utils/AuthContext";
 
 function PageAppBar({ title }) {
     const nav = useNavigate();
 
-    const [currentUser, setCurrentUser] = useState(null);
+    const { currentUser, setCurrentUser } = getAuth();
 
     const [anchorEl, setAnchorEl] = useState(null);
-
-    useEffect(() => {
-        const loggedInUser = localStorage.getItem('user');
-        if (loggedInUser) {
-            setCurrentUser(JSON.parse(loggedInUser));
-        }
-    }, []);
 
     const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -38,14 +32,21 @@ function PageAppBar({ title }) {
                             <span>{title}</span>
                         </Typography>
                         <Box sx={{ padding: '25px' }}>
-                            <Button sx={{ borderRadius: '50%' }} onClick={handleOpenMenu} aria-haspopup="true" aria-expanded={Boolean(anchorEl) ? 'true' : 'false'}>
-                                <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '50px', height: '50px', borderRadius: '50%' }}/>
-                            </Button>
-                            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-                                <MenuItem onClick={(event) => {event.stopPropagation();handleCloseMenu();}}>
-                                    <span>My Account</span>
-                                </MenuItem>
-                            </Menu>
+                            {currentUser ? (
+                                <>
+                                    <Button sx={{ borderRadius: '50%' }} onClick={handleOpenMenu} aria-haspopup="true" aria-expanded={Boolean(anchorEl) ? 'true' : 'false'}>
+                                        <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '50px', height: '50px', borderRadius: '50%' }}/>
+                                    </Button>
+                                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
+                                        <MenuItem onClick={(event) => {event.stopPropagation();handleCloseMenu();}}>
+                                            <span>My Account</span>
+                                        </MenuItem>
+                                    </Menu>
+                                </>
+                            ) : (
+                                <>
+                                </>
+                            )}
                         </Box>
                     </Toolbar>
                 </Box>
