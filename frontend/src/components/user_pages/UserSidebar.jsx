@@ -1,12 +1,12 @@
 import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar, Link } from "@mui/material";
 import React, { useState } from "react";
-import "./styles/SideBar.css";
+import "../styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
-import LoginModal from "./LoginModal.jsx";
-import RegisterModal from "./RegisterModal.jsx";
-import { getAuth } from "../utils/AuthContext";
+import LoginModal from "../LoginModal.jsx";
+import RegisterModal from "../RegisterModal.jsx";
+import { getAuth } from "../../utils/AuthContext.jsx";
 
-function UserSideBar() {
+function UserSidebar() {
     const nav = useNavigate();
 
     const { currentUser, setCurrentUser } = getAuth();
@@ -70,7 +70,7 @@ function UserSideBar() {
                     { currentUser ? (
                         <>
                             <ListItem>
-                                <ListItemButton component={Link} to="/bookings">
+                                <ListItemButton component={Link} to="/user/bookings">
                                     <ListItemText>
                                         <span>BOOKINGS</span>
                                     </ListItemText>
@@ -105,4 +105,4 @@ function UserSideBar() {
     );
 }
 
-export default UserSideBar;
+export default UserSidebar;

@@ -1,8 +1,8 @@
 import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar } from "@mui/material";
 import React, {useContext} from "react";
-import "./styles/SideBar.css";
+import "../styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "../utils/AuthContext.jsx";
+import { getAuth } from "../../utils/AuthContext.jsx";
 
 function UserSideBar() {
     const nav = useNavigate();
@@ -45,6 +45,13 @@ function UserSideBar() {
                         <ListItemButton>
                             <ListItemText>
                                 <span>USERS</span>
+                            </ListItemText>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemButton>
+                            <ListItemText>
+                                <span>ORGANIZERS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>

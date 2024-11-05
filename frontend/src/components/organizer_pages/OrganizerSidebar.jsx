@@ -1,8 +1,8 @@
 import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar } from "@mui/material";
 import React from "react";
-import "./styles/SideBar.css";
+import "../styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "../utils/AuthContext";
+import { getAuth } from "../../utils/AuthContext.jsx";
 
 function UserSideBar() {
     const nav = useNavigate();

@@ -1,10 +1,10 @@
 import './App.css';
 import { Route, Routes } from "react-router-dom";
 import LandingPage from "./components/LandingPage.jsx";
-import HomePage from "./components/HomePage.jsx";
-import BookingsPage from "./components/BookingsPage.jsx";
+import UserHome from "./components/user_pages/UserHome.jsx";
+import UserBookings from "./components/user_pages/UserBookings.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
-import MyAccountPage from "./components/MyAccountPage.jsx";
+import MyAccount from "./components/MyAccount.jsx";
 import { AuthProvider } from './utils/AuthContext.jsx';
 
 function App() {
@@ -13,9 +13,19 @@ function App() {
             <Routes>
                 <Route path="*" element={<NotFoundPage />} />
                 <Route path="/" element={<LandingPage />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/bookings" element={<BookingsPage />} />
-                <Route path="/my_account" element={<MyAccountPage />} />
+
+                <Route path="/home" element={<UserHome />} />
+                <Route path="/my_account" element={<MyAccount />} />
+
+                {/* User Routes */}
+                <Route path="/user/bookings" element={<UserBookings />} />
+
+                {/* Organizer Routes */}
+
+
+                {/* Admin Routes */}
+
+
             </Routes>
         </AuthProvider>
     );

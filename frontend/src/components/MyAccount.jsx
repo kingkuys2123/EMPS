@@ -1,15 +1,15 @@
 import './styles/FontStyle.css';
 import { Box, Button, TextField, Typography } from "@mui/material";
-import UserSideBar from "./UserSideBar.jsx";
-import PageAppBar from "./PageAppBar.jsx";
+import UserSidebar from "./user_pages/UserSidebar.jsx";
+import CustomAppBar from "./CustomAppBar.jsx";
 import './styles/FontStyle.css';
 import React, { useEffect, useState } from "react";
 import UserService from "../services/UserService.jsx";
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import { useNavigate } from "react-router-dom";
-import { getAuth } from "../utils/AuthContext";
+import { getAuth } from "../utils/AuthContext.jsx";
 
-function MyAccountPage() {
+function MyAccount() {
     const nav = useNavigate();
 
     const { currentUser, setCurrentUser } = getAuth();
@@ -125,11 +125,11 @@ function MyAccountPage() {
         <div className="my-account-page">
             <Box sx={{ display: "flex" }}>
 
-                <UserSideBar />
+                <UserSidebar />
 
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                    <PageAppBar title={"My Account"}/>
+                    <CustomAppBar title={"My Account"}/>
 
                     <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Box sx={{ backgroundColor: "#FFFFFF", width: "100%", height: "100%", boxShadow: "5px 5px 5px #aaaaaa", position: "relative", overflowY: "auto" }}>
@@ -220,4 +220,4 @@ function MyAccountPage() {
     );
 }
 
-export default MyAccountPage;
+export default MyAccount;

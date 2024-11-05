@@ -1,13 +1,13 @@
 import React, { useEffect, useState} from "react";
 import { Button, Box } from "@mui/material";
-import BookingService from '../services/BookingService.jsx';
-import UserSideBar from "./UserSideBar.jsx";
-import PageAppBar from "./PageAppBar.jsx";
-import CustomSnackbar from "./CustomSnackbar.jsx";
-import { getAuth } from "../utils/AuthContext.jsx";
+import BookingService from '../../services/BookingService.jsx';
+import UserSidebar from "./UserSidebar.jsx";
+import CustomAppBar from "../CustomAppBar.jsx";
+import CustomSnackbar from "../CustomSnackbar.jsx";
+import { getAuth } from "../../utils/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-function BookingsPage() {
+function UserBookings() {
     const nav = useNavigate();
 
     const { currentUser, setCurrentUser } = getAuth();
@@ -68,11 +68,11 @@ function BookingsPage() {
         <div className="bookings-page">
             <Box sx={{ display: "flex" }}>
 
-                <UserSideBar />
+                <UserSidebar />
 
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                    <PageAppBar title={"Bookings"} />
+                    <CustomAppBar title={"Bookings"} />
 
                     <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Box sx={{ backgroundColor: "#FFFFFF", width: "100%", height: "100%", boxShadow: "5px 5px 5px #aaaaaa", position: "relative", overflowY: "auto" }}>
@@ -121,4 +121,4 @@ function BookingsPage() {
     );
 }
 
-export default BookingsPage;
+export default UserBookings;

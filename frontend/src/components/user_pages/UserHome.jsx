@@ -1,19 +1,19 @@
 import React from "react";
 import { Box } from "@mui/material";
-import "./styles/FontStyle.css";
-import UserSideBar from "./UserSideBar.jsx";
-import PageAppBar from "./PageAppBar.jsx";
+import "../styles/FontStyle.css";
+import UserSidebar from "./UserSidebar.jsx";
+import CustomAppBar from "../CustomAppBar.jsx";
 
-function HomePage() {
+function UserHome() {
     return (
         <div className="home">
             <Box sx={{ display: "flex" }}>
 
-                <UserSideBar />
+                <UserSidebar />
 
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                    <PageAppBar title={"Home"}/>
+                    <CustomAppBar title={"Home"}/>
 
                     <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Box>
@@ -27,4 +27,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default UserHome;

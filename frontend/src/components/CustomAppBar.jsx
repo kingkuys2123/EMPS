@@ -4,7 +4,7 @@ import { AppBar, Box, Button, Toolbar, Typography, Menu, MenuItem } from "@mui/m
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../utils/AuthContext";
 
-function PageAppBar({ title }) {
+function CustomAppBar({ title }) {
     const nav = useNavigate();
 
     const { currentUser, setCurrentUser } = getAuth();
@@ -55,4 +55,4 @@ function PageAppBar({ title }) {
     );
 }
 
-export default PageAppBar;
+export default CustomAppBar;

@@ -9,7 +9,7 @@ import { getAuth } from "../utils/AuthContext.jsx";
 function LoginModal({ open, onClose, switchModal }) {
     const nav = useNavigate();
 
-    const { currentUser, setCurrentUser } = getAuth();
+    const {currentUser, setCurrentUser} = getAuth();
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -77,7 +77,7 @@ function LoginModal({ open, onClose, switchModal }) {
             localStorage.setItem('user', JSON.stringify(user));
             localStorage.setItem('token', token);
 
-            setCurrentUser(user); // Update the current user in context
+            setCurrentUser(user);
 
             setSnackbarMessage('Login successful!');
             setOpenSnackbar(true);
