@@ -1,22 +1,59 @@
-import axios from 'axios';
+import axios from '../utils/AxiosConfig.jsx';
 
-const API_URL = 'http://localhost:8080/api/feedback';
 const FeedbackService = {
+  // Create a new feedback
   createFeedback: async (feedback) => {
-    return await axios.post(`${API_URL}/postFeedback`, feedback);
+    try {
+      const response = await axios.post(`/feedback/postFeedback`, feedback);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating feedback:", error);
+      throw error.response ? error.response.data : error.message;
+    }
   },
+
+  // Get all feedbacks
   getAllFeedback: async () => {
-    return await axios.get(`${API_URL}/getAllFeedback`);
+    try {
+      const response = await axios.get(`/feedback/getAllFeedback`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching all feedback:", error);
+      throw error.response ? error.response.data : error.message;
+    }
   },
-  getFeeback: async () => {
-    return await axios.get(`${API_URL}/getFeedback`);
+
+  // Get feedback by ID
+  getFeedback: async () => {
+    try {
+      const response = await axios.get(`/feedback/getFeedback`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching feedback:", error);
+      throw error.response ? error.response.data : error.message;
+    }
   },
+
+  // Put feedback by ID
   updateFeedback: async (id, feedback) => {
-    return await axios.put(`${API_URL}/putFeedback?id=${id}`, feedback);
+    try {
+      const response = await axios.put(`/feedback/putFeedback?id=${id}`, feedback);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating feedback with ID ${id}:`, error);
+      throw error.response ? error.response.data : error.message;
+    }
   },
+
+  // Delete feedback by ID
   deleteFeedback: async (id) => {
-    return await axios.delete(`${API_URL}/deleteFeedback/${id}`);
+    try {
+      await axios.delete(`/feedback/deleteFeedback/${id}`);
+    } catch (error) {
+      console.error(`Error deleting feedback with ID ${id}:`, error);
+      throw error.response ? error.response.data : error.message;
+    }
   },
 };
 
-export default FeedbackService; 
+export default FeedbackService;

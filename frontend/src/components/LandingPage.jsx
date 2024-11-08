@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Container, Box, Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import './styles/LandingPage.css';
+
 import LoginModal from "./LoginModal.jsx";
 import RegisterModal from "./RegisterModal.jsx";
 import { getAuth } from '../utils/AuthContext.jsx';
+
+import './styles/LandingPage.css';
+import './styles/FontStyle.css';
 
 function LandingPage() {
     const { currentUser, setCurrentUser } = getAuth();

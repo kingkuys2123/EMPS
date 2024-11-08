@@ -1,12 +1,10 @@
 package com.appdev.wue.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.appdev.wue.entity.TicketEntity;
 import org.springframework.stereotype.Repository;
+import com.appdev.wue.entity.EventEntity;
 
 @Repository
-public interface TicketRepository extends JpaRepository<TicketEntity, Integer> {
-    
+public interface EventRepository extends JpaRepository<EventEntity, Integer >{
+	
 }
-

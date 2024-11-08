@@ -1,47 +1,70 @@
 package com.appdev.wue.entity;
 
 import java.util.Date;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "organizers")
+@Table(name = "organizer")
 public class OrganizerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int organizerId;
+    private int organizer_id;
 
-    private boolean isApproved;
-    private Date datetimeApproved;
+    @Column(name = "approval_status")
+    private String approval_status;
+
+    @Column(name = "datetime_approved")
+    private Date datetime_approved;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "organizer", cascade = CascadeType.ALL)
+    private List<EventEntity> events;
 
     // Getters and setters
 
     public int getOrganizerId() {
-        return organizerId;
+        return organizer_id;
     }
 
-    public void setOrganizerId(int organizerId) {
-        this.organizerId = organizerId;
+    public void setOrganizerId(int organizer_id) {
+        this.organizer_id = organizer_id;
     }
 
-    public boolean isIsApproved() {
-        return isApproved;
+    public String getApprovalStatus() {
+        return approval_status;
     }
 
-    public void setIsApproved(boolean isApproved) {
-        this.isApproved = isApproved;
+    public void setApprovalStatus(String approval_status) {
+        this.approval_status = approval_status;
     }
 
-    public Date getDatetimeApproved() {
-        return datetimeApproved;
+    public Date getDateTimeApproved() {
+        return datetime_approved;
     }
 
-    public void setDatetimeApproved(Date datetimeApproved) {
-        this.datetimeApproved = datetimeApproved;
+    public void setDateTimeApproved(Date datetime_approved) {
+        this.datetime_approved = datetime_approved;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public List<EventEntity> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
     }
 }
 

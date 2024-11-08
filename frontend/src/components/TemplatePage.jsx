@@ -1,8 +1,10 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
-import "./styles/FontStyle.css";
+
 import UserSidebar from "./user_pages/UserSidebar.jsx";
 import CustomAppBar from "./CustomAppBar.jsx";
+
+import "./styles/FontStyle.css";
 
 // Template ra ni siya
 // Copy this component nya e paste sa organizer_pages if na assigned ka sa organizer side, e paste sa admin_pages folder if na assigned ka sa admin side

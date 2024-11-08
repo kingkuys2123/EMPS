@@ -1,7 +1,9 @@
 package com.appdev.wue.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.appdev.wue.entity.OrganizerEntity;
@@ -9,41 +11,55 @@ import com.appdev.wue.repository.OrganizerRepository;
 
 @Service
 public class OrganizerService {
-    private final OrganizerRepository organizerRepository;
 
-    public OrganizerService(OrganizerRepository organizerRepository) {
-        this.organizerRepository = organizerRepository;
+    @Autowired
+    private OrganizerRepository oRepo;
+
+    // Create Organizer
+    public OrganizerEntity createOrganizer(OrganizerEntity organizer) {
+        return oRepo.save(organizer);
     }
 
+    // Get All Organizers
     public List<OrganizerEntity> getAllOrganizers() {
-        return organizerRepository.findAll();
+        return oRepo.findAll();
     }
 
-    public OrganizerEntity getOrganizerById(int id) {
-        return organizerRepository.findById(id).get();
+    // Get Organizer by Id
+    public OrganizerEntity getOrganizer(int id) {
+        return oRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Organizer with ID " + id + " not found!"));
     }
 
-    public OrganizerEntity saveOrganizer(OrganizerEntity organizer) {
-        return organizerRepository.save(organizer);
-    }
-
+    // Update Organizer (PUT)
     public OrganizerEntity updateOrganizer(int id, OrganizerEntity newOrganizer) {
-        return organizerRepository.findById(id)
-                .map(organizer -> {
-                    organizer.setIsApproved(newOrganizer.isIsApproved());
-                    organizer.setDatetimeApproved(newOrganizer.getDatetimeApproved());
-                    return organizerRepository.save(organizer);
-                })
-                .orElseThrow(() -> new RuntimeException("Organizer not found with id " + id));
+        OrganizerEntity existingOrganizer;
+        try {
+            existingOrganizer = oRepo.findById(id).get();
+
+            existingOrganizer.setApprovalStatus(newOrganizer.getApprovalStatus());
+            existingOrganizer.setDateTimeApproved(newOrganizer.getDateTimeApproved());
+
+            return oRepo.save(existingOrganizer);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating organizer with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
+    // Delete Organizer
     public String deleteOrganizer(int id) {
-        String msg = "Id not found.";
-        if(organizerRepository.findById(id) != null){
-            organizerRepository.deleteById(id);
-            msg = "Organizer deleted successfully";
+        String msg;
+        try {
+            if (oRepo.findById(id).isPresent()) {
+                oRepo.deleteById(id);
+                msg = "Organizer deleted successfully";
+            } else {
+                msg = "Organizer with ID " + id + " not found.";
+            }
+        } catch (Exception e) {
+            msg = "Error occurred while deleting organizer with ID " + id + ": " + e.getMessage();
         }
         return msg;
     }
+
 }
 

@@ -1,33 +1,61 @@
 package com.appdev.wue.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@Table(name = "event")
 public class EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long eventId;
+    private Long event_id;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "type")
     private String type;
+
+    @Column(name = "description")
     private String description;
-    private LocalDateTime startDateTime;
-    private LocalDateTime endDateTime;
-    private LocalDateTime dateCreated;
-    private String eventStatus;
-    private String confirmation;
+
+    @Column(name = "start_datetime")
+    private LocalDateTime start_datetime;
+
+    @Column(name = "end_datetime")
+    private LocalDateTime end_datetime;
+
+    @Column(name = "date_created")
+    private LocalDateTime date_created;
+
+    @Column(name = "event_status")
+    private String event_status;
+
+    @Column(name = "confirmation_status")
+    private String confirmation_status;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", cascade = CascadeType.ALL)
+    private List<TicketEntity> tickets;
+
+    @ManyToOne
+    @JoinColumn(name = "organizer_id")
+    private OrganizerEntity organizer;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", cascade = CascadeType.ALL)
+    private List<FeedbackEntity> feedbacks;
+
+    @OneToOne
+    @JoinColumn(name = "venue_id")
+    private VenueEntity venue;
 
     public Long getEventId() {
-        return eventId;
+        return event_id;
     }
 
     public void setEventId(Long eventId) {
-        this.eventId = eventId;
+        this.event_id = eventId;
     }
 
     public String getName() {
@@ -54,43 +82,75 @@ public class EventEntity {
         this.description = description;
     }
 
-    public LocalDateTime getStartDateTime() {
-        return startDateTime;
+    public LocalDateTime getStartDatetime() {
+        return start_datetime;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
+    public void setStartDatetime(LocalDateTime startDateTime) {
+        this.start_datetime = startDateTime;
     }
 
-    public LocalDateTime getEndDateTime() {
-        return endDateTime;
+    public LocalDateTime getEndDatetime() {
+        return end_datetime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        this.endDateTime = endDateTime;
+    public void setEndDatetime(LocalDateTime endDateTime) {
+        this.end_datetime = endDateTime;
     }
 
     public LocalDateTime getDateCreated() {
-        return dateCreated;
+        return date_created;
     }
 
     public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
+        this.date_created = dateCreated;
     }
 
     public String getEventStatus() {
-        return eventStatus;
+        return event_status;
     }
 
     public void setEventStatus(String eventStatus) {
-        this.eventStatus = eventStatus;
+        this.event_status = eventStatus;
     }
 
-    public String getConfirmation() {
-        return confirmation;
+    public String getConfirmationStatus() {
+        return confirmation_status;
     }
 
-    public void setConfirmation(String confirmation) {
-        this.confirmation = confirmation;
+    public void setConfirmationStatus(String confirmation) {
+        this.confirmation_status = confirmation;
+    }
+
+    public List<TicketEntity> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<TicketEntity> tickets) {
+        this.tickets = tickets;
+    }
+
+    public OrganizerEntity getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(OrganizerEntity organizer) {
+        this.organizer = organizer;
+    }
+
+    public List<FeedbackEntity> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<FeedbackEntity> feedbacks) {
+        this.feedbacks = feedbacks;
+    }
+
+    public VenueEntity getVenue() {
+        return venue;
+    }
+
+    public void setVenue(VenueEntity venue) {
+        this.venue = venue;
     }
 }

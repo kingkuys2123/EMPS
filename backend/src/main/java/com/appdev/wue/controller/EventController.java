@@ -1,48 +1,46 @@
 package com.appdev.wue.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.appdev.wue.entity.EventEntity;
 import com.appdev.wue.service.EventService;
 
 @RestController
-@RequestMapping("/api/events")
+@RequestMapping(method = RequestMethod.GET, path = "/api/event")
 public class EventController {
     @Autowired
-    private EventService eventService;
+    private EventService eServ;
 
-    @PostMapping("/postEvents")
-    public ResponseEntity<EventEntity> createEvent(@RequestBody EventEntity event) {
-        EventEntity createdEvent = eventService.createEvent(event);
-        return ResponseEntity.created(URI.create("/api/events/" + createdEvent.getEventId())).body(createdEvent);
+    // Create Event
+    @PostMapping("/createEvent")
+    public EventEntity createEvent(@RequestBody EventEntity event) {
+        return eServ.createEvent(event);
     }
 
-    @PutMapping("/putEvents/{eventId}")
-    public ResponseEntity<EventEntity> updateEvent(@PathVariable Long eventId, @RequestBody EventEntity updatedEvent) {
-        EventEntity updatedEvents = eventService.updateEvent(eventId, updatedEvent);
-        return ResponseEntity.ok(updatedEvents);
+    // Update Event (PUT)
+    @PutMapping("/updateEvent/{id}")
+    public EventEntity updateEvent(@PathVariable int id, @RequestBody EventEntity updatedEvent) {
+        return eServ.updateEvent(id, updatedEvent);
     }
 
+    // Get All Events
     @GetMapping("/getAllEvents")
-    public ResponseEntity<List<EventEntity>> getAllEvents() {
-        List<EventEntity> event = eventService.getAllEvents();
-        return ResponseEntity.ok(event);
+    public List<EventEntity> getAllEvents() {
+        return eServ.getAllEvents();
     }
 
-    @GetMapping("/getEvents/{eventId}")
-    public ResponseEntity<EventEntity> viewEvent(@PathVariable Long eventId) {
-        EventEntity event = eventService.viewEvent(eventId);
-        return ResponseEntity.ok(event);
+    // Get Event By Id
+    @GetMapping("/getEvent")
+    public EventEntity getEvent(@RequestParam int id) {
+        return eServ.getEvent(id);
     }
 
-    @DeleteMapping("/deleteEvents/{eventId}")
-    public ResponseEntity<Void> deleteEvent(@PathVariable Long eventId) {
-        eventService.deleteEvent(eventId);
-        return ResponseEntity.noContent().build();
+    // Delete Event by Id
+    @DeleteMapping("/deleteEvent/{id}")
+    public String deleteEvent(@PathVariable int id) {
+        return eServ.deleteEvent(id);
     }
 }

@@ -1,10 +1,13 @@
-import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar, Link } from "@mui/material";
 import React, { useState } from "react";
-import "../styles/Sidebar.css";
+import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+
 import LoginModal from "../LoginModal.jsx";
 import RegisterModal from "../RegisterModal.jsx";
 import { getAuth } from "../../utils/AuthContext.jsx";
+
+import '../styles/FontStyle.css';
+import "../styles/Sidebar.css";
 
 function UserSidebar() {
     const nav = useNavigate();

@@ -1,50 +1,48 @@
 package com.appdev.wue.controller;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import com.appdev.wue.entity.OrganizerEntity;
 import com.appdev.wue.service.OrganizerService;
 
 @RestController
-@RequestMapping("/api/organizers")
+@RequestMapping(method = RequestMethod.GET, path = "/api/organizer")
 public class OrganizerController {
-    private final OrganizerService organizerService;
 
-    public OrganizerController(OrganizerService organizerService) {
-        this.organizerService = organizerService;
-    }
+    @Autowired
+    private OrganizerService oServ;
 
-    @GetMapping("/getAll")
+    // Get ALl Organizers
+    @GetMapping("/getAllOrganizers")
     public List<OrganizerEntity> getAllOrganizers() {
-        return organizerService.getAllOrganizers();
+        return oServ.getAllOrganizers();
     }
 
-    @GetMapping("/getById/{id}")
-    public OrganizerEntity getOrganizerById(@PathVariable int id) {
-        return organizerService.getOrganizerById(id);
+    // Get Organizer By Id
+    @GetMapping("/getOrganizer/{id}")
+    public OrganizerEntity getOrganizer(@PathVariable int id) {
+        return oServ.getOrganizer(id);
     }
 
-    @PostMapping("/create")
+    // Create Organizer
+    @PostMapping("/createOrganizer")
     public OrganizerEntity createOrganizer(@RequestBody OrganizerEntity organizer) {
-        return organizerService.saveOrganizer(organizer);
+        return oServ.createOrganizer(organizer);
     }
 
-    @PutMapping("/update/{id}")
-    public OrganizerEntity updateOrganizer(@PathVariable int id, @RequestBody OrganizerEntity organizer) {
-        return organizerService.updateOrganizer(id, organizer);
+    // Update Organizer by Id
+    @PutMapping("/updateOrganizer")
+    public OrganizerEntity updateOrganizer(@RequestParam int id, @RequestBody OrganizerEntity organizer) {
+        return oServ.updateOrganizer(id, organizer);
     }
 
-    @DeleteMapping("/delete/{id}")
+    // Delete Organizer by Id
+    @DeleteMapping("/deleteOrganizer/{id}")
     public String deleteOrganizer(@PathVariable int id) {
-        return organizerService.deleteOrganizer(id);    
+        return oServ.deleteOrganizer(id);
     }
 }
 

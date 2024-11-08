@@ -1,11 +1,14 @@
 import React, { useEffect, useState} from "react";
 import { Button, Box } from "@mui/material";
 import BookingService from '../../services/BookingService.jsx';
+
 import UserSidebar from "./UserSidebar.jsx";
 import CustomAppBar from "../CustomAppBar.jsx";
 import CustomSnackbar from "../CustomSnackbar.jsx";
 import { getAuth } from "../../utils/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+
+import '../styles/FontStyle.css';
 
 function UserBookings() {
     const nav = useNavigate();

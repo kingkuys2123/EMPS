@@ -1,8 +1,10 @@
 import React from "react";
 import { Box } from "@mui/material";
-import "../styles/FontStyle.css";
+
 import UserSidebar from "./UserSidebar.jsx";
 import CustomAppBar from "../CustomAppBar.jsx";
+
+import "../styles/FontStyle.css";
 
 function UserHome() {
     return (

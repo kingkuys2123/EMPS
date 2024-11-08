@@ -50,7 +50,7 @@ public class UserController {
         return uServ.updateUser(id, newUserDetails);
     }
 
-    // Update Profile By ID
+    // Update Profile By ID (PUT)
     @PutMapping("/updateProfile")
     public UserEntity updateProfile(@RequestParam int id, @RequestBody UserEntity newUserDetails) {
         return uServ.updateProfile(id, newUserDetails);

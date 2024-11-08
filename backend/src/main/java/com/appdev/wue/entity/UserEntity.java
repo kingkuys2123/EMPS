@@ -39,6 +39,15 @@ public class UserEntity {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private List<BookingEntity> bookings;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private FeedbackEntity feedback;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private OrganizerEntity organizer;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private PaymentDetailsEntity payment_details;
+
     public int getUserID() {
         return user_id;
     }
@@ -117,5 +126,29 @@ public class UserEntity {
 
     public void setBookings(List<BookingEntity> bookings) {
         this.bookings = bookings;
+    }
+
+    public FeedbackEntity getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(FeedbackEntity feedback) {
+        this.feedback = feedback;
+    }
+
+    public OrganizerEntity getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(OrganizerEntity organizer) {
+        this.organizer = organizer;
+    }
+
+    public PaymentDetailsEntity getPayment_details() {
+        return payment_details;
+    }
+
+    public void setPayment_details(PaymentDetailsEntity payment_details) {
+        this.payment_details = payment_details;
     }
 }

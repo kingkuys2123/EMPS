@@ -3,47 +3,44 @@ package com.appdev.wue.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.appdev.wue.entity.FeedbackEntity;
 import com.appdev.wue.service.FeedbackService;
 
 
 @RestController
-@RequestMapping("/api/feedback")
+@RequestMapping(method = RequestMethod.GET, path = "/api/feedback")
 public class FeedbackController {
+
     @Autowired
     private FeedbackService feedbackServ;
 
-    @PostMapping("/postFeedback")
+    // Create Feedback
+    @PostMapping("/createFeedback")
     public FeedbackEntity createFeedback(@RequestBody FeedbackEntity feedback) {
-		return feedbackServ.saveFeedback(feedback);
+		return feedbackServ.createFeedback(feedback);
 	}
 
-    @GetMapping("/getAllFeedback")
-	public List<FeedbackEntity> getAllFeedback() {
-        return feedbackServ.getAllFeedback();
+    // Get All Feedbacks
+    @GetMapping("/getAllFeedbacks")
+	public List<FeedbackEntity> getAllFeedbacks() {
+        return feedbackServ.getAllFeedbacks();
     }	
-    
+
+    // Get Feedback by Id
     @GetMapping("/getFeedback")
 	public FeedbackEntity getFeedback(@RequestParam int id) {
-		FeedbackEntity feedback = feedbackServ.getFeedbackById(id);
-		return feedback;
+		return feedbackServ.getFeedback(id);
 	}
 
-    @PutMapping("/putFeedback")
-	public FeedbackEntity putFeedback(@RequestParam int id, @RequestBody FeedbackEntity newFeedback) {
-    	return feedbackServ.putFeedback(id, newFeedback);
+    // Update Feedback
+    @PutMapping("/updateFeedback")
+	public FeedbackEntity updateFeedback(@RequestParam int id, @RequestBody FeedbackEntity newFeedback) {
+    	return feedbackServ.updateFeedback(id, newFeedback);
     }
 
+    // Delete Feedback
     @DeleteMapping("/deleteFeedback/{id}")
     public String deleteFeedback(@PathVariable int id) {
         return feedbackServ.deleteFeedback(id);

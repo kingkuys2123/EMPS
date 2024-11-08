@@ -9,39 +9,49 @@ import org.springframework.stereotype.Service;
 import com.appdev.wue.entity.FeedbackEntity;
 import com.appdev.wue.repository.FeedbackRepository;
 
-
-
 @Service
 public class FeedbackService {
+
 	@Autowired 
-	private FeedbackRepository feedbackrepo;
-	
-	public List<FeedbackEntity> getAllFeedback(){
-		return feedbackrepo.findAll();
+	private FeedbackRepository feedbackRepo;
+
+	// Get All Feedbacks
+	public List<FeedbackEntity> getAllFeedbacks(){
+		return feedbackRepo.findAll();
 	}
-	
-	public FeedbackEntity getFeedbackById(int id) {
-		return feedbackrepo.findById(id).orElse(null);
+
+	// Get Feedback by Id
+	public FeedbackEntity getFeedback(int id) {
+		return feedbackRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Feedback with ID " + id + " not found!"));
 	}
-	
-	public FeedbackEntity saveFeedback(FeedbackEntity feedback) {
-		return feedbackrepo.save(feedback);
+
+	// Create Feedback
+	public FeedbackEntity createFeedback(FeedbackEntity feedback) {
+		return feedbackRepo.save(feedback);
 	}
+
+	// Delete Feedback
 	public String deleteFeedback(int id) {
-		String msg="";
-		if (feedbackrepo.findById((int) id).isPresent()) {
-			feedbackrepo.deleteById( (int) id);
-    		msg = "Feedback Successfully Deleted!!";
-    	}else
-    		msg = id + "NOT Found!";
-    	return msg;
+		String msg = "";
+		try {
+			if (feedbackRepo.findById(id).isPresent()) {
+				feedbackRepo.deleteById(id);
+				msg = "Feedback deleted successfully!";
+			} else {
+				msg = id + "Feedback not found!";
+			}
+		} catch (Exception e) {
+			msg = "Error occurred while deleting the feedback with ID " + id + ": " + e.getMessage();
+		}
+		return msg;
 	}
-	
+
+	// Update Feedback
 	@SuppressWarnings("finally")
-	public FeedbackEntity putFeedback(int id, FeedbackEntity newFeedback) {
+	public FeedbackEntity updateFeedback(int id, FeedbackEntity newFeedback) {
 		FeedbackEntity item = new FeedbackEntity();
     	try {
-    		item = feedbackrepo.findById((int) id).get();
+    		item = feedbackRepo.findById(id).get();
     		
     		item.setComment(newFeedback.getComment());
     		item.setRating(newFeedback.getRating());
@@ -49,7 +59,7 @@ public class FeedbackService {
     	}catch(NoSuchElementException nex) {
     		throw new NameNotFoundException("Feedback" + id + "Not Found");
     	}finally {
-    		return feedbackrepo.save(item);
+    		return feedbackRepo.save(item);
     	}
     }
 }

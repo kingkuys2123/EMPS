@@ -33,8 +33,8 @@ public class BookingController {
 
     // Update Booking By ID
     @PutMapping("/updateBooking")
-    public BookingEntity updateUser(@RequestParam int id, @RequestBody BookingEntity newBookingDetails) {
-        return bServ.updateBooking(id, newBookingDetails);
+    public BookingEntity updateUser(@RequestParam int id, @RequestBody BookingEntity updatedBooking) {
+        return bServ.updateBooking(id, updatedBooking);
     }
 
     // Delete Booking By ID
@@ -42,4 +42,5 @@ public class BookingController {
     public String deleteUser(@PathVariable int id) {
         return bServ.deleteBooking(id);
     }
+
 }

@@ -1,25 +1,42 @@
 package com.appdev.wue.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
-@Table(name = "tickets")
+@Table(name = "ticket")
 public class TicketEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ticketId;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "type")
     private String type;
+
+    @Column(name = "quantity")
     private int quantity;
-    private boolean isAvailable;
+
+    @Column(name = "is_available")
+    private boolean is_available;
+
+    @Column(name = "price")
     private int price;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket", cascade = CascadeType.ALL)
+    private List<BookingEntity> bookings;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    @JsonIgnore
+    private EventEntity event;
 
     // Getters and setters
 
@@ -64,11 +81,11 @@ public class TicketEntity {
     }
 
     public boolean getIsAvailable() {
-        return isAvailable;
+        return is_available;
     }
 
     public void setIsAvailable(boolean isAvailable) {
-        this.isAvailable = isAvailable;
+        this.is_available = isAvailable;
     }
 
     public int getPrice() {
@@ -77,6 +94,22 @@ public class TicketEntity {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public List<BookingEntity> getBookings() {
+        return bookings;
+    }
+
+    public void setBookings(List<BookingEntity> bookings) {
+        this.bookings = bookings;
+    }
+
+    public EventEntity getEvent() {
+        return event;
+    }
+
+    public void setEvent(EventEntity event) {
+        this.event = event;
     }
 }
 

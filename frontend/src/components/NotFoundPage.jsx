@@ -1,6 +1,9 @@
 import React from 'react';
+
 import { Container, Typography, Box, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+
+import './styles/FontStyle.css'
 
 function NotFoundPage() {
     return (

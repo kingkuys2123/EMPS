@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.naming.NameNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -23,11 +24,6 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Get User By Username
-    public UserEntity findByUsername(String username) {
-        return uRepo.findByUsername(username).orElse(null);
-    }
-
     // Create User
     public UserEntity createUser(UserEntity user) {
         return uRepo.save(user);
@@ -40,10 +36,10 @@ public class UserService {
 
     // Get User By ID
     public UserEntity getUser(int id) {
-        return uRepo.findById(id).orElse(null);
+        return uRepo.findById(id).orElseThrow(() -> new NoSuchElementException("User with ID " + id + " not found!"));
     }
 
-    // Update User By ID
+    // Update User By ID (PUT)
     public UserEntity updateUser(int id, UserEntity newUserDetails) {
         UserEntity user = new UserEntity();
         try {
@@ -84,15 +80,20 @@ public class UserService {
     // Delete User By ID
     public String deleteUser(int id) {
         String msg;
-        if (uRepo.existsById(id)) {
-            uRepo.deleteById(id);
-            msg = "User with ID " + id + " deleted successfully!";
-        } else {
-            msg = "User with ID " + id + " not found!";
+        try {
+            if (uRepo.existsById(id)) {
+                uRepo.deleteById(id);
+                msg = "User deleted successfully!";
+            } else {
+                msg = "User not found!";
+            }
+        } catch (Exception e) {
+            msg = "Error occurred while deleting the user with ID " + id + ": " + e.getMessage();
         }
         return msg;
     }
 
+    // Register User
     public UserEntity registerUser(UserEntity user) {
         if (uRepo.findByUsername(user.getUsername()).isPresent()) {
             throw new RuntimeException("Username already taken!");
@@ -119,6 +120,11 @@ public class UserService {
             throw new RuntimeException("Invalid password!");
         }
         return jwtUtil.generateToken(username);
+    }
+
+    // Get User By Username
+    public UserEntity findByUsername(String username) {
+        return uRepo.findByUsername(username).orElse(null);
     }
 
 }

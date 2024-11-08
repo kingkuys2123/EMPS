@@ -12,8 +12,8 @@ public class BookingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int booking_id;
 
-    @Column(name = "date_time_booked")
-    private LocalDateTime date_time_booked;
+    @Column(name = "datetime_booked")
+    private LocalDateTime datetime_booked;
 
     @Column(name = "ticket_quantity")
     private int ticket_quantity;
@@ -35,6 +35,11 @@ public class BookingEntity {
     @JsonIgnore
     private UserEntity user;
 
+    @ManyToOne
+    @JoinColumn(name = "ticket_id")
+    @JsonIgnore
+    private TicketEntity ticket;
+
     public int getBookingID() {
         return booking_id;
     }
@@ -44,11 +49,11 @@ public class BookingEntity {
     }
 
     public LocalDateTime getDateTimeBooked() {
-        return date_time_booked;
+        return datetime_booked;
     }
 
     public void setDateTimeBooked(LocalDateTime date_time_booked) {
-        this.date_time_booked = date_time_booked;
+        this.datetime_booked = date_time_booked;
     }
 
     public int getTicketQuantity() {
@@ -97,5 +102,13 @@ public class BookingEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public TicketEntity getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(TicketEntity ticket) {
+        this.ticket = ticket;
     }
 }

@@ -1,12 +1,8 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import Divider from '@mui/material/Divider';
-import Rating from '@mui/material/Rating';
-import TextField from '@mui/material/TextField';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Typography, Modal, Divider, Rating, TextField } from '@mui/material';
+
+import '../styles/FontStyle.css';
+
 
 const style = {
     position: 'absolute',
@@ -21,7 +17,7 @@ const style = {
     borderRadius: 2,
 };
 
-export default function FeedbackModal({ open, feedback, onClose, onSubmit }) {
+export default function UserAddFeedbackModal({ open, feedback, onClose, onSubmit }) {
     const [ratingValue, setRatingValue] = useState(0);
     const [comment, setComment] = useState('');
 

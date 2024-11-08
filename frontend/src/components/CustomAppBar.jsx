@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import "./styles/FontStyle.css";
 import { AppBar, Box, Button, Toolbar, Typography, Menu, MenuItem } from "@mui/material";
+
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../utils/AuthContext";
+
+import "./styles/FontStyle.css";
 
 function CustomAppBar({ title }) {
     const nav = useNavigate();
@@ -25,7 +27,7 @@ function CustomAppBar({ title }) {
 
     return (
         <div>
-            <AppBar sx={{ backgroundColor: '#FFFFFF', color: 'black', boxShadow: 'none' }} position="static">
+            <AppBar className="custom-appbar" sx={{ backgroundColor: '#FFFFFF', color: 'black', boxShadow: 'none' }} position="static">
                 <Box>
                     <Toolbar disableGutters sx={{ height: '80px' }}>
                         <Typography className="project-name" variant="h4" component="div" sx={{ flexGrow: 1, padding: "25px" }}>

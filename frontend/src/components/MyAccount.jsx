@@ -1,13 +1,14 @@
-import './styles/FontStyle.css';
+import React, { useEffect, useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
 import UserSidebar from "./user_pages/UserSidebar.jsx";
 import CustomAppBar from "./CustomAppBar.jsx";
-import './styles/FontStyle.css';
-import React, { useEffect, useState } from "react";
-import UserService from "../services/UserService.jsx";
 import CustomSnackbar from "./CustomSnackbar.jsx";
-import { useNavigate } from "react-router-dom";
+import UserService from "../services/UserService.jsx";
 import { getAuth } from "../utils/AuthContext.jsx";
+
+import './styles/FontStyle.css';
 
 function MyAccount() {
     const nav = useNavigate();

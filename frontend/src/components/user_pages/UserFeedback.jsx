@@ -1,23 +1,13 @@
-import { useState, useEffect } from "react";
-import FeedbackService from "../services/FeedbackServices";
-import * as React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Rating from '@mui/material/Rating';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import React, { useState, useEffect } from "react";
+import { List, ListItem, Divider, ListItemText, ListItemAvatar, Avatar, Typography, Box, Rating, IconButton, Menu, MenuItem, Button } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Button from '@mui/material/Button';
-import FeedbackModal from "./FeedbackModal";
 
-export default function Feedback() {
+import FeedbackService from "../../services/FeedbackServices.jsx";
+import UserAddFeedbackModal from "./UserAddFeedbackModal.jsx";
+
+import '../styles/FontStyle.css';
+
+export default function UserFeedback() {
     const [feedbackList, setFeedbackList] = useState([]);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -160,7 +150,7 @@ export default function Feedback() {
                     ))}
                 </List>
             )}
-            <FeedbackModal
+            <UserAddFeedbackModal
                 open={isModalOpen}
                 feedback={selectedFeedback}
                 onClose={handleModalClose}

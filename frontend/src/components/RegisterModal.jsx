@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Box, Typography, TextField, Button, Link } from "@mui/material";
-import './styles/LandingPage.css'
+
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import UserService from "../services/UserService.jsx";
+
+import './styles/FontStyle.css'
 
 function RegisterModal({ open, onClose, switchModal, label }) {
     const [firstName, setFirstName] = useState('');

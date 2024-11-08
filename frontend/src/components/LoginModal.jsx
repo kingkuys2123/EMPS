@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Box, Typography, TextField, Button, Link } from "@mui/material";
-import "./styles/FontStyle.css";
+
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import UserService from "../services/UserService.jsx";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../utils/AuthContext.jsx";
+
+import "./styles/FontStyle.css";
 
 function LoginModal({ open, onClose, switchModal }) {
     const nav = useNavigate();
@@ -95,13 +97,13 @@ function LoginModal({ open, onClose, switchModal }) {
                 validErrors.username = true;
                 setErrors(validErrors);
 
-                setSnackbarMessage('User not found!');
+                setSnackbarMessage(e);
                 setOpenSnackbar(true);
             } else if (e === 'Invalid password!') {
                 validErrors.password = true;
                 setErrors(validErrors);
 
-                setSnackbarMessage('Invalid password!');
+                setSnackbarMessage(e);
                 setOpenSnackbar(true);
             } else {
                 setSnackbarMessage('An unexpected error occurred. Please try again.');

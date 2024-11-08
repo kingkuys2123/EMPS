@@ -1,7 +1,9 @@
 package com.appdev.wue.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.appdev.wue.entity.TicketEntity;
@@ -9,42 +11,48 @@ import com.appdev.wue.repository.TicketRepository;
 
 @Service
 public class TicketService {
-    private final TicketRepository ticketRepository;
+
+    @Autowired
+    private TicketRepository tRepo;
 
     public TicketService(TicketRepository ticketRepository) {
-        this.ticketRepository = ticketRepository;
+        this.tRepo = ticketRepository;
     }
 
     public List<TicketEntity> getAllTickets() {
-        return ticketRepository.findAll();
+        return tRepo.findAll();
     }
 
-    public TicketEntity getTicketById(int id) {
-        return ticketRepository.findById(id).get();
+    public TicketEntity getTicket(int id) {
+        return tRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Ticket with ID " + id + " not found!"));
     }
 
-    public TicketEntity saveTicket(TicketEntity ticket) {
-        return ticketRepository.save(ticket);
+    public TicketEntity createTicket(TicketEntity ticket) {
+        return tRepo.save(ticket);
     }
 
-    public TicketEntity updateTicket(int id, TicketEntity newTicket) {
-        return ticketRepository.findById(id)
-                .map(ticket -> {
-                    ticket.setName(newTicket.getName());
-                    ticket.setDescription(newTicket.getDescription());
-                    ticket.setType(newTicket.getType());
-                    ticket.setQuantity(newTicket.getQuantity());
-                    ticket.setIsAvailable(newTicket.getIsAvailable());
-                    ticket.setPrice(newTicket.getPrice());
-                    return ticketRepository.save(ticket);
-                })
-                .orElseThrow(() -> new RuntimeException("Ticket not found with id " + id));
+    public TicketEntity updateTicket(int id, TicketEntity updatedTicket) {
+        TicketEntity ticket;
+        try {
+            ticket = tRepo.findById(id).get();
+
+            ticket.setName(updatedTicket.getName());
+            ticket.setDescription(updatedTicket.getDescription());
+            ticket.setType(updatedTicket.getType());
+            ticket.setQuantity(updatedTicket.getQuantity());
+            ticket.setIsAvailable(updatedTicket.getIsAvailable());
+            ticket.setPrice(updatedTicket.getPrice());
+
+            return tRepo.save(ticket);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating ticket with ID " + id + ": " + e.getMessage(), e);
+        }
     }
 
     public String deleteTicket(int id) {
         String msg = "Ticket Invalid";
-        if(ticketRepository.findById(id) != null){
-            ticketRepository.deleteById(id);
+        if(tRepo.findById(id) != null){
+            tRepo.deleteById(id);
             msg = "Ticket with id " + id + " is deleted successfully";
         }
         return msg;
