@@ -40,6 +40,7 @@ public class UserService {
     }
 
     // Update User By ID (PUT)
+    @SuppressWarnings("finally")
     public UserEntity updateUser(int id, UserEntity newUserDetails) {
         UserEntity user = new UserEntity();
         try {
@@ -61,6 +62,7 @@ public class UserService {
     }
 
     // Update Profile
+    @SuppressWarnings("finally")
     public UserEntity updateProfile(int id, UserEntity newUserDetails) {
         UserEntity user = new UserEntity();
         try {

@@ -1,0 +1,98 @@
+.template-page {
+    display: flex;
+  }
+  
+  .content {
+    flex-grow: 1;
+    background-color: #f3f3f3;
+    padding: 20px;
+  }
+  
+  .event-container {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  
+  .event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .filter-links span {
+    color: #007bff;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+  
+  .search-bar {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .add-event-button {
+    background-color: #d9534f;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .event-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .event-table th, .event-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .event-table th {
+    background-color: #f8f9fa;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 0.9em;
+  }
+  
+  .badge.private {
+    background-color: #f0ad4e;
+  }
+  
+  .badge.public {
+    background-color: #5bc0de;
+  }
+  
+  .badge.completed {
+    background-color: #5cb85c;
+  }
+  
+  .badge.upcoming {
+    background-color: #0275d8;
+  }
+  
+  .badge.ongoing {
+    background-color: #5bc0de;
+  }
+  
+  .badge.cancelled {
+    background-color: #d9534f;
+  }
+  
+  .badge.confirmed {
+    background-color: #5cb85c;
+  }
+  
+  .badge.pending {
+    background-color: #f0ad4e;
+  }
+  

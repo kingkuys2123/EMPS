@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+    
 import com.appdev.wue.entity.OrganizerEntity;
 import com.appdev.wue.service.OrganizerService;
 
