@@ -1,6 +1,7 @@
 package com.appdev.wue.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,18 +23,22 @@ public class EventEntity {
     private String description;
 
     @Column(name = "start_datetime")
+    @JsonProperty("startDateTime")
     private LocalDateTime start_datetime;
 
     @Column(name = "end_datetime")
+    @JsonProperty("endDateTime")
     private LocalDateTime end_datetime;
 
     @Column(name = "date_created")
     private LocalDateTime date_created;
 
     @Column(name = "event_status")
+    @JsonProperty("eventStatus")
     private String event_status;
 
     @Column(name = "confirmation_status")
+    @JsonProperty("confirmationStatus")
     private String confirmation_status;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", cascade = CascadeType.ALL)

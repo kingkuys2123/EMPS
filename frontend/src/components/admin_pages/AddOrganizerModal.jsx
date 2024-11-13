@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Box, Typography, TextField, Button, Autocomplete } from "@mui/material";
-
 import CustomSnackbar from "../CustomSnackbar.jsx";
 import UserService from "../../services/UserService.jsx";
 import OrganizerService from "../../services/OrganizerService.jsx";
 
-import '../styles/FontStyle.css'
+import '../styles/FontStyle.css';
 
 function AddOrganizerModal({ open, onClose, switchModal, label }) {
     const [username, setUsername] = useState('');
@@ -14,6 +13,7 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
     const [errors, setErrors] = useState({});
     const [userOptions, setUserOptions] = useState([]);
 
+    // Reset modal when closed
     useEffect(() => {
         if (!open) {
             setUsername('');
@@ -21,6 +21,7 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
         }
     }, [open]);
 
+    // Close the snackbar
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -28,14 +29,14 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
         setOpenSnackbar(false);
     };
 
+    // Handle user input and fetch matching users
     const handleUsernameChange = async (event) => {
         const value = event.target.value;
         setUsername(value);
 
-        // Fetch users with the matching username
         if (value) {
             try {
-                const users = await UserService.searchUsers(value); // Assuming UserService has a searchUsers method
+                const users = await UserService.searchUsers(value); // Fetch users from UserService
                 setUserOptions(users);
             } catch (error) {
                 console.error("Error fetching users:", error);
@@ -45,6 +46,7 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
         }
     };
 
+    // Handle form submission and assign user as organizer
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -55,9 +57,8 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
             return;
         }
 
-        // Proceed with assigning the user as an organizer
         try {
-            await OrganizerService.assignOrganizer({ username });
+            await OrganizerService.assignOrganizer({ username }); 
             setSnackbarMessage('Organizer assigned successfully!');
             setOpenSnackbar(true);
             onClose();
@@ -76,7 +77,7 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
                             <span>Add an Organizer</span>
                         </Typography>
                         <Typography variant="h6" component="h6">
-                        <span style={{color: '#7F7F7F'}}>Assign a user to become an organizer</span>
+                            <span style={{ color: '#7F7F7F' }}>Assign a user to become an organizer</span>
                         </Typography>
 
                         <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>

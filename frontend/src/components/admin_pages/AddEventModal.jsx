@@ -16,10 +16,10 @@ const AddEventModal = ({ open, onClose, onEventAdded }) => {
             name,
             type,
             description,
-            start_datetime: startDateTime,
-            end_datetime: endDateTime,
-            event_status: eventStatus,
-            confirmation_status: confirmationStatus
+            startDateTime: startDateTime,
+            endDateTime: endDateTime,
+            eventStatus: eventStatus,
+            confirmationStatus: confirmationStatus
         };
 
         try {

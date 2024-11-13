@@ -1,57 +1,49 @@
-import React from "react";
-import { Menu, MenuItem, IconButton } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import * as React from 'react';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const LongMenu = ({ onEdit, onDelete }) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+function LongMenu({ onView, onEdit, onDelete, onConfirmEvent }) {
+    const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
-  const handleEdit = () => {
-    onEdit();
-    handleClose();
-  };
+    return (
+        <>
+            {/* Replacing the button with an IconButton (ellipsis button) */}
+            <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={Boolean(anchorEl) ? 'long-menu' : undefined}
+                aria-expanded={Boolean(anchorEl) ? 'true' : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+            >
+                <MoreVertIcon />
+            </IconButton>
 
-  const handleDelete = () => {
-    onDelete();
-    handleClose();
-  };
-
-  return (
-    <div>
-      <IconButton
-        aria-label="more"
-        aria-controls={open ? "long-menu" : undefined}
-        aria-expanded={open ? "true" : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        <MoreVertIcon />
-      </IconButton>
-      <Menu
-        id="long-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        PaperProps={{
-          style: {
-            maxHeight: 48 * 4.5, // Limits menu height
-            width: "20ch",
-          },
-        }}
-      >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-      </Menu>
-    </div>
-  );
-};
+            {/* Menu with action items */}
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                <MenuItem onClick={onView}>View Event</MenuItem>
+                <MenuItem onClick={onEdit}>Edit Event</MenuItem>
+                <MenuItem onClick={onDelete}>Delete Event</MenuItem>
+                {onConfirmEvent && (
+                    <MenuItem onClick={onConfirmEvent}>Confirm Event</MenuItem>
+                )}
+            </Menu>
+        </>
+    );
+}
 
 export default LongMenu;

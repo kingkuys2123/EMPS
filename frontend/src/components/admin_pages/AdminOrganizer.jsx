@@ -4,7 +4,6 @@ import {
     Button,
     Dialog,
     DialogActions,
-    DialogContent,
     DialogTitle,
     TextField,
     Snackbar,
@@ -14,11 +13,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../../utils/AuthContext.jsx";
 import UserService from "../../services/UserService.jsx";
+import OrganizerService from "../../services/OrganizerService.jsx";
 import AdminSidebar from "./AdminSidebar.jsx";
 import CustomAppBar from "../CustomAppBar.jsx";
 import AdminTable from "./AdminTable.jsx";
-import AddUserModal from "./AddUserModal.jsx";
+import AddOrganizerModal from "./AddOrganizerModal.jsx";
 import EditUserModal from "./EditUserModal.jsx";
+import LongMenu from "./LongMenu.jsx"; 
 import "../styles/FontStyle.css";
 
 function AdminOrganizer() {
@@ -27,7 +28,7 @@ function AdminOrganizer() {
 
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
-    const [tabValue, setTabValue] = useState(0);  // 0 for All, 1 for Approved, 2 for Pending
+    const [tabValue, setTabValue] = useState(0);  
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -36,14 +37,23 @@ function AdminOrganizer() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
+    // Fetch data for organizers and users
     useEffect(() => {
         if (!currentUser) {
             nav("/home");
         }
         const fetchData = async () => {
             try {
-                const data = await UserService.getAllUsers();
-                const organizers = data.filter(user => user.accountType.toLowerCase() === "organizer"); // Filter organizers
+                const data = await OrganizerService.getAllOrganizers();
+                console.log("Fetched Data:", data);
+
+                // Filter to include only organizers with valid user data
+                const organizers = data.filter((organizer) => {
+                    console.log("Checking organizer:", organizer);
+                    return organizer.user && organizer.user.accountType;
+                });
+
+                console.log("Filtered Organizers:", organizers);
                 setUsers(organizers);
                 setFilteredUsers(organizers);
             } catch (error) {
@@ -53,39 +63,50 @@ function AdminOrganizer() {
         fetchData();
     }, [currentUser, nav]);
 
+    // Tab change handler
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
         filterUsersByTab(newValue);
     };
 
+    // Filter users by tab selection (All, Approved, Pending)
     const filterUsersByTab = (tab) => {
         let filtered;
-        if (tab === 0) {  
-            filtered = users.filter(user => user.accountType.toLowerCase() === "organizer");
+        if (tab === 0) {
+            filtered = users.filter(
+                (user) => user.user?.accountType?.toLowerCase() === "organizer"
+            );
         } else if (tab === 1) {
-            filtered = users.filter(user => user.status === "Approved" && user.accountType.toLowerCase() === "organizer");
-        } else if (tab === 2) { 
-            filtered = users.filter(user => user.status === "Pending" && user.accountType.toLowerCase() === "organizer");
+            filtered = users.filter(
+                (user) => user.status === "Approved" && user.user?.accountType?.toLowerCase() === "organizer"
+            );
+        } else if (tab === 2) {
+            filtered = users.filter(
+                (user) => user.status === "Pending" && user.user?.accountType?.toLowerCase() === "organizer"
+            );
         }
         setFilteredUsers(filtered);
     };
 
+    // Search handler
     const handleSearch = (event) => {
         const query = event.target.value.toLowerCase();
         const filtered = users.filter(
             (user) =>
-                user.firstName.toLowerCase().includes(query) ||
-                user.lastName.toLowerCase().includes(query) ||
-                user.accountType.toLowerCase().includes(query)
+                user.user.firstName.toLowerCase().includes(query) ||
+                user.user.lastName.toLowerCase().includes(query) ||
+                user.user.accountType.toLowerCase().includes(query)
         );
         setFilteredUsers(filtered);
     };
 
+    // Close snackbar
     const handleCloseSnackbar = (event, reason) => {
         if (reason === "clickaway") return;
         setOpenSnackbar(false);
     };
 
+    // Delete user handler
     const handleDeleteUser = async () => {
         try {
             await UserService.deleteUser(userToDelete);
@@ -101,6 +122,7 @@ function AdminOrganizer() {
         }
     };
 
+    // Handle edit success
     const handleEditUserSuccess = (updatedUser) => {
         setUsers((prevUsers) =>
             prevUsers.map((user) => (user.userID === updatedUser.userID ? updatedUser : user))
@@ -113,65 +135,65 @@ function AdminOrganizer() {
         setOpenEditModal(false);
     };
 
+    // Columns definition for the table
     const columns = [
         { field: "userID", headerName: "User ID", width: 100 },
         { field: "firstName", headerName: "First Name", width: 180 },
         { field: "lastName", headerName: "Last Name", width: 180 },
-        { field: "accountType", headerName: "Account Type", width: 180 },
         { field: "phoneNumber", headerName: "Phone Number", width: 180 },
+        { field: "approvalStatus", headerName: "Status", width: 180 },
         { field: "dateTimeCreated", headerName: "Date Added", width: 180 },
         {
             field: "actions",
             headerName: "Actions",
             sortable: false,
             renderCell: (params) => (
-                <Box>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleEditClick(params.row)}
-                        sx={{ marginRight: 1 }}
-                    >
-                        Edit
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => handleDeleteClick(params.row.userID)}
-                    >
-                        Delete
-                    </Button>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <LongMenu
+                        organizer={params.row} 
+                        onEdit={() => handleEditClick(params.row)}  
+                        onDelete={() => handleDeleteClick(params.row.userID)}  
+                    />
                 </Box>
             ),
-            width: 200,
+            width: 250,
         },
     ];
 
-    const rows = filteredUsers.map((user) => ({
-        id: user.userID,
-        userID: user.userID,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        accountType: user.accountType,
-        phoneNumber: user.phoneNumber,
-        dateTimeCreated: user.dateTimeCreated,
-    }));
+    // Define rows for the table
+    const rows = filteredUsers.length
+        ? filteredUsers.map((organizer) => ({
+            id: organizer.organizerId,
+            userID: organizer.user?.userID || "N/A", 
+            firstName: organizer.user?.firstName || "N/A",
+            lastName: organizer.user?.lastName || "N/A",
+            phoneNumber: organizer.user?.phoneNumber || "N/A",
+            approvalStatus: organizer.approvalStatus,
+            dateTimeCreated: organizer.user?.dateTimeCreated || "N/A",
+        }))
+        : [];
 
+    // Handle edit click
     const handleEditClick = (user) => {
         setSelectedUser(user);
         setOpenEditModal(true);
     };
 
+    // Handle delete click
     const handleDeleteClick = (userID) => {
         setUserToDelete(userID);
         setOpenDeleteDialog(true);
     };
 
+    // Close delete dialog
     const handleCloseDeleteDialog = () => {
         setOpenDeleteDialog(false);
         setUserToDelete(null);
     };
 
+
+    console.log("Rows:", rows);
+console.log("Columns:", columns);
     return (
         <div className="template-page">
             <Box sx={{ display: "flex", width: "100vw", maxWidth: "100%" }}>
@@ -230,35 +252,26 @@ function AdminOrganizer() {
                     </Box>
                 </Box>
             </Box>
-
-            <AddUserModal
-                open={openRegisterModal}
-                onClose={() => setOpenRegisterModal(false)}
-                onSuccess={(newUser) => {
-                    setUsers((prevUsers) => [...prevUsers, newUser]);
-                    filterUsersByTab(tabValue);
-                    setSnackbarMessage("User has been added successfully.");
-                    setOpenSnackbar(true);
-                    setOpenRegisterModal(false);
-                }}
-            />
-
+            <AddOrganizerModal open={openRegisterModal} onClose={() => setOpenRegisterModal(false)} />
             <EditUserModal
                 open={openEditModal}
                 onClose={() => setOpenEditModal(false)}
                 user={selectedUser}
-                onSuccess={handleEditUserSuccess}
+                onEditSuccess={handleEditUserSuccess}
             />
-
-            <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog} sx={{padding: '20px'}}>
-                <DialogTitle  sx={{width: '250px', height: '50px'}}>Confirm Delete User?</DialogTitle>
+            <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+                <DialogTitle>Are you sure you want to delete this user?</DialogTitle>
                 <DialogActions>
-                    <Button onClick={handleCloseDeleteDialog} sx={{color: 'white', backgroundColor: '#C63F47', width:'150px'}}>Cancel</Button>
-                    <Button onClick={handleDeleteUser} sx={{color: 'white', backgroundColor: '#C63F47', width:'150px'}}>Delete</Button>
+                    <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
+                    <Button onClick={handleDeleteUser} color="error">Delete</Button>
                 </DialogActions>
             </Dialog>
-
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar} message={snackbarMessage} />
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={handleCloseSnackbar}
+                message={snackbarMessage}
+            />
         </div>
     );
 }
