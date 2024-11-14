@@ -6,6 +6,7 @@ import UserBookings from "./components/user_pages/UserBookings.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
 import MyAccount from "./components/MyAccount.jsx";
 import { AuthProvider } from './utils/AuthContext.jsx';
+import AdminVenue from './components/admin_pages/AdminVenue.jsx';
 
 function App() {
     return (
@@ -24,7 +25,7 @@ function App() {
 
 
                 {/* Admin Routes */}
-
+                <Route path="/admin/venue" element={<AdminVenue />} />
 
             </Routes>
         </AuthProvider>
