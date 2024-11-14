@@ -30,6 +30,7 @@ public class PaymentDetailsService {
     }
 
     // Update Payment Details by ID
+    @SuppressWarnings("finally")
     public PaymentDetailsEntity updatePaymentDetails(int id, PaymentDetailsEntity updatedPaymentDetails) {
         PaymentDetailsEntity paymentDetails = new PaymentDetailsEntity();
         try {
