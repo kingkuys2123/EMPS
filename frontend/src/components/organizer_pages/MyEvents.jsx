@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Button, Tabs, Tab } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import EventMenu from './EventMenu'; 
 import AddEventModal from "./AddEventModal.jsx";
 import EditEventModal from "./EditEventModal.jsx";
-import ViewEventModal from "./ViewEventModal.jsx";
 import OrganizerSidebar from "./OrganizerSidebar.jsx";
 import CustomAppBar from "./CustomAppBar.jsx";
 import EventService from '../../services/EventService';
@@ -17,9 +17,10 @@ function MyEvents() {
     const [error, setError] = useState(null);
     const [openAddEventModal, setOpenAddEventModal] = useState(false);
     const [openEditEventModal, setOpenEditEventModal] = useState(false);
-    const [openViewEventModal, setOpenViewEventModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [tabValue, setTabValue] = useState(0); 
+
+    const navigate = useNavigate();
 
     const fetchEvents = async () => {
         try {
@@ -64,13 +65,7 @@ function MyEvents() {
     };
 
     const handleViewEvent = async (eventId) => {
-        try {
-            await EventService.getEvent(eventId);
-            const event = events.find(e => e.eventId === eventId);
-            console.log('Viewing event details:', event);
-        } catch (error) {
-            console.error('Error viewing event:', error);
-        }
+        navigate(`/myevents/${eventId}`);
     };
 
     const handleUpdateEvent = async (eventId, updatedEvent) => {
@@ -83,6 +78,7 @@ function MyEvents() {
                     )
                 );
                 fetchEvents();
+                //navigate(`/myevents/${eventId}`);
             } else {
                 console.error('Failed to update event:', response);
             }
@@ -90,16 +86,6 @@ function MyEvents() {
             console.error('Error updating event:', error);
             fetchEvents();
         }
-    };
-
-    const handleOpenViewEventModal = (event) => {
-        setSelectedEvent(event);
-        setOpenViewEventModal(true);
-    };
-
-    const handleCloseViewEventModal = () => {
-        setOpenViewEventModal(false);
-        setSelectedEvent(null);
     };
 
     const handleOpenEditEventModal = (event) => {
@@ -197,7 +183,7 @@ function MyEvents() {
                                     <td>{event.attendees}</td>
                                     <td>
                                         <EventMenu
-                                            onView={() => handleOpenViewEventModal(event)}
+                                            onView={() => handleViewEvent(event.eventId)}
                                             onEdit={() => handleOpenEditEventModal(event)}
                                             onDelete={() => handleDeleteEvent(event.eventId)}
                                         />
@@ -212,11 +198,6 @@ function MyEvents() {
                 open={openAddEventModal}
                 onClose={handleCloseAddEventModal}
                 onEventAdded={handleAddEventSuccess}
-            />
-            <ViewEventModal
-                open={openViewEventModal}
-                onClose={handleCloseViewEventModal}
-                event={selectedEvent}
             />
             {selectedEvent && (
                 <EditEventModal
