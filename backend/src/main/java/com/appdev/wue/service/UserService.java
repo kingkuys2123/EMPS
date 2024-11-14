@@ -1,16 +1,18 @@
 package com.appdev.wue.service;
 
-import com.appdev.wue.entity.UserEntity;
-import com.appdev.wue.repository.UserRepository;
-import com.appdev.wue.util.JwtUtil;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
+
+import javax.naming.NameNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.naming.NameNotFoundException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.NoSuchElementException;
+import com.appdev.wue.entity.UserEntity;
+import com.appdev.wue.repository.UserRepository;
+import com.appdev.wue.util.JwtUtil;
 
 @Service
 public class UserService {

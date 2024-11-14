@@ -14,6 +14,8 @@ import { AuthProvider } from './utils/AuthContext.jsx';
 import AdminVenue from './components/admin_pages/AdminVenue.jsx';
 import AdminEventsDashboard from './components/admin_pages/AdminEventsDashboard.jsx';
 
+import Ticket from './components/organizer_pages/Ticket.jsx'
+import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
 function App() {
     return (
         <AuthProvider>
@@ -27,10 +29,11 @@ function App() {
                 {/* User Routes */}
                 <Route path="/user/bookings" element={<UserBookings />} />
 
-
                 {/* Organizer Routes */}
-                <Route path="organizer/myevents" element={<MyEvents />} />
-                <Route path="organizer/myevents/:eventId" element={<ViewEventPage />} />
+                <Route path="/organizer/my_events" element={<MyEvents />} />
+                <Route path="/organizer/my_events/:eventId" element={<ViewEventPage />} />
+                <Route path='/organizer/bookings' element={<OrganizerBookings/>} />
+                <Route path='/organizer/tickets' element={<Ticket/>} />
 
                 {/* Admin Routes */}
                 <Route path="/admin/venue" element={<AdminVenue />} />
