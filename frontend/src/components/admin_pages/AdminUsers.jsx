@@ -37,9 +37,6 @@ function AdminUsers() {
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
-        if (!currentUser) {
-            nav("/home");
-        }
         const fetchData = async () => {
             try {
                 const data = await UserService.getAllUsers();
@@ -113,12 +110,12 @@ function AdminUsers() {
     };
 
     const columns = [
-        { field: "userID", headerName: "User ID", width: 100 },
-        { field: "firstName", headerName: "First Name", width: 180 },
-        { field: "lastName", headerName: "Last Name", width: 180 },
-        { field: "accountType", headerName: "Account Type", width: 180 },
-        { field: "phoneNumber", headerName: "Phone Number", width: 180 },
-        { field: "dateTimeCreated", headerName: "Date Added", width: 180 },
+        { field: "userID", headerName: "User ID", flex: 1, minWidth: 100 },
+        { field: "firstName", headerName: "First Name", flex: 1, minWidth: 100 },
+        { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 100 },
+        { field: "accountType", headerName: "Account Type", flex: 1, minWidth: 100 },
+        { field: "phoneNumber", headerName: "Phone Number", flex: 1, minWidth: 100 },
+        { field: "dateTimeCreated", headerName: "Date Added", flex: 1, minWidth: 100 },
         {
             field: "actions",
             headerName: "Actions",
@@ -132,7 +129,8 @@ function AdminUsers() {
                     />
                 </Box>
             ),
-            width: 200,
+            flex: 1,
+            minWidth: 100,
         },
     ];
 
@@ -148,15 +146,15 @@ function AdminUsers() {
 
     return (
         <div className="template-page">
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", width: "100vw", maxWidth: "100%" }}>
                 <AdminSidebar />
                 <Box component="main" sx={{
                     flexGrow: 1,
                     backgroundColor: "#F3F3F3",
-                    width: "100%",
                     height: "100vh",
                     display: "flex",
-                    flexDirection: "column"
+                    flexDirection: "column",
+                    overflowX: "hidden",
                 }}>
                     <CustomAppBar title={"Users"} />
                     <Box sx={{
@@ -164,7 +162,7 @@ function AdminUsers() {
                         padding: "25px",
                         backgroundColor: "#F3F3F3"
                     }}>
-                        <Box sx={{ display: "flex", marginBottom: "30px", justifyContent: "space-between" }}>
+                        <Box sx={{ display: "flex", marginBottom: "15px", justifyContent: "space-between" }}>
                             <h3>All Users: {users.length}</h3>
                             <Box sx={{ display: "flex", alignItems: "center" }}>
                                 <TextField
@@ -190,7 +188,6 @@ function AdminUsers() {
                         <Box sx={{
                             backgroundColor: "#FFFFFF",
                             width: "auto",
-                            height: "100%",
                             boxShadow: "5px 5px 5px #aaaaaa",
                             position: "relative",
                             overflowY: "auto"

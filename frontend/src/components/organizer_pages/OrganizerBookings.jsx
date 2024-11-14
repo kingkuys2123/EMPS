@@ -13,29 +13,30 @@ function OrganizerBookings() {
 
     // Define the columns for the DataGrid
     const columns = [
-        { field: 'booking', headerName: 'Booking', width: 150 },
-        { field: 'customerName', headerName: 'Customer Name', width: 200 },
-        { field: 'event', headerName: 'Event', width: 200 },
-        { field: 'tickets', headerName: 'Tickets', width: 120, type: 'number', align: 'left', headerAlign: 'left' },
-        { field: 'totalPrice', headerName: 'Total Price', width: 150, type: 'number', align: 'left', headerAlign: 'left' },
-        { field: 'date', headerName: 'Date', width: 180, type: 'date' },
-        { field: 'status', headerName: 'Status', width: 150 },
+        { field: 'booking', headerName: 'Booking', flex: 1, minWidth: 100  },
+        { field: 'customerName', headerName: 'Customer Name', flex: 1, minWidth: 100 },
+        { field: 'event', headerName: 'Event', flex: 1, minWidth: 100 },
+        { field: 'tickets', headerName: 'Tickets', flex: 1, minWidth: 100, type: 'number', align: 'left', headerAlign: 'left' },
+        { field: 'totalPrice', headerName: 'Total Price', flex: 1, minWidth: 100, type: 'number', align: 'left', headerAlign: 'left' },
+        { field: 'date', headerName: 'Date', flex: 1, minWidth: 100, type: 'date' },
+        { field: 'status', headerName: 'Status', flex: 1, minWidth: 100 },
         {
             field: 'actions',
             headerName: 'Actions',
-            width: 200,
+            flex: 1,
+            minWidth: 100,
             renderCell: (params) => (
                 <>
-                    <Button 
-                        onClick={() => handleEditClick(params)} 
+                    <Button
+                        onClick={() => handleEditClick(params)}
                         variant="contained"
                         color="primary"
                         size="small"
                     >
                         Edit
                     </Button>
-                    <Button 
-                        onClick={() => handleDeleteClick(params.row.id)} 
+                    <Button
+                        onClick={() => handleDeleteClick(params.row.id)}
                         variant="contained"
                         color="secondary"
                         size="small"
@@ -74,38 +75,55 @@ function OrganizerBookings() {
     };
 
     return (
-        <div className="template-page" style={{ boxSizing: "border-box" }}>
-            <Box sx={{ display: "flex", boxSizing: "border-box" }}>
-                <OrganizerSidebar />
-
-                <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column", boxSizing: "border-box" }}>
-                    <CustomAppBar title={"Bookings"} />
-
-                    <Box sx={{ flexGrow: 1, margin: "10px 20px", boxSizing: "border-box" }}>
+        <div className="template-page">
+            <Box sx={{display: "flex", width: "100%" }}>
+                <OrganizerSidebar/>
+                <Box component="main" sx={{
+                    flexGrow: 1,
+                    backgroundColor: "#F3F3F3",
+                    height: "100vh",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflowX: "hidden",
+                }}>
+                    <CustomAppBar title={"Bookings"}/>
+                    <Box sx={{flexGrow: 1, padding: "21px", backgroundColor: "#F3F3F3"}}>
                         <Box sx={{
-                            display: "flex", flexGrow: 1,
-                            height: "7vh", boxSizing: "border-box", marginBottom: "10px",
-                            justifyContent: "space-between", alignItems: "flex-end"
+                            display: "flex",
+                            flexGrow: 1,
+                            height: "5vh",
+                            marginBottom: "10px",
+                            justifyContent: "space-between",
+                            alignItems: "flex-end"
                         }}>
-                            <Box sx={{ display: "flex", boxSizing: "border-box", width: "200px", justifyContent: "space-between" }}>
-                                <Link href="#" underline="hover" className="TabBookingButtons" onClick={() => setActiveTab("All")}>All</Link>
+                            <Box sx={{display: "flex", width: "200px", justifyContent: "space-between"}}>
+                                <Link href="#" underline="hover" className="TabBookingButtons"
+                                      onClick={() => setActiveTab("All")}>All</Link>
                                 <p>|</p>
-                                <Link href="#" underline="hover" className="TabBookingButtons" onClick={() => setActiveTab("Confirmed")}>Confirmed</Link>
+                                <Link href="#" underline="hover" className="TabBookingButtons"
+                                      onClick={() => setActiveTab("Confirmed")}>Confirmed</Link>
                                 <p>|</p>
-                                <Link href="#" underline="hover" className="TabBookingButtons" onClick={() => setActiveTab("Pending")}>Pending</Link>
+                                <Link href="#" underline="hover" className="TabBookingButtons"
+                                      onClick={() => setActiveTab("Pending")}>Pending</Link>
                             </Box>
-
-                            <Box sx={{ display: "flex", boxSizing: "border-box" }}>
-                                <TextField id="outlined-size-small" label="Search bookings..." type="search" size="small" sx={{ width: "300px" }} />
-                                <Button variant="outlined" startIcon={<FilterListIcon />} sx={{ height: "40px", backgroundColor: "#CFCFC4", border: "#000", color: "#000" }}>
+                            <Box sx={{display: "flex"}}>
+                                <TextField id="outlined-size-small" label="Search bookings..." type="search"
+                                           size="small" sx={{width: "300px"}}/>
+                                <Button variant="outlined" startIcon={<FilterListIcon/>} sx={{
+                                    height: "40px",
+                                    backgroundColor: "#CFCFC4",
+                                    border: "#000",
+                                    color: "#000"
+                                }}>
                                     Filter
                                 </Button>
                             </Box>
                         </Box>
-
                         <Box sx={{
-                            display: "flex", flexGrow: 1, flex: 1, flexDirection: "column", boxSizing: "border-box",
-                            height: 'calc(100vh - 230px)'
+                            backgroundColor: "#FFFFFF",
+                            width: "auto",
+                            boxShadow: "5px 5px 5px #aaaaaa",
+                            overflowY: "auto"
                         }}>
                             <BookingTable
                                 boxPadding={"0px"}
@@ -119,7 +137,7 @@ function OrganizerBookings() {
                 </Box>
             </Box>
         </div>
-    );
+);
 }
 
 export default OrganizerBookings;

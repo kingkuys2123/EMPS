@@ -29,8 +29,9 @@ const BookingTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) 
                     checkboxSelection
                     sx={{ border: 0 }}
                     components={{
-                        Toolbar: null,  
+                        Toolbar: null,
                     }}
+                    disableColumnResize
                     getRowId={(row) => row.id}  // Use `id` field as the unique identifier
                 />
             </Paper>

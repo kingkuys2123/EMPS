@@ -19,7 +19,7 @@ import CustomAppBar from "../CustomAppBar.jsx";
 import AdminTable from "./AdminTable.jsx";
 import AddOrganizerModal from "./AddOrganizerModal.jsx";
 import EditUserModal from "./EditUserModal.jsx";
-import LongMenu from "./LongMenu.jsx"; 
+import LongMenu from "./LongMenu.jsx";
 import "../styles/FontStyle.css";
 
 function AdminOrganizer() {
@@ -28,7 +28,7 @@ function AdminOrganizer() {
 
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
-    const [tabValue, setTabValue] = useState(0);  
+    const [tabValue, setTabValue] = useState(0);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -137,12 +137,12 @@ function AdminOrganizer() {
 
     // Columns definition for the table
     const columns = [
-        { field: "userID", headerName: "User ID", width: 100 },
-        { field: "firstName", headerName: "First Name", width: 180 },
-        { field: "lastName", headerName: "Last Name", width: 180 },
-        { field: "phoneNumber", headerName: "Phone Number", width: 180 },
-        { field: "approvalStatus", headerName: "Status", width: 180 },
-        { field: "dateTimeCreated", headerName: "Date Added", width: 180 },
+        { field: "userID", headerName: "User ID", flex: 1, minWidth: 100 },
+        { field: "firstName", headerName: "First Name", flex: 1, minWidth: 180 },
+        { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 180 },
+        { field: "phoneNumber", headerName: "Phone Number", flex: 1, minWidth: 180 },
+        { field: "approvalStatus", headerName: "Status", flex: 1, minWidth: 180 },
+        { field: "dateTimeCreated", headerName: "Date Added", flex: 1, minWidth: 180 },
         {
             field: "actions",
             headerName: "Actions",
@@ -150,13 +150,14 @@ function AdminOrganizer() {
             renderCell: (params) => (
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <LongMenu
-                        organizer={params.row} 
-                        onEdit={() => handleEditClick(params.row)}  
-                        onDelete={() => handleDeleteClick(params.row.userID)}  
+                        organizer={params.row}
+                        onEdit={() => handleEditClick(params.row)}
+                        onDelete={() => handleDeleteClick(params.row.userID)}
                     />
                 </Box>
             ),
-            width: 250,
+            flex: 1,  // Allow this column to flex as well
+            minWidth: 250, // Adjust width for action buttons
         },
     ];
 
@@ -164,7 +165,7 @@ function AdminOrganizer() {
     const rows = filteredUsers.length
         ? filteredUsers.map((organizer) => ({
             id: organizer.organizerId,
-            userID: organizer.user?.userID || "N/A", 
+            userID: organizer.user?.userID || "N/A",
             firstName: organizer.user?.firstName || "N/A",
             lastName: organizer.user?.lastName || "N/A",
             phoneNumber: organizer.user?.phoneNumber || "N/A",
@@ -193,7 +194,7 @@ function AdminOrganizer() {
 
 
     console.log("Rows:", rows);
-console.log("Columns:", columns);
+    console.log("Columns:", columns);
     return (
         <div className="template-page">
             <Box sx={{ display: "flex", width: "100vw", maxWidth: "100%" }}>
@@ -212,8 +213,8 @@ console.log("Columns:", columns);
                         padding: "25px",
                         backgroundColor: "#F3F3F3"
                     }}>
-                        <Box sx={{ display: "flex", marginBottom: "30px", justifyContent: "space-between" }}>
-                            <Tabs value={tabValue} onChange={handleTabChange} sx={{ marginBottom: "20px" }}>
+                        <Box sx={{ display: "flex", marginBottom: "15px", justifyContent: "space-between" }}>
+                            <Tabs value={tabValue} onChange={handleTabChange} >
                                 <Tab label="All" />
                                 <Tab label="Approved" />
                                 <Tab label="Pending" />
@@ -242,9 +243,7 @@ console.log("Columns:", columns);
                         <Box sx={{
                             backgroundColor: "#FFFFFF",
                             width: "auto",
-                            height: "100%",
                             boxShadow: "5px 5px 5px #aaaaaa",
-                            position: "relative",
                             overflowY: "auto"
                         }}>
                             <AdminTable rows={rows} columns={columns} />

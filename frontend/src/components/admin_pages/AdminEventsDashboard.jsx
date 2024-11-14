@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button, Tabs, Tab } from "@mui/material";
-import EventMenu from './EventMenu'; 
+import {Button, Tabs, Tab, Box, Typography} from "@mui/material";
+import EventMenu from './EventMenu';
 import AddEventModal from "./AddEventModal.jsx";
 import EditEventModal from "./EditEventModal.jsx";
 import ViewEventModal from "./ViewEventModal.jsx";
@@ -20,7 +20,7 @@ function AdminEventsDashboard() {
     const [openEditEventModal, setOpenEditEventModal] = useState(false);
     const [openViewEventModal, setOpenViewEventModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [tabValue, setTabValue] = useState(0); 
+    const [tabValue, setTabValue] = useState(0);
 
     const fetchEvents = async () => {
         try {
@@ -65,8 +65,8 @@ function AdminEventsDashboard() {
 
     const handleCloseViewEventModal = () => {
         setModalOpen(false);
-      };
-      
+    };
+
 
     const handleUpdateEvent = async (eventId, updatedEvent) => {
         try {
@@ -113,94 +113,102 @@ function AdminEventsDashboard() {
         <div className="template-page">
             <AdminSidebar />
 
-            <div className="content">
-                <CustomAppBar title={"My Events"} />
+            <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                <div className="event-container">
-                    <div className="event-header">
-                        <div className="filter-links">
-                            <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
-                                <Tab label="All" />
-                                <Tab label="Confirmed" />
-                                <Tab label="Pending" />
-                            </Tabs>
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search events..."
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            className="search-bar"
-                        />
-                        <Button
-                            className="add-event-button"
-                            variant="contained"
-                            color="primary"
-                            onClick={handleOpenAddEventModal}
-                        >
-                            + Add Event
-                        </Button>
-                    </div>
+                <CustomAppBar title={"Events"}/>
 
-                    {error && <p>{error}</p>}
+                <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
+                    <div className="content">
 
-                    <table className="event-table">
-                        <thead>
-                            <tr>
-                                <th><input type="checkbox" /></th>
-                                <th>Event Name</th>
-                                <th>Type</th>
-                                <th>Start</th>
-                                <th>End</th>
-                                <th>Status</th>
-                                <th>Confirmation</th>
-                                <th>Number of Attendees</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {tabFilteredEvents.map((event) => (
-                                <tr key={event.eventId}>
-                                    <td><input type="checkbox" /></td>
-                                    <td>{event.name}</td>
-                                    <td><span className={`badge ${event.type?.toLowerCase()}`}>{event.type}</span></td>
-                                    <td>{new Date(event.startDateTime).toLocaleString()}</td>
-                                    <td>{new Date(event.endDateTime).toLocaleString()}</td>
-                                    <td><span className={`badge ${event.eventStatus?.toLowerCase()}`}>{event.eventStatus}</span></td>
-                                    <td><span className={`badge ${event.confirmationStatus?.toLowerCase()}`}>{event.confirmationStatus}</span></td>
-                                    <td>{event.attendees}</td>
-                                    <td>
-                                        <LongMenu
-                                            onView={() => handleViewEvent(event.eventId)}
-                                            onEdit={() => handleEditEvent(event)}
-                                            onDelete={() => handleDeleteEvent(event.eventId)}
-                                            onConfirmEvent={tabValue === 2 ? () => handleConfirmEvent(event.eventId) : null} // Only show for Pending tab
-                                        />
-                                    </td>
+                        <div className="event-container">
+                            <div className="event-header">
+                                <div className="filter-links">
+                                    <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
+                                        <Tab label="All" />
+                                        <Tab label="Confirmed" />
+                                        <Tab label="Pending" />
+                                    </Tabs>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search events..."
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                    className="search-bar"
+                                />
+                                <Button
+                                    className="add-event-button"
+                                    variant="contained"
+                                    color="primary"
+                                    sx={{ marginLeft: "15px", height: "35px", fontSize: "12px", width: "200px" }}
+                                    onClick={handleOpenAddEventModal}
+                                >
+                                    + Add Event
+                                </Button>
+                            </div>
+
+                            {error && <p>{error}</p>}
+
+                            <table className="event-table">
+                                <thead>
+                                <tr>
+                                    <th><input type="checkbox" /></th>
+                                    <th>Event Name</th>
+                                    <th>Type</th>
+                                    <th>Start</th>
+                                    <th>End</th>
+                                    <th>Status</th>
+                                    <th>Confirmation</th>
+                                    <th>Number of Attendees</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <AddEventModal
-                open={openAddEventModal}
-                onClose={handleCloseAddEventModal}
-                onEventAdded={handleAddEventSuccess}
-            />
-            <ViewEventModal
-                open={openViewEventModal}
-                onClose={handleCloseViewEventModal}
-                event={selectedEvent}
-            />
-            {selectedEvent && (
-                <EditEventModal
-                    open={openEditEventModal}
-                    onClose={handleCloseEditEventModal}
-                    event={selectedEvent}
-                    onSave={handleEditEventSuccess}
-                />
-            )}
+                                </thead>
+                                <tbody>
+                                {tabFilteredEvents.map((event) => (
+                                    <tr key={event.eventId}>
+                                        <td><input type="checkbox" /></td>
+                                        <td>{event.name}</td>
+                                        <td><span className={`badge ${event.type?.toLowerCase()}`}>{event.type}</span></td>
+                                        <td>{new Date(event.startDateTime).toLocaleString()}</td>
+                                        <td>{new Date(event.endDateTime).toLocaleString()}</td>
+                                        <td><span className={`badge ${event.eventStatus?.toLowerCase()}`}>{event.eventStatus}</span></td>
+                                        <td><span className={`badge ${event.confirmationStatus?.toLowerCase()}`}>{event.confirmationStatus}</span></td>
+                                        <td>{event.attendees}</td>
+                                        <td>
+                                            <LongMenu
+                                                onView={() => handleViewEvent(event.eventId)}
+                                                onEdit={() => handleEditEvent(event)}
+                                                onDelete={() => handleDeleteEvent(event.eventId)}
+                                                onConfirmEvent={tabValue === 2 ? () => handleConfirmEvent(event.eventId) : null} // Only show for Pending tab
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <AddEventModal
+                        open={openAddEventModal}
+                        onClose={handleCloseAddEventModal}
+                        onEventAdded={handleAddEventSuccess}
+                    />
+                    <ViewEventModal
+                        open={openViewEventModal}
+                        onClose={handleCloseViewEventModal}
+                        event={selectedEvent}
+                    />
+                    {selectedEvent && (
+                        <EditEventModal
+                            open={openEditEventModal}
+                            onClose={handleCloseEditEventModal}
+                            event={selectedEvent}
+                            onSave={handleEditEventSuccess}
+                        />
+                    )}
+                </Box>
+
+            </Box>
         </div>
     );
 }

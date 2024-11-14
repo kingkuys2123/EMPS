@@ -1,10 +1,21 @@
-import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar } from "@mui/material";
+import {
+    Drawer,
+    Box,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Toolbar,
+    Typography,
+    AppBar,
+    Link
+} from "@mui/material";
 import React from "react";
 import "../styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../../utils/AuthContext.jsx";
 
-function UserSideBar() {
+function OrganizerSidebar() {
     const nav = useNavigate();
 
     const { currentUser, setCurrentUser } = getAuth();
@@ -17,22 +28,6 @@ function UserSideBar() {
             nav("/");
         }
     };
-
-    const navToDashboard = () => {
-        nav("/organizer/dashboard");
-    }
-
-    const navToTickets = () => {
-        nav("/organizer/tickets");
-    }
-
-    const navToMyEvents = () => {
-        nav("/organizer/my_events");
-    };
-
-    const navToBookings = () => {
-        nav("/organizer/bookings");
-    }
 
     return (
         <div>
@@ -51,28 +46,28 @@ function UserSideBar() {
                 </AppBar>
                 <List sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                     <ListItem>
-                        <ListItemButton onClick={navToDashboard}>
+                        <ListItemButton component={Link} to="/organizer/dashboard">
                             <ListItemText>
                                 <span>DASHBOARD</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton onClick={navToMyEvents}>
+                        <ListItemButton component={Link} to="/organizer/my_events">
                             <ListItemText>
                                 <span>MY EVENTS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton onClick={navToBookings}>
+                        <ListItemButton component={Link} to="/organizer/bookings">
                             <ListItemText>
                                 <span>BOOKINGS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton onClick={navToTickets}>
+                        <ListItemButton component={Link} to="/organizer/tickets">
                             <ListItemText>
                                 <span>MY TICKETS</span>
                             </ListItemText>
@@ -92,4 +87,4 @@ function UserSideBar() {
     );
 }
 
-export default UserSideBar;
+export default OrganizerSidebar;

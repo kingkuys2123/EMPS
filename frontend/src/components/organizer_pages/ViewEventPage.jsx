@@ -3,7 +3,7 @@ import { Typography, Box, Tabs, Tab, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import OrganizerSidebar from "./OrganizerSidebar";
-import CustomAppBar from "./CustomAppBar";
+import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
 import FeedbackServices from "../../services/FeedbackServices";
 
@@ -52,33 +52,31 @@ function ViewEventPage() {
 
     return (
         <div className="template-page">
-            <Box sx={{ display: "flex" }}>
-                <OrganizerSidebar />
+            <OrganizerSidebar />
 
-                <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", display: "flex", flexDirection: "column", height: "100vh" }}>
-                    {/* App Bar with Event Name and Account Icon aligned right */}
-                    <CustomAppBar title={event.name || "View Event"} sx={{ justifyContent: "space-between" }} />
+            <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                    <Box sx={{ display: "flex", flexGrow: 1 }}>
-                        {/* Left-side Tabs for Navigation */}
-                        <Box sx={{ minWidth: "200px", backgroundColor: "#E0E0E0", paddingTop: "15px" }}>
+                <CustomAppBar title={event.name || "View Event"} sx={{ justifyContent: "space-between" }} />
+
+                <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3", height: "100%" }}>
+                    <Box sx={{ display: "flex", flexGrow: 1, backgroundColor: "#FFFFFF", width: "100%", height: "100%"}}>
+                        <Box sx={{ minWidth: "150px", backgroundColor: "#CFCFC4", paddingTop: "15px" }}>
                             <Tabs
                                 orientation="vertical"
                                 value={tabValue}
                                 onChange={handleTabChange}
                                 textColor="primary"
                                 indicatorColor="primary"
-                                sx={{ borderRight: 1, borderColor: "divider" }}
+                                sx={{ borderRight: 1, borderColor: "divider", textAlign: "left" }}
                             >
-                                <Tab label="Details" />
-                                <Tab label="Tickets" />
-                                <Tab label="Bookings" />
-                                <Tab label="Feedbacks" />
+                                <Tab label="Details" sx={{ alignItems: "flex-start" }} />
+                                <Tab label="Tickets" sx={{ alignItems: "flex-start" }} />
+                                <Tab label="Bookings" sx={{ alignItems: "flex-start" }} />
+                                <Tab label="Feedbacks" sx={{ alignItems: "flex-start" }} />
                             </Tabs>
                         </Box>
 
-                        {/* Centered Content Area */}
-                        <Box sx={{ flexGrow: 1, padding: "50px", backgroundColor: "#FFFFFF", margin: "glex", width: "80%" }}>
+                        <Box sx={{ flexGrow: 1, padding: "50px", backgroundColor: "#FFFFFF", width: "80%" }}>
                             {tabValue === 0 && (
                                 <Box>
                                     <Typography variant="h6">Event Details</Typography>

@@ -11,27 +11,28 @@ const AdminTable = ({ rows, columns, onEditClick, onDeleteClick }) => {
     }));
 
     const handleEdit = (params) => {
-        if (onEditClick) onEditClick(params.row);  
+        if (onEditClick) onEditClick(params.row);
     };
 
     const handleDelete = (userID) => {
-        if (onDeleteClick) onDeleteClick(userID);  
+        if (onDeleteClick) onDeleteClick(userID);
     };
 
     return (
-        <Box sx={{ padding: "50px" }}>
-            <Paper sx={{ height: 400, width: '100%' }}>
+        <Box sx={{ padding: "0px" }}>
+            <Paper sx={{ height: '550px', width: '100%' }}>
                 <DataGrid
-                    rows={rowsWithIds} // Pass rows with unique `id`
+                    rows={rowsWithIds} // Pass rows with unique id
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5, 10]}
                     checkboxSelection
                     sx={{ border: 0 }}
                     components={{
-                        Toolbar: null,  
+                        Toolbar: null,
                     }}
-                    getRowId={(row) => row.id}  // Use `id` field as the unique identifier
+                    disableColumnResize
+                    getRowId={(row) => row.id}  // Use id field as the unique identifier
                 />
             </Paper>
         </Box>
