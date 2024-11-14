@@ -5,9 +5,9 @@ import { TabContext, TabPanel } from '@mui/lab';
 import AdminSidebar from "../admin_pages/AdminSidebar.jsx";
 import CustomAppBar from "../CustomAppBar.jsx";
 import VenueService from '../../services/VenueService.jsx';
-
+import './styles/venue.css';
 import ViewVenue from "../admin_pages/ViewVenue.jsx";
-import "../styles/FontStyle.css";
+
 
 function AdminVenue() {
     const [value, setValue] = React.useState('one');
@@ -27,20 +27,47 @@ function AdminVenue() {
                         <Typography variant="body1" component="div">
                         <TabContext value={value}>
                             <Tabs value={value}
-                                onChange={handleChangeTab}>
+                                onChange={handleChangeTab}
+                                >
                                 <Tab value="one"
                                     label="View Venue"
-                                    wrapped>
+                                    wrapped
+                                    sx={{
+                                        backgroundColor: value === "one" ? "#fff" : "#f4f4f4",
+                                        boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", 
+                                        borderTopLeftRadius: "10px", 
+                                        borderTopRightRadius: "10px",
+                                    }}>
                                 </Tab>
                                 <Tab value="two"
                                     label="Pending Booking Request"
-                                    wrapped>
+                                    wrapped
+                                   sx={{
+                                    backgroundColor: value === "two" ? "#fff" : "#f4f4f4", 
+                                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", 
+                                    borderTopLeftRadius: "10px", 
+                                    borderTopRightRadius: "10px",
+                                }}>
                                 </Tab>
                             </Tabs>
-                            <TabPanel value="one">
+                            <TabPanel value="one" sx={{
+                                backgroundColor: "#fff", 
+                                borderRadius: "15px",     
+                                padding: "20px",          
+                                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                                borderTopLeftRadius: "0px",  
+                            }}>
                             <ViewVenue />
                             </TabPanel>
-                            <TabPanel value="two">Pending Bookings</TabPanel>
+                            <TabPanel value="two" sx={{
+                                backgroundColor: "#fff", 
+                                borderRadius: "15px",     
+                                padding: "20px",          
+                                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+                                borderTopLeftRadius: "0px",  
+                            }}>
+                                Pending Bookings
+                            </TabPanel>
                         </TabContext>
                         </Typography>
 
