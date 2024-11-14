@@ -7,6 +7,7 @@ import NotFoundPage from "./components/NotFoundPage.jsx";
 import MyAccount from "./components/MyAccount.jsx";
 import MyEvents from './components/organizer_pages/MyEvents.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
+import AdminVenue from './components/admin_pages/AdminVenue.jsx';
 
 function App() {
     return (
@@ -25,7 +26,7 @@ function App() {
                 <Route path="/myevents" element={<MyEvents />} />
 
                 {/* Admin Routes */}
-
+                <Route path="/admin/venue" element={<AdminVenue />} />
 
             </Routes>
         </AuthProvider>
