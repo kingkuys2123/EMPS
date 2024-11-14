@@ -6,7 +6,6 @@ import { getAuth } from "../../utils/AuthContext.jsx";
 
 function UserSideBar() {
     const nav = useNavigate();
-
     const { currentUser, setCurrentUser } = getAuth();
 
     const handleLogOutButton = () => {
@@ -18,9 +17,35 @@ function UserSideBar() {
         }
     };
 
+    const navigateToMyEvents = () => {
+        nav("/myevents");
+    };
+
+    const navigateToDashboard = () => {
+        nav("/dashboard");
+    };
+
+    const navigateToBooking = () => {
+        nav("/booking");
+    }
+
     return (
         <div>
-            <Drawer sx={{ width: 200, flexShrink: 0, "& .MuiDrawer-paper": {width: 200, boxSizing: "border-box", color: "white", backgroundColor: "#C63f47", overflow: "hidden" } }} variant="permanent" anchor="left">
+            <Drawer
+                sx={{
+                    width: 200,
+                    flexShrink: 0,
+                    "& .MuiDrawer-paper": {
+                        width: 200,
+                        boxSizing: "border-box",
+                        color: "white",
+                        backgroundColor: "#C63f47",
+                        overflow: "hidden"
+                    }
+                }}
+                variant="permanent"
+                anchor="left"
+            >
                 <AppBar sx={{ backgroundColor: '#C63f47', color: '#000000', boxShadow: 'none' }} position="static">
                     <Box>
                         <Toolbar disableGutters sx={{ height: '80px', alignItems: 'center'}}>
@@ -35,16 +60,23 @@ function UserSideBar() {
                 </AppBar>
                 <List sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton onClick={navigateToDashboard}>
                             <ListItemText>
                                 <span>DASHBOARD</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton onClick={navigateToMyEvents}>
                             <ListItemText>
                                 <span>MY EVENTS</span>
+                            </ListItemText>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemButton onClick={navigateToBooking}>
+                            <ListItemText>
+                                <span>BOOKING</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>

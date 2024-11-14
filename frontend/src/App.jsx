@@ -6,6 +6,7 @@ import UserBookings from "./components/user_pages/UserBookings.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
 import MyAccount from "./components/MyAccount.jsx";
 import MyEvents from './components/organizer_pages/MyEvents.jsx';
+import ViewEventPage from './components/organizer_pages/ViewEventPage.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 import AdminVenue from './components/admin_pages/AdminVenue.jsx';
 
@@ -24,6 +25,7 @@ function App() {
 
                 {/* Organizer Routes */}
                 <Route path="/myevents" element={<MyEvents />} />
+                <Route path="/myevents/:eventId" element={<ViewEventPage />} />
 
                 {/* Admin Routes */}
                 <Route path="/admin/venue" element={<AdminVenue />} />
