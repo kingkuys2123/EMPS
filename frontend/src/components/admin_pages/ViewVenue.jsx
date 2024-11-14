@@ -25,7 +25,7 @@ function ViewVenue() {
         address: v.address,
         capacity: v.capacity,
         description: v.description,
-        option: <VenueOptions />
+        option: <VenueOptions venue={v} />
     }));
 
     const columns = [

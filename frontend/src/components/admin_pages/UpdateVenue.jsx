@@ -4,12 +4,22 @@ import { Container, Box } from "@mui/material";
 import VenueService from '../../services/VenueService.jsx';
 import './styles/venue.css';
 
-function UpdateVenue() {
+function UpdateVenue({ venue, onClose }) {
+    const [updatedVenue, setUpdatedVenue] = useState(venue);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setUpdatedVenue((prevVenue) => ({ ...prevVenue, [name]: value }));
+      };
+
+      const handleCancel = () => {
+        onClose(); 
+    };
 
   return (
     <Container className="con" maxWidth="sm">
     <Box className="mainBox">
-      <h2>Update VenueName</h2>
+      <h2>Update {updatedVenue.name}</h2>
     <form className="venue-form">
       <div className='form-row'>
               <input
@@ -17,7 +27,7 @@ function UpdateVenue() {
               placeholder='Name'
               type="text"
               name="name"
-            //   value={venue.name}
+              value={updatedVenue.name}
             //   onChange={handleChange}
               />
               <input
@@ -25,7 +35,7 @@ function UpdateVenue() {
               placeholder='Capacity'
               type="number"
               name="capacity"
-            //   value={venue.capacity}
+              value={updatedVenue.capacity}
             //   onChange={handleChange}
               />
           
@@ -35,7 +45,7 @@ function UpdateVenue() {
               type="text"
               name="address"
               id="address"
-            //   value={venue.address}
+              value={updatedVenue.address}
             //   onChange={handleChange}
               />
           
@@ -43,12 +53,12 @@ function UpdateVenue() {
               className="description"
               placeholder="Description"
               name="description"
-            //   value={venue.description}
+              value={updatedVenue.description}
             //   onChange={handleChange}
               />
           </div>
           <div className='buttons'>
-          <button >Cancel</button>
+          <button onClick={handleCancel}>Cancel</button>
           <button className='btn' type="submit">Update</button>
           </div>
       </form>

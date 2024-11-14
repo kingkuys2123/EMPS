@@ -9,7 +9,7 @@ import UpdateVenue from "../admin_pages/UpdateVenue.jsx"
   
 
 
-function VenueOptions() {
+function VenueOptions({ venue }) {
 
     const options = ['Update', 'Delete'];
     const ITEM_HEIGHT = 48;
@@ -93,7 +93,7 @@ function VenueOptions() {
                 className="mod"
             >
                 <Box className="updateBox">
-                    <UpdateVenue onClose={handleCloseModal} /> 
+                    <UpdateVenue venue={venue} onClose={handleCloseModal} /> 
                 </Box>
             </Modal>
 
