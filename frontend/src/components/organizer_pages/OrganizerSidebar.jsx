@@ -18,6 +18,16 @@ function UserSideBar() {
         }
     };
 
+    const navToDashboard = () => {
+        nav("/organizer/dashboard");
+    }
+    const navToEvents = () => {
+        nav("/organizer/events");
+    }
+    const navToTickets = () => {
+        nav("/organizer/tickets");
+    }
+
     return (
         <div>
             <Drawer sx={{ width: 200, flexShrink: 0, "& .MuiDrawer-paper": {width: 200, boxSizing: "border-box", color: "white", backgroundColor: "#C63f47", overflow: "hidden" } }} variant="permanent" anchor="left">
@@ -35,16 +45,23 @@ function UserSideBar() {
                 </AppBar>
                 <List sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton onClick={navToDashboard}>
                             <ListItemText>
                                 <span>DASHBOARD</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton onClick={navToEvents}>
                             <ListItemText>
                                 <span>MY EVENTS</span>
+                            </ListItemText>
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem>
+                        <ListItemButton onClick={navToTickets}>
+                            <ListItemText>
+                                <span>MY TICKETS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>

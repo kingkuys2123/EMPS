@@ -6,7 +6,8 @@ import UserBookings from "./components/user_pages/UserBookings.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
 import MyAccount from "./components/MyAccount.jsx";
 import { AuthProvider } from './utils/AuthContext.jsx';
-
+import Ticket from './components/organizer_pages/Ticket.jsx'
+import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
 function App() {
     return (
         <AuthProvider>
@@ -21,8 +22,8 @@ function App() {
                 <Route path="/user/bookings" element={<UserBookings />} />
 
                 {/* Organizer Routes */}
-
-
+                <Route path='/organizer/bookings' element={<OrganizerBookings/>} />
+                <Route path='/organizer/tickets' element={<Ticket/>} />
                 {/* Admin Routes */}
 
 
