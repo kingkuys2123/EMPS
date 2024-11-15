@@ -36,8 +36,8 @@ function App() {
                 <Route path='/organizer/tickets' element={<Ticket/>} />
 
                 {/* Admin Routes */}
-                <Route path="/admin/venues" element={<AdminVenue />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/venues" element={<AdminVenue />} />
                 <Route path='/admin/users' element={<AdminUsers/>} />
                 <Route path='/admin/organizers' element={<AdminOrganizer/>} />
                 <Route path='/admin/events' element={<AdminEventsDashboard/>} />

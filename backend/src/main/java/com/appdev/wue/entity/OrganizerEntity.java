@@ -23,10 +23,10 @@ public class OrganizerEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private UserEntity user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organizer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<EventEntity> events;
 
     // Getters and setters

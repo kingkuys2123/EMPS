@@ -8,12 +8,26 @@ import { getAuth } from '../utils/AuthContext.jsx';
 
 import './styles/LandingPage.css';
 import './styles/FontStyle.css';
+import ConfirmDialog from "./ConfirmDialog.jsx";
 
 function LandingPage() {
     const { currentUser, setCurrentUser } = getAuth();
 
     const [openModal, setOpenModal] = useState(null);
     const [registerModalLabel, setRegisterModalLabel] = useState("Register");
+
+    const [openConfirmLogoutDialog, setOpenConfirmLogoutDialog] = useState(false);
+
+    const handleClickLogoutButton = () => {
+        setOpenConfirmLogoutDialog(true);
+    }
+
+    const handleConfirmLogoutDialogClose = (confirm) => {
+        if (confirm) {
+            handleLogout();
+        }
+        setOpenConfirmLogoutDialog(false);
+    };
 
     const handleOpenModal = (modal, event) => {
         setOpenModal(modal);
@@ -24,7 +38,7 @@ function LandingPage() {
         }
     };
 
-    const handleLogOutButton = () => {
+    const handleLogout = () => {
         if (currentUser) {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
@@ -61,7 +75,7 @@ function LandingPage() {
                                     </Button>
                                 </>
                             ) : (
-                                <Button variant="text" onClick={handleLogOutButton} sx={{ marginRight: 2, borderRadius: '0px', textTransform: 'none' }}>
+                                <Button variant="text" onClick={handleClickLogoutButton} sx={{ marginRight: 2, borderRadius: '0px', textTransform: 'none' }}>
                                     <Typography color="white">
                                         <span>Log Out</span>
                                     </Typography>
@@ -123,6 +137,14 @@ function LandingPage() {
                     </Box>
                 </Container>
             </main>
+
+            <ConfirmDialog
+                openDialog={openConfirmLogoutDialog}
+                setOpenDialog={setOpenConfirmLogoutDialog}
+                onClose={handleConfirmLogoutDialogClose}
+                message={"Are you sure you want to log out?"}
+                title={"Confirm Logout"}
+            />
 
             <LoginModal open={openModal === 'loginModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('registerModal')} />
             <RegisterModal open={openModal === 'registerModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('loginModal')} label={registerModalLabel} />

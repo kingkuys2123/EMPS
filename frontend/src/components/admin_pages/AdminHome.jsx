@@ -10,7 +10,7 @@ import "../styles/FontStyle.css";
 export default function AdminDashboard() {
     return (
         <div className="template-page">
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", width: "100%" }}>
 
                 <AdminSidebar />
 
