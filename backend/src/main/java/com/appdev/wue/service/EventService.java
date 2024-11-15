@@ -24,6 +24,7 @@ public class EventService {
     }
 
     // Update Event (PUT)
+    @SuppressWarnings("finally")
     public EventEntity updateEvent(int id, EventEntity updatedEvent) {
         EventEntity existingEvent = new EventEntity();
         try {

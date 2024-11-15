@@ -14,7 +14,7 @@ import "./styles/FontStyle.css";
 function TemplatePage() {
     return (
         <div className="template-page">
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", width: "100%" }}>
 
                 {/*  change ni into either <UserSidebar>, <OrganizerSideBar> or <AdminSideBar>, e
                  change siya depende sa imong page if imong page kay admin, user or
@@ -28,9 +28,7 @@ function TemplatePage() {
 
                     {/* BODY SA IMONG PAGE, INSIDE SA BOX, HERE KA MAG IMPLEMENT NA SA IMONG PAGE */}
                     <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
-                        <Typography variant="body1">
                             <span>Page Body</span>
-                        </Typography>
                     </Box>
 
                 </Box>

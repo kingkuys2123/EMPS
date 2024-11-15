@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from "react";
 import {Button, Tabs, Tab, Box, Typography} from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import EventMenu from './EventMenu'; 
+import EventMenu from './EventMenu';
 import AddEventModal from "./AddEventModal.jsx";
 import EditEventModal from "./EditEventModal.jsx";
-import OrganizerSidebar from "./OrganizerSidebar.jsx";
+import ViewEventModal from "./ViewEventModal.jsx";
+import AdminSidebar from  "./AdminSidebar.jsx";
 import CustomAppBar from "../CustomAppBar.jsx";
 import EventService from '../../services/EventService';
 
-import "./styles/FontStyle.css";
+import "../styles/FontStyle.css";
 import "./styles/EventList.css";
+import LongMenu from "./LongMenu.jsx";
 
-function MyEvents() {
+function AdminEventsDashboard() {
     const [events, setEvents] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [error, setError] = useState(null);
     const [openAddEventModal, setOpenAddEventModal] = useState(false);
     const [openEditEventModal, setOpenEditEventModal] = useState(false);
+    const [openViewEventModal, setOpenViewEventModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
-    const [tabValue, setTabValue] = useState(0); 
-
-    const navigate = useNavigate();
+    const [tabValue, setTabValue] = useState(0);
 
     const fetchEvents = async () => {
         try {
             const response = await EventService.getAllEvent();
             setEvents(response.data);
         } catch (error) {
-            console.error('Error fetching events:', error);
             setError('Error fetching events. Please try again later');
         }
     };
@@ -64,9 +63,10 @@ function MyEvents() {
         fetchEvents();
     };
 
-    const handleViewEvent = async (eventId) => {
-        navigate(`/organizer/my_events/${eventId}`);
+    const handleCloseViewEventModal = () => {
+        setModalOpen(false);
     };
+
 
     const handleUpdateEvent = async (eventId, updatedEvent) => {
         try {
@@ -78,7 +78,6 @@ function MyEvents() {
                     )
                 );
                 fetchEvents();
-                //navigate(`/myevents/${eventId}`);
             } else {
                 console.error('Failed to update event:', response);
             }
@@ -88,29 +87,18 @@ function MyEvents() {
         }
     };
 
-    const handleOpenEditEventModal = (event) => {
-        setSelectedEvent(event);
-        setOpenEditEventModal(true);
-    };
-
-    const handleCloseEditEventModal = () => {
-        setOpenEditEventModal(false);
-        setSelectedEvent(null);
-    };
-
-    const handleEditEventSuccess = (updatedEvent) => {
-        handleUpdateEvent(updatedEvent.eventId, updatedEvent);
-        handleCloseEditEventModal();
-    };
-
-    const handleDeleteEvent = async (eventId) => {
+    const handleConfirmEvent = async (eventId) => {
         try {
-            setEvents((prevEvents) => prevEvents.filter((event) => event.eventId !== eventId));
-            await EventService.deleteEvent(eventId);
+            const updatedEvent = { confirmationStatus: "Confirmed" };
+            await EventService.updateEvent(eventId, updatedEvent);
+            setEvents((prevEvents) =>
+                prevEvents.map((event) =>
+                    event.eventId === eventId ? { ...event, ...updatedEvent } : event
+                )
+            );
             fetchEvents();
         } catch (error) {
-            console.error('Error deleting event:', error);
-            fetchEvents();
+            console.error('Error confirming event:', error);
         }
     };
 
@@ -123,15 +111,15 @@ function MyEvents() {
 
     return (
         <div className="template-page">
-
-            <OrganizerSidebar />
+            <AdminSidebar />
 
             <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                <CustomAppBar title={"My Events"}/>
+                <CustomAppBar title={"Events"}/>
 
                 <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                     <div className="content">
+
                         <div className="event-container">
                             <div className="event-header">
                                 <div className="filter-links">
@@ -164,7 +152,7 @@ function MyEvents() {
                             <table className="event-table">
                                 <thead>
                                 <tr>
-                                    <th></th>
+                                    <th><input type="checkbox" /></th>
                                     <th>Event Name</th>
                                     <th>Type</th>
                                     <th>Start</th>
@@ -187,10 +175,11 @@ function MyEvents() {
                                         <td><span className={`badge ${event.confirmationStatus?.toLowerCase()}`}>{event.confirmationStatus}</span></td>
                                         <td>{event.attendees}</td>
                                         <td>
-                                            <EventMenu
+                                            <LongMenu
                                                 onView={() => handleViewEvent(event.eventId)}
-                                                onEdit={() => handleOpenEditEventModal(event)}
+                                                onEdit={() => handleEditEvent(event)}
                                                 onDelete={() => handleDeleteEvent(event.eventId)}
+                                                onConfirmEvent={tabValue === 2 ? () => handleConfirmEvent(event.eventId) : null} // Only show for Pending tab
                                             />
                                         </td>
                                     </tr>
@@ -203,6 +192,11 @@ function MyEvents() {
                         open={openAddEventModal}
                         onClose={handleCloseAddEventModal}
                         onEventAdded={handleAddEventSuccess}
+                    />
+                    <ViewEventModal
+                        open={openViewEventModal}
+                        onClose={handleCloseViewEventModal}
+                        event={selectedEvent}
                     />
                     {selectedEvent && (
                         <EditEventModal
@@ -219,4 +213,4 @@ function MyEvents() {
     );
 }
 
-export default MyEvents;
+export default AdminEventsDashboard;

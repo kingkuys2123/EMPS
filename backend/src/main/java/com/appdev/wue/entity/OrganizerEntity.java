@@ -3,6 +3,9 @@ package com.appdev.wue.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -23,6 +26,7 @@ public class OrganizerEntity {
     private UserEntity user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "organizer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<EventEntity> events;
 
     // Getters and setters

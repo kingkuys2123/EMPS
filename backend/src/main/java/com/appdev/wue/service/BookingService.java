@@ -30,6 +30,7 @@ public class BookingService {
     }
 
     // Update Booking By ID
+    @SuppressWarnings("finally")
     public BookingEntity updateBooking(int id, BookingEntity updatedBooking) {
         BookingEntity booking = new BookingEntity();
         try {

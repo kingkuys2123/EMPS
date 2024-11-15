@@ -1,15 +1,40 @@
-import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar } from "@mui/material";
-import React, {useContext} from "react";
+import {
+    Drawer,
+    Box,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Toolbar,
+    Typography,
+    AppBar,
+    Link
+} from "@mui/material";
+import React, {useContext, useState} from "react";
 import "../styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../../utils/AuthContext.jsx";
+import ConfirmDialog from "../ConfirmDialog.jsx";
 
-function UserSideBar() {
+function AdminSidebar() {
     const nav = useNavigate();
 
     const { currentUser, setCurrentUser } = getAuth();
 
-    const handleLogOutButton = () => {
+    const [openConfirmLogoutDialog, setOpenConfirmLogoutDialog] = useState(false);
+
+    const handleClickLogoutButton = () => {
+        setOpenConfirmLogoutDialog(true);
+    }
+
+    const handleConfirmLogoutDialogClose = (confirm) => {
+        if (confirm) {
+            handleLogout();
+        }
+        setOpenConfirmLogoutDialog(false);
+    };
+
+    const handleLogout = () => {
         if (currentUser) {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
@@ -35,35 +60,35 @@ function UserSideBar() {
                 </AppBar>
                 <List sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton component={Link} to="/admin/dashboard">
                             <ListItemText>
                                 <span>DASHBOARD</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton component={Link} to="/admin/users">
                             <ListItemText>
                                 <span>USERS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton component={Link} to="/admin/organizers">
                             <ListItemText>
                                 <span>ORGANIZERS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton component={Link} to="/admin/events">
                             <ListItemText>
                                 <span>EVENTS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton component={Link} to="/admin/venues">
                             <ListItemText>
                                 <span>VENUES</span>
                             </ListItemText>
@@ -71,7 +96,7 @@ function UserSideBar() {
                     </ListItem>
                     <hr style={{ width: '100%', margin: '0 auto', marginTop: 'auto' }}/>
                     <ListItem>
-                        <ListItemButton onClick={handleLogOutButton} sx={{ paddingTop: '0', paddingBottom: '0'}}>
+                        <ListItemButton onClick={handleClickLogoutButton} sx={{ paddingTop: '0', paddingBottom: '0'}}>
                             <ListItemText>
                                 <span>LOG OUT</span>
                             </ListItemText>
@@ -79,8 +104,15 @@ function UserSideBar() {
                     </ListItem>
                 </List>
             </Drawer>
+            <ConfirmDialog
+                openDialog={openConfirmLogoutDialog}
+                setOpenDialog={setOpenConfirmLogoutDialog}
+                onClose={handleConfirmLogoutDialogClose}
+                message={"Are you sure you want to log out?"}
+                title={"Confirm Logout"}
+            />
         </div>
     );
 }
 
-export default UserSideBar;
+export default AdminSidebar;

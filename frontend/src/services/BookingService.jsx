@@ -15,13 +15,29 @@ const BookingService = {
     // Get all bookings
     getAllBookings: async () => {
         try {
+            // Fetching data from the backend
             const response = await axios.get(`/booking/getAllBookings`);
-            return response.data;
+            console.log("Raw Booking Data:", response.data);
+            // Mapping the response data to the required structure
+            const mappedBookings = response.data.map((booking) => ({
+                booking: booking.bookingID,
+                customerName: booking.userID || "Unknown",
+                event: null,
+                tickets: booking.ticketQuantity,
+                totalPrice: booking.totalPrice,
+                date: new Date(booking.dateTimeBooked),
+                status: booking.status,
+            }));
+            console.log("Mapped Booking Data:", mappedBookings);
+            return mappedBookings;
         } catch (error) {
-            console.error("Error fetching bookings:", error);
+            // Log any errors that occur during the API request
+            console.error("Error fetching all bookings:", error);
             throw error.response ? error.response.data : error.message;
         }
     },
+    
+
 
     // Get booking by ID
     getBooking: async (id) => {

@@ -9,29 +9,31 @@ import UserService from "../services/UserService.jsx";
 import { getAuth } from "../utils/AuthContext.jsx";
 
 import './styles/FontStyle.css';
+import ConfirmDialog from "./ConfirmDialog.jsx";
 
 function MyAccount() {
     const nav = useNavigate();
-
     const { currentUser, setCurrentUser } = getAuth();
 
-    const [username, setUsername] = React.useState('');
-    const [firstName, setFirstName] = React.useState('');
-    const [lastName, setLastName] = React.useState('');
-    const [phoneNumber, setPhoneNumber] = React.useState('');
-    const [email, setEmail] = React.useState('');
+    const [username, setUsername] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
-    const [errors, setErrors] = React.useState({});
+    const [errors, setErrors] = useState({});
+    const [openConfirmChangesDialog, setOpenConfirmChangesDialog] = useState(false);
+    const [openConfirmDeleteUserDialog, setOpenConfirmDeleteUserDialog] = useState(false);
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
         setOpenSnackbar(false);
-    }
+    };
 
     useEffect(() => {
         if (!currentUser) {
@@ -55,7 +57,6 @@ function MyAccount() {
             if (!username) validErrors.username = true;
             if (!firstName) validErrors.firstName = true;
             if (!lastName) validErrors.lastName = true;
-            // if (!phoneNumber) validErrors.phoneNumber = true;
 
             setErrors(validErrors);
             setSnackbarMessage('Please fill out all required fields.');
@@ -65,7 +66,6 @@ function MyAccount() {
 
         if (phoneNumber) {
             const phoneRegex = /^\d+$/;
-
             if (!phoneRegex.test(phoneNumber)) {
                 validErrors.phoneNumber = true;
                 setErrors(validErrors);
@@ -75,29 +75,30 @@ function MyAccount() {
             }
         }
 
-        await handleUpdateUser();
-
+        setOpenConfirmChangesDialog(true);
     };
+
+    const handleClickDeleteAccount = () => {
+        setOpenConfirmDeleteUserDialog(true);
+    }
 
     const handleUpdateUser = async () => {
         try {
             await UserService.updateProfile(currentUser.userID, { username, firstName, lastName, phoneNumber });
-
             const updatedUser = { ...currentUser, username, firstName, lastName, phoneNumber };
             localStorage.setItem('user', JSON.stringify(updatedUser));
 
             setSnackbarMessage('User updated successfully.');
             setOpenSnackbar(true);
-
             setErrors({});
         } catch (e) {
             setSnackbarMessage(e.message || 'Failed updating user.');
             setOpenSnackbar(true);
         }
-    }
+    };
 
     const handleDeleteUser = async () => {
-        try{
+        try {
             await UserService.deleteUser(currentUser.userID);
 
             setSnackbarMessage('User deleted successfully.');
@@ -105,22 +106,28 @@ function MyAccount() {
 
             localStorage.removeItem('token');
             localStorage.removeItem("user");
+            setCurrentUser(null);
 
             nav("/");
-        }
-        catch(e){
+        } catch (e) {
             setSnackbarMessage(e);
             setOpenSnackbar(true);
         }
-    }
+    };
 
-    const handleChangeEmail = async () => {
+    const handleConfirmChangesDialogClose = (confirm) => {
+        if (confirm) {
+            handleUpdateUser();
+        }
+        setOpenConfirmChangesDialog(false);
+    };
 
-    }
-
-    const handleChangePassword = async () => {
-
-    }
+    const handleConfirmDeleteUserClose = (confirm) => {
+        if (confirm) {
+            handleDeleteUser();
+        }
+        setOpenConfirmDeleteUserDialog(false);
+    };
 
     return (
         <div className="my-account-page">
@@ -187,12 +194,45 @@ function MyAccount() {
                                         <Typography component="span" sx={{ fontWeight: "bold" }}>
                                             <span>Email</span>
                                         </Typography>
-                                        <TextField fullWidth disabled label="Email" variant="outlined" margin="normal" value={email}/>
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <TextField
+                                                fullWidth
+                                                disabled
+                                                label="Email"
+                                                variant="outlined"
+                                                margin="normal"
+                                                value={email}
+                                                sx={{ flexGrow: 1 }}
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px' }}
+                                            >
+                                                <Typography>Change</Typography>
+                                            </Button>
+                                        </Box>
 
                                         <Typography component="span" sx={{ fontWeight: "bold" }}>
                                             <span>Password</span>
                                         </Typography>
-                                        <TextField fullWidth disabled label="Password" type="password" value="nothingtoseehere" variant="outlined" margin="normal" />
+                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                            <TextField
+                                                fullWidth
+                                                disabled
+                                                label="Password"
+                                                type="password"
+                                                value="nothingtoseehere"
+                                                variant="outlined"
+                                                margin="normal"
+                                                sx={{ flexGrow: 1 }}
+                                            />
+                                            <Button
+                                                variant="contained"
+                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px' }}
+                                            >
+                                                <Typography>Change</Typography>
+                                            </Button>
+                                        </Box>
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between', padding: '20px 0' }}>
@@ -202,7 +242,7 @@ function MyAccount() {
                                                 <span>Save Changes</span>
                                             </Typography>
                                         </Button>
-                                        <Button variant="contained" onClick={handleDeleteUser} sx={{ width: "100%", backgroundColor: "#C63f47", color: "#FFFFFF", textTransform: 'none', borderRadius: "0" }}>
+                                        <Button variant="contained" onClick={handleClickDeleteAccount} sx={{ width: "100%", backgroundColor: "#C63f47", color: "#FFFFFF", textTransform: 'none', borderRadius: "0" }}>
                                             <Typography>
                                                 <span>Delete Account</span>
                                             </Typography>
@@ -212,11 +252,27 @@ function MyAccount() {
                             </Box>
                         </Box>
                     </Box>
-
                 </Box>
 
-                <CustomSnackbar open={openSnackbar} message={snackbarMessage} onClose={handleCloseSnackbar}/>
             </Box>
+
+            <ConfirmDialog
+                openDialog={openConfirmChangesDialog}
+                setOpenDialog={setOpenConfirmChangesDialog}
+                onClose={handleConfirmChangesDialogClose}
+                message={"Are you sure you want to save changes?"}
+                title={"Confirm Changes"}
+            />
+
+            <ConfirmDialog
+                openDialog={openConfirmDeleteUserDialog}
+                setOpenDialog={setOpenConfirmDeleteUserDialog}
+                onClose={handleConfirmDeleteUserClose}
+                message={"Are you sure you want to delete your account?"}
+                title={"Confirm Delete Account"}
+            />
+
+            <CustomSnackbar open={openSnackbar} message={snackbarMessage} onClose={handleCloseSnackbar} />
         </div>
     );
 }

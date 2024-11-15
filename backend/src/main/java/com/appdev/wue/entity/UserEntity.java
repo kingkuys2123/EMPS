@@ -1,5 +1,6 @@
 package com.appdev.wue.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -37,15 +38,19 @@ public class UserEntity {
     private LocalDateTime datetime_created;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<BookingEntity> bookings;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private FeedbackEntity feedback;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private OrganizerEntity organizer;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private PaymentDetailsEntity payment_details;
 
     public int getUserID() {
