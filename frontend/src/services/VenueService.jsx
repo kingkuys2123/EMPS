@@ -34,6 +34,16 @@ const VenueService = {
             console.error(`Error fetching venue with ID ${id}:`, error);
             throw error.response ? error.response.data : error.message;
         }
+    },
+
+    deleteVenue:async () => {
+        try {
+            const response = await axios.get(`/venue//deleteVenue/${id}`);
+            return response.data;
+        } catch (error) {
+            onsole.error(`Error deleting venue with ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
     }
 
 }
