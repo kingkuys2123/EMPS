@@ -5,9 +5,17 @@ import UserHome from "./components/user_pages/UserHome.jsx";
 import UserBookings from "./components/user_pages/UserBookings.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
 import MyAccount from "./components/MyAccount.jsx";
+import MyEvents from './components/organizer_pages/MyEvents.jsx';
+import ViewEventPage from './components/organizer_pages/ViewEventPage.jsx';
+import AdminDashboard from "./components/admin_pages/AdminHome.jsx"
+import AdminUsers from './components/admin_pages/AdminUsers.jsx';
+import AdminOrganizer from './components/admin_pages/AdminOrganizer.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 import AdminVenue from './components/admin_pages/AdminVenue.jsx';
+import AdminEventsDashboard from './components/admin_pages/AdminEventsDashboard.jsx';
 
+import Ticket from './components/organizer_pages/Ticket.jsx'
+import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
 function App() {
     return (
         <AuthProvider>
@@ -22,10 +30,17 @@ function App() {
                 <Route path="/user/bookings" element={<UserBookings />} />
 
                 {/* Organizer Routes */}
-
+                <Route path="/organizer/my_events" element={<MyEvents />} />
+                <Route path="/organizer/my_events/:eventId" element={<ViewEventPage />} />
+                <Route path='/organizer/bookings' element={<OrganizerBookings/>} />
+                <Route path='/organizer/tickets' element={<Ticket/>} />
 
                 {/* Admin Routes */}
-                <Route path="/admin/venue" element={<AdminVenue />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/venues" element={<AdminVenue />} />
+                <Route path='/admin/users' element={<AdminUsers/>} />
+                <Route path='/admin/organizers' element={<AdminOrganizer/>} />
+                <Route path='/admin/events' element={<AdminEventsDashboard/>} />
 
             </Routes>
         </AuthProvider>

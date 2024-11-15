@@ -1,5 +1,6 @@
 package com.appdev.wue.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -26,6 +27,7 @@ public class   VenueEntity {
      private String status;
 
      @OneToOne(mappedBy = "venue")
+     @JsonIgnore
      private EventEntity event;
 
     public int getVenueId() {

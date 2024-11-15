@@ -31,11 +31,11 @@ public class TicketEntity {
     private int price;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ticket", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<BookingEntity> bookings;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    @JsonIgnore
     private EventEntity event;
 
     // Getters and setters

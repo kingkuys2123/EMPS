@@ -27,7 +27,6 @@ public class FeedbackEntity{
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    @JsonIgnore
     private EventEntity event;
 
     public int getFeedbackId() {

@@ -1,5 +1,6 @@
 package com.appdev.wue.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,10 +19,12 @@ public class EventService {
 
     // Create Event
     public EventEntity createEvent(EventEntity event) {
+        event.setDateCreated(LocalDateTime.now());
         return eRepo.save(event);
     }
 
     // Update Event (PUT)
+    @SuppressWarnings("finally")
     public EventEntity updateEvent(int id, EventEntity updatedEvent) {
         EventEntity existingEvent = new EventEntity();
         try {

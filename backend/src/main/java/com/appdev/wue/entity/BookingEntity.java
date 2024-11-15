@@ -32,12 +32,10 @@ public class BookingEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
-    @JsonIgnore
     private TicketEntity ticket;
 
     public int getBookingID() {

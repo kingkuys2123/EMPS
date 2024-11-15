@@ -8,6 +8,7 @@ import { getAuth } from "../../utils/AuthContext.jsx";
 
 import '../styles/FontStyle.css';
 import "../styles/Sidebar.css";
+import ConfirmDialog from "../ConfirmDialog.jsx";
 
 function UserSidebar() {
     const nav = useNavigate();
@@ -15,7 +16,20 @@ function UserSidebar() {
     const { currentUser, setCurrentUser } = getAuth();
     const [openModal, setOpenModal] = useState(null);
 
-    const handleLogOutButton = () => {
+    const [openConfirmLogoutDialog, setOpenConfirmLogoutDialog] = useState(false);
+
+    const handleClickLogoutButton = () => {
+        setOpenConfirmLogoutDialog(true);
+    }
+
+    const handleConfirmLogoutDialogClose = (confirm) => {
+        if (confirm) {
+            handleLogout();
+        }
+        setOpenConfirmLogoutDialog(false);
+    };
+
+    const handleLogout = () => {
         if (currentUser) {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
@@ -87,7 +101,7 @@ function UserSidebar() {
                     <hr style={{ width: '100%', margin: '0 auto', marginTop: 'auto' }} />
                     <ListItem>
                         {currentUser ? (
-                            <ListItemButton onClick={handleLogOutButton} sx={{ paddingTop: '0', paddingBottom: '0' }}>
+                            <ListItemButton onClick={handleClickLogoutButton} sx={{ paddingTop: '0', paddingBottom: '0' }}>
                                 <ListItemText>
                                     <span>LOG OUT</span>
                                 </ListItemText>
@@ -102,6 +116,15 @@ function UserSidebar() {
                     </ListItem>
                 </List>
             </Drawer>
+
+            <ConfirmDialog
+                openDialog={openConfirmLogoutDialog}
+                setOpenDialog={setOpenConfirmLogoutDialog}
+                onClose={handleConfirmLogoutDialogClose}
+                message={"Are you sure you want to log out?"}
+                title={"Confirm Logout"}
+            />
+
             <LoginModal open={openModal === 'loginModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('registerModal')} />
             <RegisterModal open={openModal === 'registerModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('loginModal')} label={"Register"} />
         </div>
