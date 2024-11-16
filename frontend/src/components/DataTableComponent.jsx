@@ -3,7 +3,7 @@ import { Box, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 
-const BookingTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) => {
+const DataTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) => {
     // Ensure rows have unique ids if not already present
     const rowsWithIds = (rows || []).map((row, index) => ({
         id: row.id || index,  // Use `userID` if available, otherwise fall back to `index`
@@ -29,9 +29,8 @@ const BookingTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) 
                     checkboxSelection
                     sx={{ border: 0 }}
                     components={{
-                        Toolbar: null,
+                        Toolbar: null,  
                     }}
-                    disableColumnResize
                     getRowId={(row) => row.id}  // Use `id` field as the unique identifier
                 />
             </Paper>
@@ -39,4 +38,4 @@ const BookingTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) 
     );
 };
 
-export default BookingTable;
+export default DataTable;
