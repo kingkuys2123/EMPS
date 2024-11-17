@@ -55,7 +55,7 @@ function ViewEventPage() {
             <Box sx={{ display: "flex" }}>
                 <OrganizerSidebar />
 
-                <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", display: "flex", flexDirection: "column", height: "100vh" }}>
+                <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", display: "flex", flexDirection: "column", height: "100vh", width: "1075px" }}>
                     {/* App Bar with Event Name and Account Icon aligned right */}
                     <CustomAppBar title={event.name || "View Event"} sx={{ justifyContent: "space-between" }} />
 

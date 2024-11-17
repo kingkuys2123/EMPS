@@ -149,6 +149,7 @@ function MyEvents() {
                             variant="contained"
                             color="primary"
                             onClick={handleOpenAddEventModal}
+                            sx={{backgroundColor: '#B71C1C'}}
                         >
                             + Add Event
                         </Button>
