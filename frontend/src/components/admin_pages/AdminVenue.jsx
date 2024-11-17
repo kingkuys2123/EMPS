@@ -35,7 +35,7 @@ function AdminVenue() {
 
     return (
         <div className="template-page">
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", width: "100%" }}>
                 <AdminSidebar />
 
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>

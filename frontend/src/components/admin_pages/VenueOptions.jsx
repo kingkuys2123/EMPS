@@ -53,13 +53,13 @@ function VenueOptions({ venue }) {
     return (
         <div className="venue-option">
             <IconButton
-        aria-label="more"
-        id="long-button"
-        aria-controls={open ? 'long-menu' : undefined}
-        aria-expanded={open ? 'true' : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
+          aria-label="more"
+          id="long-button"
+          aria-controls={open ? 'long-menu' : undefined}
+          aria-expanded={open ? 'true' : undefined}
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
         <MoreVertIcon />
       </IconButton>
       <Menu
@@ -86,7 +86,7 @@ function VenueOptions({ venue }) {
         ))}
       </Menu>
 
-      <Modal
+            <Modal
                 open={openModal}
                 onClose={handleCloseModal}
                 aria-labelledby="Update-venue"

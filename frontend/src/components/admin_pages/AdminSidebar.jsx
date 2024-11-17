@@ -43,6 +43,10 @@ function AdminSidebar() {
         }
     };
 
+    const handleNavigation = (path) => {
+        nav(path);
+    };
+
     return (
         <div className="admin-side-bar">
             <Drawer sx={{ width: 200, flexShrink: 0, "& .MuiDrawer-paper": {width: 200, boxSizing: "border-box", color: "white", backgroundColor: "#A72F36", overflow: "hidden" } }} variant="permanent" anchor="left">
