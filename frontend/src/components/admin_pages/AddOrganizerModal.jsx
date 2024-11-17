@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Box, Typography, TextField, Button, Autocomplete } from "@mui/material";
 import CustomSnackbar from "../CustomSnackbar.jsx";
-import UserService from "../../services/UserService.jsx";
-import OrganizerService from "../../services/OrganizerService.jsx";
-
+import UserService from "../../services/UserService.jsx"; // Assuming this service fetches users
 import '../styles/FontStyle.css';
 
 function AddOrganizerModal({ open, onClose, switchModal, label }) {
@@ -12,12 +10,29 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [errors, setErrors] = useState({});
     const [userOptions, setUserOptions] = useState([]);
+    const [allUsers, setAllUsers] = useState([]); // Store all users here
 
-    // Reset modal when closed
+    // Fetch all users when modal opens
     useEffect(() => {
+        if (open) {
+            const fetchUsers = async () => {
+                try {
+                    const users = await UserService.getAllUsers(); // Fetch all users
+                    setAllUsers(users); // Store all users
+                    setUserOptions(users); // Populate options in autocomplete
+                } catch (error) {
+                    console.error("Error fetching users:", error);
+                    setSnackbarMessage('Error fetching users. Please try again.');
+                    setOpenSnackbar(true);
+                }
+            };
+            fetchUsers();
+        }
+
         if (!open) {
             setUsername('');
             setErrors({});
+            setUserOptions([]); // Reset user options when modal closes
         }
     }, [open]);
 
@@ -29,45 +44,69 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
         setOpenSnackbar(false);
     };
 
-    // Handle user input and fetch matching users
-    const handleUsernameChange = async (event) => {
+    // Handle username input change
+    const handleUsernameChange = (event) => {
         const value = event.target.value;
         setUsername(value);
 
+        // Filter the users as the user types
         if (value) {
-            try {
-                const users = await UserService.searchUsers(value); // Fetch users from UserService
-                setUserOptions(users);
-            } catch (error) {
-                console.error("Error fetching users:", error);
-            }
+            const filteredUsers = allUsers.filter(user =>
+                user.username && user.username.toLowerCase().includes(value.toLowerCase())
+            );
+            setUserOptions(filteredUsers); // Update autocomplete options
         } else {
-            setUserOptions([]);
+            setUserOptions(allUsers); // Show all users when input is cleared
         }
     };
 
-    // Handle form submission and assign user as organizer
+    // Handle form submission to update user accountType to "Organizer"
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
+        // Check if username is set
         if (!username) {
             setErrors({ username: true });
             setSnackbarMessage('Please select a user.');
             setOpenSnackbar(true);
             return;
         }
-
+    
         try {
-            await OrganizerService.assignOrganizer({ username }); 
-            setSnackbarMessage('Organizer assigned successfully!');
-            setOpenSnackbar(true);
-            onClose();
-        } catch (e) {
-            setSnackbarMessage('An unexpected error occurred. Please try again.');
+            // Find the user from allUsers based on the selected username
+            const user = allUsers.find((user) => user.username.trim().toLowerCase() === username.trim().toLowerCase());
+    
+            if (user) {
+                // Debugging: Log user data being sent to the backend
+                console.log('Sending user to update:', user);
+    
+                const updatedUser = { ...user, accountType: 'Organizer' };
+    
+                // Call the UserService to update the user's accountType in the database
+                const response = await UserService.updateUser(updatedUser); // Assuming UserService handles the API call
+                
+                // Check the response from the API call
+                console.log('API Response:', response);
+    
+                if (response?.status === 200) {
+                    setSnackbarMessage('User account updated to Organizer!');
+                    setOpenSnackbar(true);
+                    onClose(); // Close the modal
+                } else {
+                    setSnackbarMessage('An error occurred while updating the user.');
+                    setOpenSnackbar(true);
+                }
+            } else {
+                setSnackbarMessage('User not found.');
+                setOpenSnackbar(true);
+            }
+        } catch (error) {
+            console.error('Error during user update:', error);
+            setSnackbarMessage('An error occurred while updating the user.');
             setOpenSnackbar(true);
         }
     };
-
+    
     return (
         <div className="add-organizer-modal">
             <Modal open={open} onClose={onClose}>
@@ -83,7 +122,7 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
                         <form onSubmit={handleSubmit} style={{ marginTop: '20px' }}>
                             <Autocomplete
                                 options={userOptions}
-                                getOptionLabel={(option) => option.username || ""}
+                                getOptionLabel={(option) => option.username || ''}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
@@ -97,11 +136,19 @@ function AddOrganizerModal({ open, onClose, switchModal, label }) {
                                 )}
                                 onChange={(event, newValue) => setUsername(newValue?.username || '')}
                                 freeSolo
+                                isOptionEqualToValue={(option, value) => option.username === value.username}
+                                getOptionSelected={(option, value) => option.username === value.username}
                             />
 
-                            <Button type="submit" fullWidth variant="contained" sx={{ marginTop: 2, backgroundColor: '#C63f47', borderRadius: 0 }}>
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ marginTop: 2, backgroundColor: '#C63f47', borderRadius: 0 }}
+                            >
                                 <span>Save</span>
                             </Button>
+
                         </form>
                     </Box>
                 </Box>
