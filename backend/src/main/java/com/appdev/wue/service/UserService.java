@@ -131,4 +131,31 @@ public class UserService {
         return uRepo.findByUsername(username).orElse(null);
     }
 
+    // Change Email
+    public UserEntity changeEmail(int id, UserEntity newUserDetails) {
+        if (uRepo.findByEmail(newUserDetails.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already taken!");
+        }
+
+        UserEntity user = uRepo.findById(id).get();
+
+        user.setEmail(newUserDetails.getEmail());
+        return uRepo.save(user);
+    }
+
+    // Change Password
+    public UserEntity changePassword(int id, String oldPassword, String newPassword){
+        UserEntity user = uRepo.findById(id).get();
+
+        if(!passwordEncoder.matches(oldPassword, user.getPassword())){
+            throw new RuntimeException("Invalid password!");
+        }
+        if(oldPassword.equals(newPassword)){
+            throw new RuntimeException("New password cannot be the old password!");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return uRepo.save(user);
+    }
+
 }

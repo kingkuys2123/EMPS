@@ -8,7 +8,7 @@ import { getAuth } from "../../utils/AuthContext.jsx";
 
 import "../styles/FontStyle.css";
 
-function ChangeEmailModal({ open, onClose }) {
+function ChangeEmailModal({ open, onClose, oldEmail }) {
     const nav = useNavigate();
 
     const { currentUser, setCurrentUser } = getAuth();
@@ -60,6 +60,28 @@ function ChangeEmailModal({ open, onClose }) {
     };
 
     const handleChangeEmail = async () => {
+        try{
+            await UserService.changeEmail(currentUser.userID, {email});
+            const updatedUser = await UserService.getUser(currentUser.userID);
+
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+
+            oldEmail(email);
+
+            setSnackbarMessage("Email updated successfully.");
+            setOpenSnackbar(true);
+            onClose();
+        }
+        catch (e) {
+            if(e === "Email already taken!"){
+                setSnackbarMessage(e);
+                setOpenSnackbar(true);
+            }
+            else{
+                setSnackbarMessage("Error updating email. Please try again.");
+                setOpenSnackbar(true);
+            }
+        }
     };
 
     return (

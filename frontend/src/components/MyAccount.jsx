@@ -291,6 +291,7 @@ function MyAccount() {
             <ChangeEmailModal
                 open={openChangeEmailModal}
                 onClose={() => setOpenChangeEmailModal(false)}
+                oldEmail={setEmail}
             />
 
             <ChangePasswordModal

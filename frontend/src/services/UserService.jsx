@@ -45,17 +45,6 @@ const UserService = {
         }
     },
 
-    // Update Profile
-    updateProfile: async (userId, newUserDetails) => {
-        try {
-            const response = await axios.put(`/user/updateProfile?id=${userId}`, newUserDetails);
-            return response.data;
-        } catch (error) {
-            console.error(`Error updating user profile:`, error);
-            throw error.response ? error.response.data : error.message;
-        }
-    },
-
     // Delete User
     deleteUser: async (userId) => {
         try {
@@ -88,6 +77,39 @@ const UserService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    // Update Profile
+    updateProfile: async (userId, newUserDetails) => {
+        try {
+            const response = await axios.put(`/user/updateProfile?id=${userId}`, newUserDetails);
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating user profile:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Change Email
+    changeEmail: async(userId, newEmail) => {
+        try {
+            const response = await axios.put(`/user/changeEmail?id=${userId}`, newEmail);
+            return response.data;
+        } catch (error) {
+            console.error(`Error changing email:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Change Password
+    changePassword: async(id, oldPassword, newPassword) => {
+        try {
+            const response = await axios.put(`/user/changePassword?id=${id}`, {oldPassword, newPassword});
+            return response.data;
+        } catch (error) {
+            console.error(`Error changing password:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    }
 };
 
 export default UserService;

@@ -73,6 +73,25 @@ function ChangePasswordModal({ open, onClose }) {
     };
 
     const handleChangePassword = async () => {
+        try {
+            await UserService.changePassword(currentUser.userID, oldPassword, newPassword);
+            const updatedUser = await UserService.getUser(currentUser.userID);
+
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
+            setSnackbarMessage("Password changed successfully.");
+            setOpenSnackbar(true);
+            onClose();
+        } catch (error) {
+            if(error){
+                setSnackbarMessage(error);
+                setOpenSnackbar(true);
+            }
+            else{
+                setSnackbarMessage("Error changing password. Please try again.");
+                setOpenSnackbar(true);
+            }
+        }
     };
 
     return (
