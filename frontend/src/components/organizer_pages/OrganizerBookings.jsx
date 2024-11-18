@@ -18,10 +18,10 @@ const columns = [
         display: "flex", flex: 1, 
         renderCell: (params) => (
             <>
-                <Button onClick={() => onEditClick(params)} variant="contained" color="primary" size="small">
-                    Edit
+                <Button onClick={() => onEditClick(params)} variant="contained" color="success" size="small">
+                    Accept
                 </Button>
-                <Button onClick={() => onDeleteClick(params.row.id)} variant="contained" color="secondary" size="small" style={{ marginLeft: 8 }}>
+                <Button onClick={() => onDeleteClick(params.row.id)} variant="contained" color="error" size="small" style={{ marginLeft: 8 }}>
                     Delete
                 </Button>
             </>
@@ -43,7 +43,7 @@ function OrganizerBookings() {
     }, []);
 
     const handleEditClick = (row) => {
-        console.log('Edit clicked:', row);
+        console.log('Accepted clicked:', row);
     };
 
     const handleDeleteClick = (userID) => {

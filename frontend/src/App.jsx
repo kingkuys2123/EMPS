@@ -30,6 +30,7 @@ function App() {
                 <Route path="/user/bookings" element={<UserBookings />} />
 
                 {/* Organizer Routes */}
+                <Route path="/organizer" element={<MyEvents />} />
                 <Route path="/organizer/my_events" element={<MyEvents />} />
                 <Route path="/organizer/my_events/:eventId" element={<ViewEventPage />} />
                 <Route path='/organizer/bookings' element={<OrganizerBookings/>} />

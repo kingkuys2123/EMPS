@@ -21,7 +21,7 @@ const BookingService = {
             // Mapping the response data to the required structure
             const mappedBookings = response.data.map((booking) => ({
                 booking: booking.bookingID,
-                customerName: booking.userID || "Unknown",
+                customerName: booking.user.firstName || "Unknown",
                 event: null,
                 tickets: booking.ticketQuantity,
                 totalPrice: booking.totalPrice,
