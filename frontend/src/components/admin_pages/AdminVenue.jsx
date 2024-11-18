@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Typography,Tabs, Tab, Zoom,Fab, Box, Modal  } from "@mui/material";
+import React, { useState } from "react";
+import { Tabs, Tab, Zoom,Fab, Box, Modal  } from "@mui/material";
 import { TabContext, TabPanel } from '@mui/lab';
 import AddIcon from "@mui/icons-material/Add";
 import AdminSidebar from "../admin_pages/AdminSidebar.jsx";
@@ -92,7 +92,6 @@ function AdminVenue() {
                                 <AddIcon />
                             </Fab>
                         </Zoom>
-                        </Typography>
                         <Modal open={openModal} onClose={handleCloseModal} className="mod">
                             <Box className="updateBox">
                                 <AddVenue onClose={handleCloseModal} />

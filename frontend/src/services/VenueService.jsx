@@ -4,7 +4,7 @@ const VenueService = {
 
     createVenue: async (venueData) => {
         try {
-            const response = await axios.post(`/venue/postVenue`, venue, {
+            const response = await axios.post(`/venue/createVenue`, venue, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -28,7 +28,7 @@ const VenueService = {
 
     getVenue:async () => {
         try {
-            const response = await axios.get(`/venue//getVenue/${id}`);
+            const response = await axios.get(`/venue/getVenue/${id}`);
             return response.data;
         } catch (error) {
             console.error(`Error fetching venue with ID ${id}:`, error);
@@ -38,7 +38,7 @@ const VenueService = {
 
     deleteVenue:async () => {
         try {
-            const response = await axios.get(`/venue//deleteVenue/${id}`);
+            const response = await axios.get(`/venue/deleteVenue/${id}`);
             return response.data;
         } catch (error) {
             onsole.error(`Error deleting venue with ID ${id}:`, error);
