@@ -1,18 +1,9 @@
-import React, { useState } from 'react';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import EditEventModal from './EditEventModal';
+import React from "react";
+import { Menu, MenuItem, IconButton } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const options = [
-  'View Event',
-  'Update Event',
-  'Delete Event',
-];
-
-export default function EventMenu({ event, onView, onUpdate, onDelete }) {
-  const [anchorEl, setAnchorEl] = useState(null);
+export default function EventMenu({ onView, onEdit, onDelete }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
@@ -23,21 +14,18 @@ export default function EventMenu({ event, onView, onUpdate, onDelete }) {
     setAnchorEl(null);
   };
 
-  const handleMenuItemClick = (action) => {
-    console.group(event.eventId);
-    switch (action) {
-      case 'View Event':
-        onView(event.eventId);
-        break;
-      case 'Update Event':
-        onUpdate(event.eventId);
-        break;
-      case 'Delete Event':
-        onDelete(event.eventId);
-        break;
-      default:
-        break;
-    }
+  const handleView = () => {
+    onView();
+    handleClose();
+  }
+
+  const handleEdit = () => {
+    onEdit();
+    handleClose();
+  };
+
+  const handleDelete = () => {
+    onDelete();
     handleClose();
   };
 
@@ -45,24 +33,29 @@ export default function EventMenu({ event, onView, onUpdate, onDelete }) {
     <div>
       <IconButton
         aria-label="more"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
         onClick={handleClick}
       >
         <MoreVertIcon />
       </IconButton>
       <Menu
+        id="long-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: 48 * 4.5, // Limits menu height
+            width: "20ch",
+          },
+        }}
       >
-        {options.map((option) => (
-          <MenuItem
-            key={option}
-            onClick={() => handleMenuItemClick(option)}
-          >
-            {option}
-          </MenuItem>
-        ))}
+        <MenuItem onClick={handleView}>View Event</MenuItem>
+        <MenuItem onClick={handleEdit}>Edit Event</MenuItem>
+        <MenuItem onClick={handleDelete}>Delete Event</MenuItem>
       </Menu>
     </div>
   );
-}
+};

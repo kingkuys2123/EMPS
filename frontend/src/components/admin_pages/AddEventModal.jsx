@@ -19,7 +19,7 @@ const AddEventModal = ({ open, onClose, onEventAdded }) => {
             startDateTime: startDateTime,
             endDateTime: endDateTime,
             eventStatus: eventStatus,
-            confirmationStatus: confirmationStatus
+            confirmationStatus: "Pending"
         };
 
         try {
@@ -109,25 +109,13 @@ const AddEventModal = ({ open, onClose, onEventAdded }) => {
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Confirmation Status"
-                            value={confirmationStatus}
-                            onChange={(e) => setConfirmationStatus(e.target.value)}
-                            select
-                        >
-                            <MenuItem value="Confirmed">Confirmed</MenuItem>
-                            <MenuItem value="Pending">Pending</MenuItem>
-                        </TextField>
-                    </Grid>
                 </Grid>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="secondary">
+                <Button onClick={onClose} sx={{color:"white",backgroundColor:"#B71C1C"}}>
                     Cancel
                 </Button>
-                <Button onClick={handleAddEvent} color="primary">
+                <Button onClick={handleAddEvent} sx={{color:"white",backgroundColor:"#B71C1C"}}>
                     Add Event
                 </Button>
             </DialogActions>

@@ -19,7 +19,7 @@ import CustomAppBar from "../CustomAppBar.jsx";
 import AdminTable from "./AdminTable.jsx";
 import AddOrganizerModal from "./AddOrganizerModal.jsx";
 import EditUserModal from "./EditUserModal.jsx";
-import LongMenu from "./LongMenu.jsx";
+import OrganizerMenu from "./OrganizerMenu.jsx";
 import "../styles/FontStyle.css";
 
 function AdminOrganizer() {
@@ -69,7 +69,6 @@ function AdminOrganizer() {
         filterUsersByTab(newValue);
     };
 
-    // Filter users by tab selection (All, Approved, Pending)
     const filterUsersByTab = (tab) => {
         let filtered;
         if (tab === 0) {
@@ -78,15 +77,21 @@ function AdminOrganizer() {
             );
         } else if (tab === 1) {
             filtered = users.filter(
-                (user) => user.status === "Approved" && user.user?.accountType?.toLowerCase() === "organizer"
+                (user) =>
+                    (user.approvalStatus?.toLowerCase() === "approved" || user.approvalStatus === undefined) &&
+                    user.user?.accountType?.toLowerCase() === "organizer"
             );
         } else if (tab === 2) {
             filtered = users.filter(
-                (user) => user.status === "Pending" && user.user?.accountType?.toLowerCase() === "organizer"
+                (user) =>
+                    (user.approvalStatus?.toLowerCase() === "pending" || user.approvalStatus === undefined) &&
+                    user.user?.accountType?.toLowerCase() === "organizer"
             );
         }
         setFilteredUsers(filtered);
     };
+
+
 
     // Search handler
     const handleSearch = (event) => {
@@ -149,10 +154,11 @@ function AdminOrganizer() {
             sortable: false,
             renderCell: (params) => (
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <LongMenu
+                    <OrganizerMenu
                         organizer={params.row}
                         onEdit={() => handleEditClick(params.row)}
                         onDelete={() => handleDeleteClick(params.row.userID)}
+                        activeTab={tabValue}  // Pass the activeTab here
                     />
                 </Box>
             ),
@@ -192,9 +198,6 @@ function AdminOrganizer() {
         setUserToDelete(null);
     };
 
-
-    console.log("Rows:", rows);
-    console.log("Columns:", columns);
     return (
         <div className="template-page">
             <Box sx={{ display: "flex", width: "100vw", maxWidth: "100%" }}>

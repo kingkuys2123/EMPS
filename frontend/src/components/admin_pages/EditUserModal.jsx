@@ -75,6 +75,7 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
                 phoneNumber,
             };
             await UserService.updateProfile(user.userID, updatedUser);
+            console.log(updatedUser);
             onSuccess(updatedUser);  // Inform the parent component of the successful update
             setSnackbarMessage("User updated successfully.");
             setOpenSnackbar(true);
@@ -98,8 +99,7 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
                     >
                         <MenuItem value="Admin">Admin</MenuItem>
                         <MenuItem value="User">User</MenuItem>
-                        <MenuItem value="organizer">Organizer</MenuItem>
-                        {/* Add other account types as needed */}
+                        <MenuItem value="Organizer">Organizer</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField
