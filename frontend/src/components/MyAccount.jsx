@@ -7,6 +7,8 @@ import CustomAppBar from "./CustomAppBar.jsx";
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import UserService from "../services/UserService.jsx";
 import { getAuth } from "../utils/AuthContext.jsx";
+import ChangeEmailModal from "./user_pages/ChangeEmailModal.jsx";
+import ChangePasswordModal from "./user_pages/ChangePasswordModal.jsx";
 
 import './styles/FontStyle.css';
 import ConfirmDialog from "./ConfirmDialog.jsx";
@@ -25,8 +27,12 @@ function MyAccount() {
     const [snackbarMessage, setSnackbarMessage] = useState('');
 
     const [errors, setErrors] = useState({});
+
     const [openConfirmChangesDialog, setOpenConfirmChangesDialog] = useState(false);
     const [openConfirmDeleteUserDialog, setOpenConfirmDeleteUserDialog] = useState(false);
+
+    const [openChangeEmailModal, setOpenChangeEmailModal] = useState(false);
+    const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -80,6 +86,14 @@ function MyAccount() {
 
     const handleClickDeleteAccount = () => {
         setOpenConfirmDeleteUserDialog(true);
+    }
+
+    const handleChangeEmail = () => {
+        setOpenChangeEmailModal(true);
+    }
+
+    const handleChangePassword = () => {
+        setOpenChangePasswordModal(true);
     }
 
     const handleUpdateUser = async () => {
@@ -206,7 +220,8 @@ function MyAccount() {
                                             />
                                             <Button
                                                 variant="contained"
-                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px' }}
+                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px', height: '70%' }}
+                                                onClick={handleChangeEmail}
                                             >
                                                 <Typography>Change</Typography>
                                             </Button>
@@ -228,7 +243,8 @@ function MyAccount() {
                                             />
                                             <Button
                                                 variant="contained"
-                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px' }}
+                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px', height: '70%' }}
+                                                onClick={handleChangePassword}
                                             >
                                                 <Typography>Change</Typography>
                                             </Button>
@@ -270,6 +286,16 @@ function MyAccount() {
                 onClose={handleConfirmDeleteUserClose}
                 message={"Are you sure you want to delete your account?"}
                 title={"Confirm Delete Account"}
+            />
+
+            <ChangeEmailModal
+                open={openChangeEmailModal}
+                onClose={() => setOpenChangeEmailModal(false)}
+            />
+
+            <ChangePasswordModal
+                open={openChangePasswordModal}
+                onClose={() => setOpenChangePasswordModal(false)}
             />
 
             <CustomSnackbar open={openSnackbar} message={snackbarMessage} onClose={handleCloseSnackbar} />
