@@ -1,20 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { Typography,Tabs, Tab, Table,TableHead, TableRow, TableCell,TableBody, Box   } from "@mui/material";
+import { Typography,Tabs, Tab, Zoom,Fab, Box, Modal  } from "@mui/material";
 import { TabContext, TabPanel } from '@mui/lab';
-
+import AddIcon from "@mui/icons-material/Add";
 import AdminSidebar from "../admin_pages/AdminSidebar.jsx";
 import CustomAppBar from "../CustomAppBar.jsx";
-import VenueService from '../../services/VenueService.jsx';
 import './styles/venue.css';
 import ViewVenue from "../admin_pages/ViewVenue.jsx";
+import AddVenue from "../admin_pages/AddVenue.jsx";
 
 
 function AdminVenue() {
     const [value, setValue] = React.useState('one');
+    const [openModal, setOpenModal] = useState(false);
 
     const handleChangeTab = (event, newValue) => {
         setValue(newValue);
       };
+
+      const transitionDuration = {
+        enter: 500,
+        exit: 300,
+    };
+
+    const handleOpenModal = () => {
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
 
     return (
         <div className="template-page">
@@ -68,6 +82,22 @@ function AdminVenue() {
                                 Pending Bookings
                             </TabPanel>
                         </TabContext>
+
+                        <Zoom
+                                in={value === "one"}
+                                timeout={transitionDuration}
+                                unmountOnExit
+                            >
+                            <Fab sx = {{position: 'absolute', bottom: 16, right: 16,backgroundColor: '#A72F36','&:hover': {backgroundColor: '#8C232A'},}} aria-label='Add' color='primary' onClick={handleOpenModal}>
+                                <AddIcon />
+                            </Fab>
+                        </Zoom>
+                        </Typography>
+                        <Modal open={openModal} onClose={handleCloseModal} className="mod">
+                            <Box className="updateBox">
+                                <AddVenue onClose={handleCloseModal} />
+                            </Box>
+                        </Modal>
                     </Box>
                 </Box>
             </Box>
