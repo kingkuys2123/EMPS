@@ -2,8 +2,6 @@ package com.appdev.wue.entity;
 
 import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -71,4 +69,3 @@ public class OrganizerEntity {
         this.events = events;
     }
 }
-
