@@ -21,11 +21,17 @@ export default function UserFeedback() {
     const fetchFeedbacks = async () => {
         try {
             const response = await FeedbackService.getAllFeedback();
+            console.log("Full response:", response); // Debugging log
+            console.log("Response data:", response.data); // Debugging log for data structure
+            
+            // Assuming response.data contains an array of feedback objects
             setFeedbackList(response.data);
         } catch (error) {
-            setError('Failed to fetch feedbacks.');
+            console.error("Error fetching feedbacks:", error);
+            setError("Failed to fetch feedbacks.");
         }
     };
+    
 
     const handleAddFeedback = () => {
         setSelectedFeedback(null); 
