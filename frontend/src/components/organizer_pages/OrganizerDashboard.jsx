@@ -92,7 +92,7 @@ function OrganizerDashboard() {
                             <Grid item xs={12} md={8}>
                                 <Paper sx={{ padding: "20px", height: "300px" }}>
                                     <Typography variant="h6" sx={{ marginBottom: "10px" }}>
-                                        Events by Category
+                                        Events by Confirmed and Pending
                                     </Typography>
                                     <ResponsiveContainer width="100%" height="100%">
                                         <PieChart>
