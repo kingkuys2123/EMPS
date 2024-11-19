@@ -44,7 +44,26 @@ const VenueService = {
             onsole.error(`Error deleting venue with ID ${id}:`, error);
             throw error.response ? error.response.data : error.message;
         }
-    }
+    },
 
+    updateVenue: async (id, venue) => {
+        if (!id) {
+            throw new Error("Venue ID is required to update.");
+        }
+        try {
+            const response = await axios.put(`/venue/updateVenue?id=${id}`, venue, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating venue with ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 }
+
+
+
 export default VenueService;

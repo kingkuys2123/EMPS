@@ -9,7 +9,7 @@ import UpdateVenue from "../admin_pages/UpdateVenue.jsx"
   
 
 
-function VenueOptions({ venue }) {
+function VenueOptions({ venue,  refreshData}) {
 
     const options = ['Update', 'Delete'];
     const ITEM_HEIGHT = 48;
@@ -33,6 +33,7 @@ function VenueOptions({ venue }) {
 
     const handleCloseModal = () => {
         setOpenModal(false);
+        refreshData();
     };
 
     const handleOpenDeleteConfirm = () => {
@@ -48,6 +49,7 @@ function VenueOptions({ venue }) {
         
         console.log("Item deleted");
         setOpenDeleteConfirm(false);
+        refreshData();
     };
 
     return (

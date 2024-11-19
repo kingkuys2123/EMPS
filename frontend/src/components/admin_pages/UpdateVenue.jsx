@@ -15,25 +15,41 @@ function UpdateVenue({ venue, onClose }) {
         onClose(); 
     };
 
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      
+      
+    
+      if (updatedVenue.name && updatedVenue.address && updatedVenue.capacity) {
+        try {
+          const response = await VenueService.updateVenue(updatedVenue.venueId, updatedVenue);
+            onClose();
+            alert("Updated");
+        } catch (error) {
+            console.error('Error updating venue:', error);
+        }
+      }
+    };
+
   return (
     <Container className="con" maxWidth="sm">
     <Box className="mainBox">
       <h2>Update {updatedVenue.name}</h2>
-    <form className="venue-form">
+    <form className="venue-form" onSubmit={handleSubmit}>
       <div className='form-row'>
               <input
               className='name'
               type="text"
               name="name"
               value={updatedVenue.name}
-            //   onChange={handleChange}
+              onChange={handleChange}
               />
               <input
               className='capacity'
               type="number"
               name="capacity"
               value={updatedVenue.capacity}
-            //   onChange={handleChange}
+              onChange={handleChange}
               />
           
               <input
@@ -42,14 +58,14 @@ function UpdateVenue({ venue, onClose }) {
               name="address"
               id="address"
               value={updatedVenue.address}
-            //   onChange={handleChange}
+              onChange={handleChange}
               />
           
               <textarea
               className="description"
               name="description"
               value={updatedVenue.description}
-            //   onChange={handleChange}
+              onChange={handleChange}
               />
           </div>
           <div className='buttons'>

@@ -7,17 +7,20 @@ function ViewVenue() {
     const [venue, setVenue] = useState({ name: '', location: '', capacity: '' });
     const [venues, setVenues] = useState([]);
 
+    const loadVenues = async () => {
+        try {
+            const data = await VenueService.getAllVenue();
+            setVenues(data);
+        } catch (error) {
+        }
+    };
+
     useEffect(() => {
-        const loadVenues = async () => {
-            try {
-                const data = await VenueService.getAllVenue();
-                setVenues(data);
-            } catch (error) {
-            }
-        };
 
         loadVenues();
     }, []);
+
+   const refreshData = loadVenues;
 
     const rows = venues.map((v) => ({
         id: v.venueId,
@@ -25,7 +28,7 @@ function ViewVenue() {
         address: v.address,
         capacity: v.capacity,
         description: v.description,
-        option: <VenueOptions venue={v} />
+        option: <VenueOptions venue={v} refreshData={refreshData}/>
     }));
 
     const columns = [
