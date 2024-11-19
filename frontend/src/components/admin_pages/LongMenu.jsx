@@ -35,9 +35,9 @@ function LongMenu({ onView, onEdit, onDelete, onConfirmEvent }) {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem onClick={onView}>View Event</MenuItem>
-                <MenuItem onClick={onEdit}>Edit Event</MenuItem>
-                <MenuItem onClick={onDelete}>Delete Event</MenuItem>
+                <MenuItem onClick={onView}>View</MenuItem>
+                <MenuItem onClick={onEdit}>Edit</MenuItem>
+                <MenuItem onClick={onDelete}>Delete</MenuItem>
                 {onConfirmEvent && (
                     <MenuItem onClick={onConfirmEvent}>Confirm Event</MenuItem>
                 )}

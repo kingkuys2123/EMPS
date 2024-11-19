@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';  
 import { Container, Box } from "@mui/material";
 import VenueService from '../../services/VenueService.jsx';
 import './styles/venue.css';
@@ -24,7 +23,6 @@ function UpdateVenue({ venue, onClose }) {
       <div className='form-row'>
               <input
               className='name'
-              placeholder='Name'
               type="text"
               name="name"
               value={updatedVenue.name}
@@ -32,7 +30,6 @@ function UpdateVenue({ venue, onClose }) {
               />
               <input
               className='capacity'
-              placeholder='Capacity'
               type="number"
               name="capacity"
               value={updatedVenue.capacity}
@@ -41,7 +38,6 @@ function UpdateVenue({ venue, onClose }) {
           
               <input
               className='address'
-              placeholder='Address'
               type="text"
               name="address"
               id="address"
@@ -51,7 +47,6 @@ function UpdateVenue({ venue, onClose }) {
           
               <textarea
               className="description"
-              placeholder="Description"
               name="description"
               value={updatedVenue.description}
             //   onChange={handleChange}

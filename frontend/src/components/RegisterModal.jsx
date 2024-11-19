@@ -65,6 +65,14 @@ function RegisterModal({ open, onClose, switchModal, label }) {
             return;
         }
 
+        if(password.length < 8){
+            validErrors.password = true;
+            setErrors(validErrors);
+            setSnackbarMessage('Password must be at least 8 characters long.');
+            setOpenSnackbar(true);
+            return;
+        }
+
         if (password !== confirmPassword) {
             validErrors.password = true;
             validErrors.confirmPassword = true;

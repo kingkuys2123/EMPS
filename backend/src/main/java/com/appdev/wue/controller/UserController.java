@@ -94,4 +94,27 @@ public class UserController {
         }
     }
 
+    // Change Email
+    @PutMapping("/changeEmail")
+    public ResponseEntity<?> changeEmail(@RequestParam int id, @RequestBody UserEntity newUserDetails) {
+        try {
+            UserEntity updatedUser = uServ.changeEmail(id, newUserDetails);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // Change Password
+    @PutMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestParam int id, @RequestBody Map<String, String> passwords){
+        try{
+            UserEntity updatedUser = uServ.changePassword(id, passwords.get("oldPassword"), passwords.get("newPassword"));
+            return ResponseEntity.ok(updatedUser);
+        }
+        catch(RuntimeException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
 }
