@@ -11,11 +11,11 @@ function TemplateComponent({
     tabs = ["All"],
     fetchRows,
     columns,
-    onEditClick,
+    setActiveTab,
+    onAcceptClick,
     onDeleteClick,
     body
 }) {
-    const [activeTab, setActiveTab] = useState(tabs[0]);
     return (
         <div className="template-page" style={{ boxSizing: "border-box"}}>
             <Box sx={{ display: "flex", boxSizing: "border-box", width: "100vw" }}>
@@ -86,7 +86,7 @@ function TemplateComponent({
                                     boxPadding={"0px"}
                                     rows={fetchRows}
                                     columns={columns}
-                                    onEditClick={onEditClick}
+                                    onAcceptClick={onAcceptClick}
                                     onDeleteClick={onDeleteClick}
                                 />
                             )}
