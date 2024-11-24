@@ -95,9 +95,23 @@ function AdminUsers() {
     };
 
     const handleEditClick = (user) => {
-        setSelectedUser(user);
+        // Check the user object to ensure all required fields exist
+        console.log("Selected user:", user);
+        
+        setSelectedUser({
+            userID: user.userID,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            accountType: user.accountType,
+            phoneNumber: user.phoneNumber,
+            email: user.email || "",  // Default to empty string if undefined
+            username: user.username || "",  // Default to empty string if undefined
+            password: user.password || ""  // Default to empty string if undefined
+        });
         setOpenEditModal(true);
     };
+    
+    
 
     const handleDeleteClick = (userID) => {
         setUserToDelete(userID);
@@ -122,7 +136,7 @@ function AdminUsers() {
             sortable: false,
             renderCell: (params) => (
                 <Box>
-                    {/* LongMenu replaces the Edit and Delete buttons */}
+                    {/* check pass row for empty username,email, password*/}
                     <LongMenu
                         onEdit={() => handleEditClick(params.row)} 
                         onDelete={() => handleDeleteClick(params.row.userID)}

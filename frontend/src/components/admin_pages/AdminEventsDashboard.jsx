@@ -131,12 +131,20 @@ function AdminEventsDashboard() {
                 <div className="event-container">
                     <div className="event-header">
                         <div className="filter-links">
-                            <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
+                            <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" 
+                            sx={{
+                                "& .MuiTab-root.Mui-selected": {
+                                    backgroundColor: "#FFFFFF", 
+                                    color: "#000000", 
+                                    borderRadius: "5px", 
+                                },
+                            }}>
                                 <Tab label="All" />
                                 <Tab label="Confirmed" />
                                 <Tab label="Pending" />
                             </Tabs>
                         </div>
+                        <div style={{display:'flex', alignItems:'center'}}>
                         <input
                             type="text"
                             placeholder="Search events..."
@@ -149,10 +157,11 @@ function AdminEventsDashboard() {
                             variant="contained"
                             color="primary"
                             onClick={handleOpenAddEventModal}
-                            sx={{backgroundColor: '#B71C1C'}}
+                            sx={{backgroundColor: '#B71C1C', marginLeft: "20px"}}
                         >
                             + Add Event
                         </Button>
+                        </div>
                     </div>
 
                     {error && <p>{error}</p>}

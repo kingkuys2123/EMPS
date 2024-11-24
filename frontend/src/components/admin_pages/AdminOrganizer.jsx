@@ -201,7 +201,7 @@ function AdminOrganizer() {
     return (
         <div className="template-page">
             <Box sx={{ display: "flex", width: "100vw", maxWidth: "100%" }}>
-                <AdminSidebar />
+                <AdminSidebar/>
                 <Box component="main" sx={{
                     flexGrow: 1,
                     backgroundColor: "#F3F3F3",
@@ -216,8 +216,14 @@ function AdminOrganizer() {
                         padding: "25px",
                         backgroundColor: "#F3F3F3"
                     }}>
-                        <Box sx={{ display: "flex", marginBottom: "15px", justifyContent: "space-between" }}>
-                            <Tabs value={tabValue} onChange={handleTabChange} >
+                        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                            <Tabs value={tabValue} onChange={handleTabChange}  sx={{
+                                    "& .MuiTab-root.Mui-selected": {
+                                        backgroundColor: "#FFFFFF", 
+                                        color: "#000000", 
+                                        borderRadius: "5px", 
+                                    },
+                                }} >
                                 <Tab label="All" />
                                 <Tab label="Approved" />
                                 <Tab label="Pending" />

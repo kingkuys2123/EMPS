@@ -47,7 +47,7 @@ public class UserService {
         UserEntity user = new UserEntity();
         try {
             user = uRepo.findById(id).get();
-
+            System.out.println("Before update: " + user); // Log the current user before update
             user.setUsername(newUserDetails.getUsername());
             user.setPassword(newUserDetails.getPassword());
             user.setEmail(newUserDetails.getEmail());
@@ -56,12 +56,14 @@ public class UserService {
             user.setAccountType(newUserDetails.getAccountType());
             user.setPhoneNumber(newUserDetails.getPhoneNumber());
             user.setDateTimeCreated(newUserDetails.getDateTimeCreated());
+            System.out.println("After update: " + user); // Log the updated user
         } catch (Exception e) {
             throw new NameNotFoundException("User with ID " + id + " not found!");
         } finally {
             return uRepo.save(user);
         }
     }
+    
 
     // Update Profile
     @SuppressWarnings("finally")

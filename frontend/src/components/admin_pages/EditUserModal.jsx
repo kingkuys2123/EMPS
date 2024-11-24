@@ -3,7 +3,6 @@ import {
     Box,
     Button,
     TextField,
-    Typography,
     Dialog,
     DialogActions,
     DialogContent,
@@ -22,16 +21,24 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [username, setUserName] = useState(""); 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
         if (user) {
+            // Ensure all fields are properly initialized
+            console.log("User passed to modal:", user); // Add this to inspect the data
             setAccountType(user.accountType || "");
             setFirstName(user.firstName || "");
             setLastName(user.lastName || "");
             setPhoneNumber(user.phoneNumber || "");
+            setEmail(user.email || "");   
+            setPassword(user.password || "");
+            setUserName(user.username || ""); 
         }
     }, [user]);
 
@@ -45,6 +52,8 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const validErrors = {};
+
+        // Check if required fields are filled
         if (!firstName || !lastName || !accountType) {
             if (!accountType) validErrors.accountType = true;
             if (!firstName) validErrors.firstName = true;
@@ -55,6 +64,7 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
             return;
         }
 
+        // Validate phone number if provided
         if (phoneNumber) {
             const phoneRegex = /^\d+$/;
             if (!phoneRegex.test(phoneNumber)) {
@@ -73,9 +83,16 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
                 firstName,
                 lastName,
                 phoneNumber,
+                email,
+                password,
+                username, 
             };
-            await UserService.updateProfile(user.userID, updatedUser);
-            console.log(updatedUser);
+
+            // Log the updated user object to verify all fields are populated
+            console.log("Updated user object:", updatedUser);
+
+            // Call the API to update the user
+            await UserService.updateUser(user.userID, updatedUser);
             onSuccess(updatedUser);  // Inform the parent component of the successful update
             setSnackbarMessage("User updated successfully.");
             setOpenSnackbar(true);
@@ -90,16 +107,16 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
         <Dialog open={open} onClose={onClose}>
             <DialogTitle>Edit User</DialogTitle>
             <DialogContent>
-                <FormControl fullWidth margin="normal" error={!!errors.accountType}>
+                <FormControl fullWidth margin="normal">
                     <InputLabel>Account Type</InputLabel>
                     <Select
                         value={accountType}
                         onChange={(e) => setAccountType(e.target.value)}
                         label="Account Type"
                     >
-                        <MenuItem value="Admin">Admin</MenuItem>
-                        <MenuItem value="User">User</MenuItem>
-                        <MenuItem value="Organizer">Organizer</MenuItem>
+                        <MenuItem value="admin">Admin</MenuItem>
+                        <MenuItem value="user">User</MenuItem>
+                        <MenuItem value="organizer">Organizer</MenuItem>
                     </Select>
                 </FormControl>
                 <TextField
@@ -128,6 +145,34 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
                     value={phoneNumber}
                     error={!!errors.phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="Email"
+                    variant="outlined"
+                    margin="normal"
+                    value={email}
+                    error={!!errors.email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="Username"
+                    variant="outlined"
+                    margin="normal"
+                    value={username}
+                    error={!!errors.username}
+                    onChange={(e) => setUserName(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="Password"
+                    variant="outlined"
+                    margin="normal"
+                    type="password"
+                    value={password}
+                    error={!!errors.password}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
             </DialogContent>
             <DialogActions>
