@@ -16,8 +16,16 @@ function TemplateComponent({
     onDeleteClick,
     body
 }) {
+    // State for search input
+    const [searchText, setSearchText] = useState("");
+
+    // Filter rows based on search text
+    const filteredRows = fetchRows.filter((row) =>
+        row.customerName.toLowerCase().includes(searchText.toLowerCase())
+    );
+
     return (
-        <div className="template-page" style={{ boxSizing: "border-box"}}>
+        <div className="template-page" style={{ boxSizing: "border-box" }}>
             <Box sx={{ display: "flex", boxSizing: "border-box", width: "100vw" }}>
                 {SidebarComponent && <SidebarComponent />}
 
@@ -60,10 +68,12 @@ function TemplateComponent({
                             <Box sx={{ display: "flex", boxSizing: "border-box", gap: "10px" }}>
                                 <TextField
                                     id="outlined-size-small"
-                                    label="Search bookings..."
+                                    label="Search bookings by name..."
                                     type="search"
                                     size="small"
                                     sx={{ width: "250px" }}
+                                    value={searchText}
+                                    onChange={(e) => setSearchText(e.target.value)}
                                 />
                                 <Button
                                     variant="outlined"
@@ -84,14 +94,12 @@ function TemplateComponent({
                             ) : (
                                 <DataTable
                                     boxPadding={"0px"}
-                                    rows={fetchRows}
+                                    rows={filteredRows}
                                     columns={columns}
                                     onAcceptClick={onAcceptClick}
                                     onDeleteClick={onDeleteClick}
                                 />
                             )}
-
-
                         </Box>
                     </Box>
                 </Box>

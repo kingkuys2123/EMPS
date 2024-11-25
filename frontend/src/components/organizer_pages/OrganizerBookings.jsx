@@ -7,6 +7,7 @@ import { Button } from "@mui/material";
 function OrganizerBookings() {
     const [rows, setRows] = useState([]);
     const [activeTab, setActiveTab] = useState("All");
+    const [checker, checked] = useState(true);
     const columns = [
         { field: 'booking', headerName: 'Booking', minWidth: 80 },
         { field: 'customerName', headerName: 'Customer Name', minWidth: 200, display: "flex", flex: 1 },
@@ -35,7 +36,7 @@ function OrganizerBookings() {
                                 Accept
                             </Button>
                             <Button
-                                onClick={() => handleDeleteClick(params.row.id)}
+                                onClick={() => handleDeleteClick(params)}
                                 variant="contained"
                                 color="error"
                                 size="small"
@@ -70,15 +71,40 @@ function OrganizerBookings() {
             }
         };
         fetchBookings();
-    }, [activeTab]);
+    }, [activeTab, checker]);
 
-    const handleAcceptClick = (data) => {
-        console.log('rowStatus is: ', data.row.status);
-        console.log('Accepted clicked:', data);
+    const handleAcceptClick = async (data) => {
+        console.log("rowStatus is: ", data.row.status);
+    
+        try {
+            // Step 1: Update booking quantity
+            const updatedBooking = await BookingService.updateTicketQuantity(data.row.booking);
+            console.log("Booking quantity updated successfully:", updatedBooking);
+    
+            // Step 2: Update booking status
+            const statusUpdatedBooking = await BookingService.updateBookingStatus(data.row.booking);
+            console.log("Booking status updated to Confirmed:", statusUpdatedBooking);
+
+            setRows((prevRows) =>
+                prevRows.map((row) =>
+                    row.booking === data.row.booking
+                        ? { ...row, status: "Confirmed" }
+                        : row
+                )
+            );
+        } catch (error) {
+            console.error("Error accepting booking:", error);
+        }
     };
+    
 
-    const handleDeleteClick = (userID) => {
-        console.log('Delete clicked for user ID:', userID);
+    const handleDeleteClick = async (data) => {
+         try{
+            const deleteRow = await BookingService.deleteBooking(data.row.booking);
+            checked((prevChecker) => !prevChecker);
+        } catch (error) {
+            console.error("Error deleting booking: ", error);
+        }
     };
 
     return (

@@ -12,7 +12,7 @@ import java.util.List;
 public class BookingController {
     @Autowired
     BookingService bServ;
-
+    
     // Create Booking
     @PostMapping("/createBooking")
     public BookingEntity createUser(@RequestBody BookingEntity booking) {
@@ -36,7 +36,14 @@ public class BookingController {
     public BookingEntity updateUser(@RequestParam int id, @RequestBody BookingEntity updatedBooking) {
         return bServ.updateBooking(id, updatedBooking);
     }
-
+    @PutMapping("/updateTicketQuantity/{id}")
+    public BookingEntity updateTicketQuantity(@PathVariable int id) {
+        return bServ.updateTicketQuantity(id);
+    }
+    @PutMapping("/updateStatus/{id}")
+    public BookingEntity updateStatus(@PathVariable int id) {
+        return bServ.acceptBookingStatus(id);
+    }
     // Delete Booking By ID
     @DeleteMapping("/deleteBooking/{id}")
     public String deleteUser(@PathVariable int id) {

@@ -112,7 +112,25 @@ const BookingService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+    updateTicketQuantity: async (id) => {
+        try {
+            const response = await axios.put(`/booking/updateTicketQuantity/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating booking quantity for ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 
+    updateBookingStatus: async (id) => {
+        try {
+            const response = await axios.put(`/booking/updateStatus/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating booking status for ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
     // Delete booking by ID
     deleteBooking: async (id) => {
         try {
