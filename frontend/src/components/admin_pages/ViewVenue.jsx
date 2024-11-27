@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Table,TableHead, TableRow, TableCell,TableBody } from "@mui/material";
-import VenueService from '../../services/VenueService.jsx';
+import { Table,TableHead, TableRow, TableCell,TableBody, Grid, TextField } from "@mui/material";
 import VenueOptions from "../admin_pages/VenueOptions.jsx";
 
-function ViewVenue() {
-    const [venue, setVenue] = useState({ name: '', location: '', capacity: '' });
+function ViewVenue({refreshData, searchTerm, filter }) {
     const [venues, setVenues] = useState([]);
+    const [filteredVenues, setFilteredVenues] = useState([]);
 
     const loadVenues = async () => {
         try {
-            const data = await VenueService.getAllVenue();
+            const data = await refreshData(); 
             setVenues(data);
         } catch (error) {
         }
@@ -20,9 +19,33 @@ function ViewVenue() {
         loadVenues();
     }, []);
 
-   const refreshData = loadVenues;
+    useEffect(() => {
+        if (refreshData) {
+            loadVenues();  
+        }
+    }, [refreshData]);
 
-    const rows = venues.map((v) => ({
+    useEffect(() => {
+        let filteredData = [...venues];
+
+        if (searchTerm) {
+            filteredData = filteredData.filter((venue) =>
+                venue.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+       
+        if (filter) {
+            filteredData = filteredData.filter((venue) =>
+                venue.capacity >= filter
+            );
+        }
+
+        setFilteredVenues(filteredData);
+    }, [searchTerm, filter, venues]);
+
+
+    const rows = filteredVenues.map((v) => ({
         id: v.venueId,
         name: v.name,
         address: v.address,

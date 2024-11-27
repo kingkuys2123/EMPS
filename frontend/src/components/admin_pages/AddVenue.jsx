@@ -4,33 +4,38 @@ import { Container, Box   } from "@mui/material";
 import VenueService from '../../services/VenueService.jsx';
 import "../styles/FontStyle.css";
 
-function AddVenue({ onClose }) {
-    const [venue, setVenue] = useState({ name: '', location: '', capacity: '' });
-    const [venues, setVenues] = useState([]);
+function AddVenue({ onClose, refreshData }) {
+    const [venue, setVenue] = useState({ name: '', address: '', capacity: '', description: '' });
+    const [error, setError] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setVenue({ ...venue, [name]: value });
       };
 
-    const handleSubmit = async (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
-        if (venue.name && venue.location && venue.capacity) {
-            try {
-                const response = VenueService.createVenue(venue);
-  
-                if (response.ok) {
-                    const newVenue = await response.json();
-                    setVenues([...venues, newVenue]); 
-                    setVenue({ name: '', location: '', capacity: '' }); 
-                } else {
-                    console.error('Failed to add venue');
-                }
-            } catch (error) {
-                console.error('Error submitting venue:', error);
-            }
+        setError("");
+    
+
+        if (!venue.name || !venue.address || !venue.capacity) {
+          setError("All fields are required.");
+          console.error("Validation error: Missing fields", venue);
+          return;
         }
-    };
+    
+        try {
+            console.log("Submitting venue:", venue);
+        const response = await VenueService.createVenue(venue);
+            
+          setVenue({ name: "", capacity: "", address: "", description: "" });
+          refreshData(); 
+          onClose();
+        } catch (error) {
+          console.error("Error submitting venue:", error);
+          setError("Failed to add venue. Please try again.");
+        }
+      };
 
     const handleCancel = () => {
         onClose(); 
@@ -42,21 +47,21 @@ function AddVenue({ onClose }) {
             <Container className="con" maxWidth="sm">
                 <Box className="mainBox">
                 <h2>Add New Venue</h2>
-                <form className="venue-form">
+                <form className="venue-form" onSubmit={handleSubmit}>
                 <div className='form-row'>
                         <input
                         className='name'
                         placeholder='Name'
                         type="text"
                         name="name"
-                        //   onChange={handleChange}
+                          onChange={handleChange}
                         />
                         <input
                         className='capacity'
                         placeholder='Capacity'
                         type="number"
                         name="capacity"
-                        //   onChange={handleChange}
+                          onChange={handleChange}
                         />
                     
                         <input
@@ -65,14 +70,14 @@ function AddVenue({ onClose }) {
                         type="text"
                         name="address"
                         id="address"
-                        //   onChange={handleChange}
+                          onChange={handleChange}
                         />
                     
                         <textarea
                         className="description"
                         placeholder="Description"
                         name="description"
-                        //   onChange={handleChange}
+                          onChange={handleChange}
                         />
                     </div>
                     <div className='buttons'>

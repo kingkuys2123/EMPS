@@ -2,9 +2,9 @@ import axios from '../utils/AxiosConfig.jsx';
 
 const VenueService = {
 
-    createVenue: async (venueData) => {
+    createVenue: async (venue) => {
         try {
-            const response = await axios.post(`/venue/postVenue`, venue, {
+            const response = await axios.post(`/venue/createVenue`, venue, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -36,12 +36,12 @@ const VenueService = {
         }
     },
 
-    deleteVenue:async () => {
+    deleteVenue:async (id) => {
         try {
-            const response = await axios.get(`/venue//deleteVenue/${id}`);
+            const response = await axios.get(`/venue/deleteVenue/${id}`);
             return response.data;
         } catch (error) {
-            onsole.error(`Error deleting venue with ID ${id}:`, error);
+            console.error(`Error deleting venue with ID ${id}:`, error);
             throw error.response ? error.response.data : error.message;
         }
     },

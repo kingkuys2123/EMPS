@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Menu, MenuItem, IconButton, Modal, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import './styles/venue.css';
+import VenueService from '../../services/VenueService.jsx';
 import UpdateVenue from "../admin_pages/UpdateVenue.jsx"
 
 
@@ -42,14 +43,20 @@ function VenueOptions({ venue,  refreshData}) {
     };
 
     const handleCloseDeleteConfirm = () => {
-        setOpenDeleteConfirm(false); 
+      setOpenDeleteConfirm(false); 
     }
 
-    const handleDelete = () => {
+    const handleDelete = async (e) => {
         
-        console.log("Item deleted");
-        setOpenDeleteConfirm(false);
-        refreshData();
+      try {
+        const response = await VenueService.deleteVenue(venue.venueId);
+        setOpenDeleteConfirm(false); 
+          alert("Deleted");
+          refreshData();
+      } catch (error) {
+          console.error('Error deleting venue:', error);
+      }
+        
     };
 
     return (

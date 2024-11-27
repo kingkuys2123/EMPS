@@ -18,8 +18,6 @@ function UpdateVenue({ venue, onClose }) {
     const handleSubmit = async (e) => {
       e.preventDefault();
       
-      
-    
       if (updatedVenue.name && updatedVenue.address && updatedVenue.capacity) {
         try {
           const response = await VenueService.updateVenue(updatedVenue.venueId, updatedVenue);
@@ -34,7 +32,7 @@ function UpdateVenue({ venue, onClose }) {
   return (
     <Container className="con" maxWidth="sm">
     <Box className="mainBox">
-      <h2>Update {updatedVenue.name}</h2>
+      <h2>Update {venue.name}</h2>
     <form className="venue-form" onSubmit={handleSubmit}>
       <div className='form-row'>
               <input
