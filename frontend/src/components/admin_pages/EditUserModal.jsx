@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import CustomSnackbar from "../CustomSnackbar.jsx";
 import UserService from "../../services/UserService.jsx";
+import OrganizerService from "../../services/OrganizerService.jsx"
 
 function EditUserModal({ open, onClose, user, onSuccess }) {
     // Initialize local state with the passed user details
@@ -24,6 +25,7 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUserName] = useState(""); 
+    const [dateTimeCreated, setDateTimeCreated] = useState("");
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
     const [errors, setErrors] = useState({});
@@ -39,6 +41,7 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
             setEmail(user.email || "");   
             setPassword(user.password || "");
             setUserName(user.username || ""); 
+            setDateTimeCreated(user.dateTimeCreated || "");
         }
     }, [user]);
 
@@ -52,21 +55,22 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const validErrors = {};
-
-        // Check if required fields are filled
+    
+        // Validate required fields
         if (!firstName || !lastName || !accountType) {
             if (!accountType) validErrors.accountType = true;
             if (!firstName) validErrors.firstName = true;
             if (!lastName) validErrors.lastName = true;
+    
             setErrors(validErrors);
             setSnackbarMessage("Please fill out all required fields.");
             setOpenSnackbar(true);
             return;
         }
-
-        // Validate phone number if provided
+    
+        // Validate phone number
         if (phoneNumber) {
-            const phoneRegex = /^\d+$/;
+            const phoneRegex = /^\d+$/; // Regex for numeric values only
             if (!phoneRegex.test(phoneNumber)) {
                 validErrors.phoneNumber = true;
                 setErrors(validErrors);
@@ -75,33 +79,52 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
                 return;
             }
         }
-
+    
         try {
+            // Prepare the updated user object
             const updatedUser = {
                 ...user,
-                accountType,
                 firstName,
                 lastName,
                 phoneNumber,
                 email,
                 password,
-                username, 
+                username,
+                dateTimeCreated,
+                accountType,
             };
-
-            // Log the updated user object to verify all fields are populated
-            console.log("Updated user object:", updatedUser);
-
-            // Call the API to update the user
+    
+            // Create a new organizer only if accountType is 'organizer' and was not already set
+            if (accountType === 'organizer' && user.accountType !== 'organizer') {
+                const newOrganizer = {
+                    user: { userID: user.userID },
+                    approvalStatus: 'approved',
+                };
+                
+    
+                console.log("Organizer Data Sent to API:", newOrganizer);
+                await OrganizerService.addOrganizer(newOrganizer);
+                console.log("New organizer created", newOrganizer);
+            }
+    
+            // Update user details
             await UserService.updateUser(user.userID, updatedUser);
-            onSuccess(updatedUser);  // Inform the parent component of the successful update
+            onSuccess(updatedUser); // Notify parent component of success
+    
+            // Show success feedback
             setSnackbarMessage("User updated successfully.");
             setOpenSnackbar(true);
-            onClose(); // Close the modal after successful update
-        } catch (e) {
+            onClose(); // Close the modal or form
+        } catch (error) {
+            // Log the error for debugging
+            console.error("Error updating user:", error);
+    
+            // Show error feedback
             setSnackbarMessage("Failed updating user.");
             setOpenSnackbar(true);
         }
     };
+   
 
     return (
         <Dialog open={open} onClose={onClose}>
@@ -163,16 +186,6 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
                     value={username}
                     error={!!errors.username}
                     onChange={(e) => setUserName(e.target.value)}
-                />
-                <TextField
-                    fullWidth
-                    label="Password"
-                    variant="outlined"
-                    margin="normal"
-                    type="password"
-                    value={password}
-                    error={!!errors.password}
-                    onChange={(e) => setPassword(e.target.value)}
                 />
             </DialogContent>
             <DialogActions>

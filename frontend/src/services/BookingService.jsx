@@ -21,8 +21,8 @@ const BookingService = {
             // Mapping the response data to the required structure
             const mappedBookings = response.data.map((booking) => ({
                 booking: booking.bookingID,
-                customerName: booking.userID || "Unknown",
-                event: null,
+                customerName: booking.user.firstName || "Unknown",
+                event: booking.ticket.name,
                 tickets: booking.ticketQuantity,
                 totalPrice: booking.totalPrice,
                 date: new Date(booking.dateTimeBooked),
@@ -36,7 +36,59 @@ const BookingService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+    //get bookings if status is Confirmed
+    getConfirmedBookings: async () => {
+        try {
+            const response = await axios.get(`/booking/getAllBookings`);
+            console.log("Raw Booking Data:", response.data);
+
+            const confirmedBookings = response.data
+                .filter((booking) => booking.status === "Confirmed")
+                .map((booking) => ({
+                    booking: booking.bookingID,
+                    customerName: booking.user.firstName || "Unknown",
+                    event: booking.ticket.name || "N/A",
+                    tickets: booking.ticketQuantity,
+                    totalPrice: booking.totalPrice,
+                    date: new Date(booking.dateTimeBooked),
+                    status: booking.status,
+                }));
     
+            console.log("Mapped Confirmed Booking Data:", confirmedBookings);
+            return confirmedBookings;
+        } catch (error) {
+            // Log any errors that occur during the API request
+            console.error("Error fetching confirmed bookings:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    
+    //get bookings if status is Pending
+    getPendingBookings: async () => {
+        try {
+            const response = await axios.get(`/booking/getAllBookings`);
+            console.log("Raw Booking Data:", response.data);
+            
+            const pendingBookings = response.data
+                .filter((booking) => booking.status === "Pending")
+                .map((booking) => ({
+                    booking: booking.bookingID,
+                    customerName: booking.user.firstName || "Unknown",
+                    event: booking.ticket.name || "N/A",
+                    tickets: booking.ticketQuantity,
+                    totalPrice: booking.totalPrice,
+                    date: new Date(booking.dateTimeBooked),
+                    status: booking.status,
+                }));
+    
+            console.log("Mapped Confirmed Booking Data:", pendingBookings);
+            return pendingBookings;
+        } catch (error) {
+            // Log any errors that occur during the API request
+            console.error("Error fetching pending bookings:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 
 
     // Get booking by ID

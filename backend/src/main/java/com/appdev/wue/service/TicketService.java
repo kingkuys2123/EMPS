@@ -28,6 +28,9 @@ public class TicketService {
     }
 
     public TicketEntity createTicket(TicketEntity ticket) {
+        if (ticket.getQuantity() <= 0) {
+            ticket.setQuantity(1);
+        }
         return tRepo.save(ticket);
     }
 
@@ -51,11 +54,10 @@ public class TicketService {
 
     public String deleteTicket(int id) {
         String msg = "Ticket Invalid";
-        if(tRepo.findById(id) != null){
+        if (tRepo.findById(id) != null) {
             tRepo.deleteById(id);
             msg = "Ticket with id " + id + " is deleted successfully";
         }
         return msg;
     }
 }
-

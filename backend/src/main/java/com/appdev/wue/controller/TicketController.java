@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import com.appdev.wue.entity.TicketEntity;
 import com.appdev.wue.service.TicketService;
 
-
 @RestController
 @RequestMapping(method = RequestMethod.GET, path = "/api/ticket")
 public class TicketController {
@@ -43,7 +42,6 @@ public class TicketController {
     // Dalete Ticket
     @DeleteMapping("/deleteTicket/{id}")
     public String deleteTicket(@PathVariable int id) {
-       return tServ.deleteTicket(id);
+        return tServ.deleteTicket(id);
     }
 }
-    

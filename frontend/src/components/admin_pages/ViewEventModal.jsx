@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Box, Tabs, Tab, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 
-import OrganizerSidebar from "./OrganizerSidebar";
+import AdminSidebar from "./AdminSidebar";
 import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
 import FeedbackServices from "../../services/FeedbackServices";
@@ -12,7 +12,7 @@ import "./styles/FontStyle.css";
 function ViewEventModal() {
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
-    const [feedbacks, setFeedbacks] = useState([]);  // State for feedback data
+    const [feedbacks, setFeedbacks] = useState([]);
     const [tabValue, setTabValue] = useState(0);
 
     const fetchEvent = async () => {
@@ -52,7 +52,7 @@ function ViewEventModal() {
 
     return (
         <div className="template-page">
-            <OrganizerSidebar />
+            <AdminSidebarSidebar />
 
             <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 

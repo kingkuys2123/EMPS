@@ -45,19 +45,19 @@ function AdminOrganizer() {
         const fetchData = async () => {
             try {
                 const data = await OrganizerService.getAllOrganizers();
-                console.log("Fetched Data:", data);
+                
 
                 // Filter to include only organizers with valid user data
                 const organizers = data.filter((organizer) => {
-                    console.log("Checking organizer:", organizer);
+                    
                     return organizer.user && organizer.user.accountType;
                 });
 
-                console.log("Filtered Organizers:", organizers);
+           
                 setUsers(organizers);
                 setFilteredUsers(organizers);
             } catch (error) {
-                console.error("Failed to fetch Users", error);
+               
             }
         };
         fetchData();

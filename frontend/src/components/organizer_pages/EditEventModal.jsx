@@ -122,25 +122,13 @@ const EditEventModal = ({ open, onClose, event, onSave }) => {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Confirmation Status"
-              value={confirmationStatus}
-              onChange={(e) => setConfirmationStatus(e.target.value)}
-              select
-            >
-              <MenuItem value="Confirmed">Confirmed</MenuItem>
-              <MenuItem value="Pending">Pending</MenuItem>
-            </TextField>
-          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} sx={{backgroundColor: '#B71C1C', color: "white"}}>
           Cancel
         </Button>
-        <Button onClick={handleEditEvent} color="primary">
+        <Button onClick={handleEditEvent} sx={{backgroundColor: '#B71C1C', color: "white"}}>
           Save Changes
         </Button>
       </DialogActions>

@@ -104,9 +104,10 @@ function AdminUsers() {
             lastName: user.lastName,
             accountType: user.accountType,
             phoneNumber: user.phoneNumber,
-            email: user.email || "",  // Default to empty string if undefined
-            username: user.username || "",  // Default to empty string if undefined
-            password: user.password || ""  // Default to empty string if undefined
+            dateTimeCreated: user.dateTimeCreated,
+            email: user.email || "",  
+            username: user.username || "",  
+            password: user.password || "" 
         });
         setOpenEditModal(true);
     };
@@ -156,6 +157,9 @@ function AdminUsers() {
         accountType: user.accountType,
         phoneNumber: user.phoneNumber,
         dateTimeCreated: user.dateTimeCreated,
+        email: user.email || "",  
+        username: user.username || "",  
+        password: user.password || "" 
     }));
 
     return (

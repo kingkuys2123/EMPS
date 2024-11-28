@@ -5,6 +5,7 @@ import UserHome from "./components/user_pages/UserHome.jsx";
 import UserBookings from "./components/user_pages/UserBookings.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
 import MyAccount from "./components/MyAccount.jsx";
+import OrganizerDashboard from './components/organizer_pages/OrganizerDashboard.jsx';
 import MyEvents from './components/organizer_pages/MyEvents.jsx';
 import ViewEventPage from './components/organizer_pages/ViewEventPage.jsx';
 import AdminDashboard from "./components/admin_pages/AdminHome.jsx"
@@ -13,6 +14,7 @@ import AdminOrganizer from './components/admin_pages/AdminOrganizer.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 import AdminVenue from './components/admin_pages/AdminVenue.jsx';
 import AdminEventsDashboard from './components/admin_pages/AdminEventsDashboard.jsx';
+import UserFeedback from './components/user_pages/UserFeedback.jsx';
 
 import Ticket from './components/organizer_pages/Ticket.jsx'
 import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
@@ -28,12 +30,15 @@ function App() {
 
                 {/* User Routes */}
                 <Route path="/user/bookings" element={<UserBookings />} />
+                <Route path="/user/feedbacks" element={<UserFeedback />} />
 
                 {/* Organizer Routes */}
+                <Route path="/organizer" element={<MyEvents />} />
                 <Route path="/organizer/my_events" element={<MyEvents />} />
                 <Route path="/organizer/my_events/:eventId" element={<ViewEventPage />} />
                 <Route path='/organizer/bookings' element={<OrganizerBookings/>} />
                 <Route path='/organizer/tickets' element={<Ticket/>} />
+                <Route path='/organizer/dashboard/' element={<OrganizerDashboard />} />
 
                 {/* Admin Routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
