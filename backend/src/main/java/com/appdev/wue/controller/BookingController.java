@@ -46,7 +46,7 @@ public class BookingController {
     }
     // Delete Booking By ID
     @DeleteMapping("/deleteBooking/{id}")
-    public String deleteUser(@PathVariable int id) {
+    public BookingEntity deleteUser(@PathVariable int id) {
         return bServ.deleteBooking(id);
     }
 

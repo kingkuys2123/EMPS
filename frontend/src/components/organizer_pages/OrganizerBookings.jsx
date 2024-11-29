@@ -3,6 +3,8 @@ import OrganizerSidebar from "./OrganizerSidebar.jsx";
 import TemplateComponent from "../TemplateComponent.jsx";
 import BookingService from "../../services/BookingService.jsx";
 import { Button } from "@mui/material";
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 function OrganizerBookings() {
     const [rows, setRows] = useState([]);
@@ -12,10 +14,37 @@ function OrganizerBookings() {
         { field: 'booking', headerName: 'Booking', minWidth: 80 },
         { field: 'customerName', headerName: 'Customer Name', minWidth: 200, display: "flex", flex: 1 },
         { field: 'event', headerName: 'Event', minWidth: 300, display: "flex", flex: 2 },
-        { field: 'tickets', headerName: 'Tickets', minWidth: 80, type: 'number', align: 'left', headerAlign: 'left' },
-        { field: 'totalPrice', headerName: 'Total Price', minWidth: 120, type: 'number', align: 'left', headerAlign: 'left', display: "flex", flex: 1 },
-        { field: 'date', headerName: 'Date', minWidth: 120, type: 'date', display: "flex", flex: 1 },
-        { field: 'status', headerName: 'Status', minWidth: 120, display: "flex", flex: 1 },
+        { field: 'tickets', headerName: 'Tickets', minWidth: 80, type: 'number', align: 'left', headerAlign: 'left', flex: .5 },
+        { field: 'totalPrice', headerName: 'Total Price', minWidth: "20px", type: 'number', align: 'left', headerAlign: 'left', display: "flex", flex: .5 },
+        {
+            field: 'dateBooked',
+            headerName: 'Date Booked',
+            minWidth: "200px",
+            type: 'date',
+            display: "flex",
+            flex: 1.5,
+            valueFormatter: (params) => {
+                const date = new Date(params);  // Accessing the date value
+                console.log("Raw Date Value:", params.value);  // Log the raw date value
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                });
+            },
+        },
+
+        {
+            field: 'status', headerName: 'Status', minWidth: 120, display: "flex", flex: 1,
+            renderCell: (params) => {
+                return (
+                    <div style={{ color: params.row.status === "Pending" ? "red" : "green", display: "flex", alignItems: "center" }}>
+                        {params.row.status === "Confirmed" ? <CheckCircleIcon sx={{ height: "18px" }} /> : <ReportGmailerrorredIcon sx={{ height: "18px" }} />}
+                        {params.row.status}
+                    </div>
+                )
+            }
+        },
         {
             field: 'actions',
             headerName: 'Actions',
@@ -75,12 +104,12 @@ function OrganizerBookings() {
 
     const handleAcceptClick = async (data) => {
         console.log("rowStatus is: ", data.row.status);
-    
+
         try {
             // Step 1: Update booking quantity
             const updatedBooking = await BookingService.updateTicketQuantity(data.row.booking);
             console.log("Booking quantity updated successfully:", updatedBooking);
-    
+
             // Step 2: Update booking status
             const statusUpdatedBooking = await BookingService.updateBookingStatus(data.row.booking);
             console.log("Booking status updated to Confirmed:", statusUpdatedBooking);
@@ -96,10 +125,10 @@ function OrganizerBookings() {
             console.error("Error accepting booking:", error);
         }
     };
-    
+
 
     const handleDeleteClick = async (data) => {
-         try{
+        try {
             const deleteRow = await BookingService.deleteBooking(data.row.booking);
             checked((prevChecker) => !prevChecker);
         } catch (error) {

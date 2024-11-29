@@ -82,14 +82,10 @@ public class BookingService {
         return bRepo.save(booking);
     }
     // Delete Booking By ID
-    public String deleteBooking(int id) {
-        String msg;
-        if (bRepo.existsById(id)) {
-            bRepo.deleteById(id);
-            msg = "Booking with ID " + id + " deleted successfully!";
-        } else {
-            msg = "Booking with ID " + id + " not found!";
-        }
-        return msg;
+    public BookingEntity deleteBooking(int id) {
+        BookingEntity delete = bRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
+        delete.IsDeleted(1);
+        return bRepo.save(delete);
     }
 }

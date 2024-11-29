@@ -19,13 +19,15 @@ const BookingService = {
             const response = await axios.get(`/booking/getAllBookings`);
             console.log("Raw Booking Data:", response.data);
             // Mapping the response data to the required structure
-            const mappedBookings = response.data.map((booking) => ({
+            const mappedBookings = response.data
+            .filter((booking) => booking.isDeleted === 0)
+            .map((booking) => ({
                 booking: booking.bookingID,
                 customerName: booking.user.firstName || "Unknown",
                 event: booking.ticket.name,
                 tickets: booking.ticketQuantity,
                 totalPrice: booking.totalPrice,
-                date: new Date(booking.dateTimeBooked),
+                dateBooked: booking.dateTimeBooked,
                 status: booking.status,
             }));
             console.log("Mapped Booking Data:", mappedBookings);

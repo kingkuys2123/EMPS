@@ -8,7 +8,7 @@ import DataTable from "./DataTableComponent.jsx";
 function TemplateComponent({
     SidebarComponent,
     title = "Page Title",
-    tabs = ["All"],
+    tabs = [""],
     fetchRows,
     columns,
     setActiveTab,
@@ -49,20 +49,31 @@ function TemplateComponent({
                             height: "7vh", boxSizing: "border-box", marginBottom: "10px",
                             justifyContent: "space-between", alignItems: "flex-end"
                         }}>
-                            <Box sx={{ display: "flex", boxSizing: "border-box", width: "200px", justifyContent: "space-between" }}>
-                                {tabs.map((tab) => (
-                                    <React.Fragment key={tab}>
-                                        <Link
-                                            href="#"
-                                            underline="hover"
-                                            className="TabBookingButtons"
-                                            onClick={() => setActiveTab(tab)}
-                                        >
-                                            {tab}
-                                        </Link>
-                                        {tab !== tabs[tabs.length - 1] && <p>|</p>}
-                                    </React.Fragment>
-                                ))}
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    boxSizing: "border-box",
+                                    width: "200px",
+                                    justifyContent: tabs.length ? "space-between" : "center",
+                                }}
+                            >
+                                {tabs.length > 0 ? (
+                                    tabs.map((tab) => (
+                                        <React.Fragment key={tab}>
+                                            <Link
+                                                href="#"
+                                                underline="hover"
+                                                className="TabBookingButtons"
+                                                onClick={() => setActiveTab(tab)}
+                                            >
+                                                {tab}
+                                            </Link>
+                                            {tab !== tabs[tabs.length - 1] && <p>|</p>}
+                                        </React.Fragment>
+                                    ))
+                                ) : (
+                                    <Box sx={{ textAlign: "center", color: "#757575" }}></Box>
+                                )}
                             </Box>
 
                             <Box sx={{ display: "flex", boxSizing: "border-box", gap: "10px" }}>
@@ -75,13 +86,6 @@ function TemplateComponent({
                                     value={searchText}
                                     onChange={(e) => setSearchText(e.target.value)}
                                 />
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<FilterListIcon />}
-                                    sx={{ height: "40px", backgroundColor: "#CFCFC4", border: "#000", color: "#000" }}
-                                >
-                                    Filter
-                                </Button>
                             </Box>
                         </Box>
 
