@@ -94,9 +94,10 @@ const BookingService = {
 
 
     // Get booking by ID
-    getBooking: async (id) => {
+    getBookingById: async (id) => {
         try {
             const response = await axios.get(`/booking/getBooking/${id}`);
+            console.log("Bookingid: ", response.data);
             return response.data;
         } catch (error) {
             console.error(`Error fetching booking with ID ${id}:`, error);
