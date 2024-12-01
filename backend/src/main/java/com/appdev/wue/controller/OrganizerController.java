@@ -9,6 +9,9 @@ import com.appdev.wue.entity.OrganizerEntity;
 import com.appdev.wue.service.OrganizerService;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/api/organizer")
@@ -37,6 +40,13 @@ public class OrganizerController {
         return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
     }
 
+    // Create Organizer with user id
+    @PostMapping("/createOrganizerWithUser")
+    public ResponseEntity<OrganizerEntity> createOrganizerWithUser(@RequestBody OrganizerEntity organizer, @RequestParam int userId) {
+        OrganizerEntity createdOrganizer = oServ.createOrganizerWithUserId(organizer,userId);
+        return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
+    }
+
     // Update Organizer by Id
     @PutMapping("/updateOrganizer")
     public ResponseEntity<OrganizerEntity> updateOrganizer(@RequestParam int id, @RequestBody OrganizerEntity organizer) {
@@ -50,4 +60,18 @@ public class OrganizerController {
         String result = oServ.deleteOrganizer(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    //AddOrganizer
+    @PostMapping("/addOrganizer")
+    public ResponseEntity<?> addOrganizer(@RequestBody OrganizerEntity organizer){
+        try{
+            OrganizerEntity newOrganizer = oServ.addOrganizer(organizer);
+
+            return ResponseEntity.ok(newOrganizer);
+        }
+        catch(RuntimeException e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
 }

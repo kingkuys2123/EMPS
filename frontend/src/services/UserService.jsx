@@ -27,12 +27,18 @@ const UserService = {
     getUser: async (userId) => {
         try {
             const response = await axios.get(`/user/getUser/${userId}`);
-            return response.data;
+            return response.data; // Return user data if found
         } catch (error) {
-            console.error("Error fetching user with ID:", error);
-            throw error.response ? error.response.data : error.message;
+            // Handle 404 or other errors gracefully
+            if (error.response?.status === 404) {
+                console.error(`User with ID ${userId} not found.`);
+                throw new Error("User not found.");
+            }
+            console.error("Error fetching user:", error);
+            throw new Error("Error fetching user. Please try again.");
         }
     },
+    
 
     // Update User
     updateUser: async (userId, newUserDetails) => {

@@ -3,7 +3,7 @@ import React from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 
-function SearchableDataGrid({ rows, columns, height = 400 }) {
+function SearchableDataGrid({ rows, columns, height = 500 }) {
     return (
         <Box sx={{ height: height, width: '100%' }}>
             <DataGrid

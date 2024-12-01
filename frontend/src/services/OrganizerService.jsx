@@ -5,13 +5,24 @@ const OrganizerService = {
     // Create organizer
     createOrganizer: async (organizerData) => {
         try {
-            const response = await axios.post(`/organizer/createorganizer`, organizerData);
+            const response = await axios.post(`/organizer/createOrganizer`, organizerData);
             return response.data;
         } catch (error) {
             console.error("Error creating organizer:", error);
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    createOrganizerWithUserId: async (organizerData, userID) => {
+        try {
+            const response = await axios.post(`/organizer/createOrganizerWithUser?userId=${userID}`, organizerData);
+            return response.data;
+        } catch (error) {
+            console.error("Error creating organizer with user ID:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+    
 
     // Assign an existing user as an organizer
     assignOrganizer: async ({ username }) => {
@@ -67,6 +78,17 @@ const OrganizerService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    // Add Organizer
+    addOrganizer: async (organizerData)=>{
+        try {
+            const response = await axios.post(`/organizer/addOrganizer`,organizerData);
+            return response.data
+        }catch (error) {
+            console.error("Error creating organizer:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    }
 };
 
 export default OrganizerService;
