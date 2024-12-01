@@ -12,6 +12,8 @@ import ChangePasswordModal from "./user_pages/ChangePasswordModal.jsx";
 
 import './styles/FontStyle.css';
 import ConfirmDialog from "./ConfirmDialog.jsx";
+import AdminSidebar from "./admin_pages/AdminSidebar.jsx";
+import OrganizerSidebar from "./organizer_pages/OrganizerSidebar.jsx";
 
 function MyAccount() {
     const nav = useNavigate();
@@ -22,6 +24,8 @@ function MyAccount() {
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
+
+    const [profilePicture, setProfilePicture] = useState(null);
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -49,6 +53,7 @@ function MyAccount() {
             setFirstName(currentUser.firstName);
             setLastName(currentUser.lastName);
             setPhoneNumber(currentUser.phoneNumber);
+            setProfilePicture(currentUser.profilePicture);
             setEmail(currentUser.email);
             setErrors({});
         }
@@ -143,11 +148,24 @@ function MyAccount() {
         setOpenConfirmDeleteUserDialog(false);
     };
 
+    const Sidebars = {
+        user: <UserSidebar />,
+        admin: <AdminSidebar />,
+        organizer: <OrganizerSidebar />
+    };
+
+    const handleProfilePictureChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setProfilePicture(URL.createObjectURL(file));
+        }
+    };
+
     return (
         <div className="my-account-page">
             <Box sx={{ display: "flex" }}>
 
-                <UserSidebar />
+                {Sidebars[currentUser.accountType] || null}
 
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
@@ -155,24 +173,64 @@ function MyAccount() {
 
                     <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Box sx={{ backgroundColor: "#FFFFFF", width: "100%", height: "100%", boxShadow: "5px 5px 5px #aaaaaa", position: "relative", overflowY: "auto" }}>
-                            <Box sx={{ padding: '25px', display: 'flex' }}>
-                                <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '100px', height: '100px', borderRadius: '50%' }}/>
-                                <Box sx={{ paddingLeft: "15px", flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
-                                    <Box sx={{ fontWeight: 'bold' }}>
+                            <Box sx={{padding: '25px', display: 'flex'}}>
+                                <img
+                                    src={profilePicture || "/assets/placeholders/avatar-photo-placeholder.png"}
+                                    alt="profile-picture"
+                                    style={{width: '100px', height: '100px', borderRadius: '50%'}}
+                                />
+                                <Box sx={{
+                                    paddingLeft: "15px",
+                                    flexGrow: 1,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    textAlign: 'left'
+                                }}>
+                                    <Box sx={{fontWeight: 'bold'}}>
                                         <span>Profile Picture</span>
                                     </Box>
-                                    <Box sx={{ color: "#7F7F7F" }}>
+                                    <Box sx={{color: "#7F7F7F"}}>
                                         <span>PNG, JPEG under 15MB</span>
                                     </Box>
                                 </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    textAlign: 'left'
+                                }}>
                                     <Box>
-                                        <Button variant="contained" sx={{ backgroundColor: "#C63f47", color: "#FFFFFF", textTransform: 'none', borderRadius: "0" }}>
+                                        <Button
+                                            variant="contained"
+                                            component="label"
+                                            sx={{
+                                                backgroundColor: "#C63f47",
+                                                color: "#FFFFFF",
+                                                textTransform: 'none',
+                                                borderRadius: "0"
+                                            }}
+                                        >
                                             <Typography>
                                                 <span>Upload a new picture</span>
                                             </Typography>
+                                            <input
+                                                type="file"
+                                                hidden
+                                                accept="image/*"
+                                                onChange={handleProfilePictureChange}
+                                            />
                                         </Button>
-                                        <Button variant="contained" sx={{ marginLeft: '10px', backgroundColor: "#CFCFC4", color: "#FFFFFF", textTransform: 'none', borderRadius: "0" }}>
+                                        <Button
+                                            variant="contained"
+                                            sx={{
+                                                marginLeft: '10px',
+                                                backgroundColor: "#CFCFC4",
+                                                color: "#FFFFFF",
+                                                textTransform: 'none',
+                                                borderRadius: "0"
+                                            }}
+                                        >
                                             <Typography>
                                                 <span>Delete</span>
                                             </Typography>
@@ -180,15 +238,17 @@ function MyAccount() {
                                     </Box>
                                 </Box>
                             </Box>
-                            <Box sx={{ padding: '20px', display: 'flex', flexDirection: 'column' }}>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <Box sx={{ width: '48%', display: 'flex', flexDirection: 'column' }}>
-                                        <Typography component="span" sx={{ fontWeight: "bold" }}>
+                            <Box sx={{padding: '20px', display: 'flex', flexDirection: 'column'}}>
+                                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                                    <Box sx={{width: '48%', display: 'flex', flexDirection: 'column'}}>
+                                        <Typography component="span" sx={{fontWeight: "bold"}}>
                                             <span>Username</span>
                                         </Typography>
-                                        <TextField fullWidth label="Username" variant="outlined" margin="normal" value={username} error={!!errors.username} onChange={(e) => setUsername(e.target.value)} />
+                                        <TextField fullWidth label="Username" variant="outlined" margin="normal"
+                                                   value={username} error={!!errors.username}
+                                                   onChange={(e) => setUsername(e.target.value)}/>
 
-                                        <Typography component="span" sx={{ fontWeight: "bold" }}>
+                                        <Typography component="span" sx={{fontWeight: "bold"}}>
                                             <span>Full Name</span>
                                         </Typography>
                                         <TextField fullWidth label="First Name" variant="outlined" margin="normal" value={firstName} error={!!errors.firstName} onChange={(e) => setFirstName(e.target.value)}/>
