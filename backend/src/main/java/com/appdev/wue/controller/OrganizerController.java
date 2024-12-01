@@ -4,11 +4,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.events.Event;
 
 import com.appdev.wue.entity.OrganizerEntity;
+import com.appdev.wue.entity.UserEntity;
+import com.appdev.wue.repository.UserRepository;
 import com.appdev.wue.service.OrganizerService;
+import com.appdev.wue.service.UserService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -19,6 +28,12 @@ public class OrganizerController {
 
     @Autowired
     private OrganizerService oServ;
+    private final UserService uServ;
+
+    public OrganizerController(UserService uServ) {
+        this.uServ = uServ;
+    }
+
 
     // Get All Organizers
     @GetMapping("/getAllOrganizers")
@@ -36,7 +51,9 @@ public class OrganizerController {
     // Create Organizer
     @PostMapping("/createOrganizer")
     public ResponseEntity<OrganizerEntity> createOrganizer(@RequestBody OrganizerEntity organizer) {
-        OrganizerEntity createdOrganizer = oServ.createOrganizer(organizer);
+    	UserEntity user = uServ.getUser(organizer.getUser().getUserID());
+    	organizer.setUser(user);
+    	OrganizerEntity createdOrganizer = oServ.createOrganizer(organizer);
         return new ResponseEntity<>(createdOrganizer, HttpStatus.CREATED);
     }
 
@@ -73,5 +90,43 @@ public class OrganizerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    
+
+
+    @GetMapping("/getTopOrganizers")
+    public ResponseEntity<List<Map<String, Object>>> getTopOrganizers() {
+        List<Map<String, Object>> topOrganizers = oServ.getTopOrganizers();
+        return ResponseEntity.ok(topOrganizers);
+    }
+
+
+    @GetMapping("/getDummyData")
+    public ResponseEntity<List<Map<String, Object>>> getDummyData() {
+        List<Map<String, Object>> dummyOrganizers = new ArrayList<>();
+
+        // Create first dummy organizer
+        Map<String, Object> organizer1 = new HashMap<>();
+        organizer1.put("organizerId", 1);
+        organizer1.put("organizerName", "John Doe");
+        organizer1.put("rating", 4.8);
+        organizer1.put("eventCount", 2);
+        organizer1.put("events", Arrays.asList(
+            Map.of("eventId", 1, "eventName", "Summer Festival 2024", "attendees", 500),
+            Map.of("eventId", 2, "eventName", "Tech Conference 2024", "attendees", 300)
+        ));
+        dummyOrganizers.add(organizer1);
+
+        // Create second dummy organizer
+        Map<String, Object> organizer2 = new HashMap<>();
+        organizer2.put("organizerId", 2);
+        organizer2.put("organizerName", "Jane Smith");
+        organizer2.put("rating", 4.9);
+        organizer2.put("eventCount", 2);
+        organizer2.put("events", Arrays.asList(
+            Map.of("eventId", 3, "eventName", "Music Festival 2024", "attendees", 1000),
+            Map.of("eventId", 4, "eventName", "Food & Wine Expo", "attendees", 750)
+        ));
+        dummyOrganizers.add(organizer2);
+
+        return ResponseEntity.ok(dummyOrganizers);
+    }
 }
