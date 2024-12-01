@@ -27,11 +27,11 @@ export default function AdminDashboard() {
         return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
     };
 
-    useEffect(() => {
-        OrganizerService.getTopOrganizers()
-            .then(data => setTopOrganizers(formatter(data)))
-            .catch(error => console.error("Error fetching top organizers:", error));
-    }, []);
+    // useEffect(() => {
+    //     OrganizerService.getTopOrganizers()
+    //         .then(data => setTopOrganizers(formatter(data)))
+    //         .catch(error => console.error("Error fetching top organizers:", error));
+    // }, []);
 
     const chartSetting = {
         yAxis: [

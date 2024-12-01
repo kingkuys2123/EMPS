@@ -82,9 +82,6 @@ public class OrganizerService {
     
         return oRepo.save(organizer);
     }
-    
-
-
 
 }
 

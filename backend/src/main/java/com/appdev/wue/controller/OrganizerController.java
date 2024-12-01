@@ -91,42 +91,42 @@ public class OrganizerController {
         }
     }
 
+//    @GetMapping("/getTopOrganizers")
+//    public ResponseEntity<List<Map<String, Object>>> getTopOrganizers() {
+//        List<Map<String, Object>> topOrganizers = oServ.getTopOrganizers();
+//        return ResponseEntity.ok(topOrganizers);
+//    }
+//
+//
+//    @GetMapping("/getDummyData")
+//    public ResponseEntity<List<Map<String, Object>>> getDummyData() {
+//        List<Map<String, Object>> dummyOrganizers = new ArrayList<>();
+//
+//        // Create first dummy organizer
+//        Map<String, Object> organizer1 = new HashMap<>();
+//        organizer1.put("organizerId", 1);
+//        organizer1.put("organizerName", "John Doe");
+//        organizer1.put("rating", 4.8);
+//        organizer1.put("eventCount", 2);
+//        organizer1.put("events", Arrays.asList(
+//            Map.of("eventId", 1, "eventName", "Summer Festival 2024", "attendees", 500),
+//            Map.of("eventId", 2, "eventName", "Tech Conference 2024", "attendees", 300)
+//        ));
+//        dummyOrganizers.add(organizer1);
+//
+//        // Create second dummy organizer
+//        Map<String, Object> organizer2 = new HashMap<>();
+//        organizer2.put("organizerId", 2);
+//        organizer2.put("organizerName", "Jane Smith");
+//        organizer2.put("rating", 4.9);
+//        organizer2.put("eventCount", 2);
+//        organizer2.put("events", Arrays.asList(
+//            Map.of("eventId", 3, "eventName", "Music Festival 2024", "attendees", 1000),
+//            Map.of("eventId", 4, "eventName", "Food & Wine Expo", "attendees", 750)
+//        ));
+//        dummyOrganizers.add(organizer2);
+//
+//        return ResponseEntity.ok(dummyOrganizers);
+//    }
 
-    @GetMapping("/getTopOrganizers")
-    public ResponseEntity<List<Map<String, Object>>> getTopOrganizers() {
-        List<Map<String, Object>> topOrganizers = oServ.getTopOrganizers();
-        return ResponseEntity.ok(topOrganizers);
-    }
-
-
-    @GetMapping("/getDummyData")
-    public ResponseEntity<List<Map<String, Object>>> getDummyData() {
-        List<Map<String, Object>> dummyOrganizers = new ArrayList<>();
-
-        // Create first dummy organizer
-        Map<String, Object> organizer1 = new HashMap<>();
-        organizer1.put("organizerId", 1);
-        organizer1.put("organizerName", "John Doe");
-        organizer1.put("rating", 4.8);
-        organizer1.put("eventCount", 2);
-        organizer1.put("events", Arrays.asList(
-            Map.of("eventId", 1, "eventName", "Summer Festival 2024", "attendees", 500),
-            Map.of("eventId", 2, "eventName", "Tech Conference 2024", "attendees", 300)
-        ));
-        dummyOrganizers.add(organizer1);
-
-        // Create second dummy organizer
-        Map<String, Object> organizer2 = new HashMap<>();
-        organizer2.put("organizerId", 2);
-        organizer2.put("organizerName", "Jane Smith");
-        organizer2.put("rating", 4.9);
-        organizer2.put("eventCount", 2);
-        organizer2.put("events", Arrays.asList(
-            Map.of("eventId", 3, "eventName", "Music Festival 2024", "attendees", 1000),
-            Map.of("eventId", 4, "eventName", "Food & Wine Expo", "attendees", 750)
-        ));
-        dummyOrganizers.add(organizer2);
-
-        return ResponseEntity.ok(dummyOrganizers);
-    }
 }
