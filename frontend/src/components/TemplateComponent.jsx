@@ -8,7 +8,7 @@ import DataTable from "./DataTableComponent.jsx";
 function TemplateComponent({
     SidebarComponent,
     title = "Page Title",
-    tabs = ["All"],
+    tabs = [""],
     fetchRows,
     columns,
     setActiveTab,
@@ -16,8 +16,16 @@ function TemplateComponent({
     onDeleteClick,
     body
 }) {
+    // State for search input
+    const [searchText, setSearchText] = useState("");
+
+    // Filter rows based on search text
+    const filteredRows = fetchRows.filter((row) =>
+        row.customerName.toLowerCase().includes(searchText.toLowerCase())
+    );
+
     return (
-        <div className="template-page" style={{ boxSizing: "border-box"}}>
+        <div className="template-page" style={{ boxSizing: "border-box" }}>
             <Box sx={{ display: "flex", boxSizing: "border-box", width: "100vw" }}>
                 {SidebarComponent && <SidebarComponent />}
 
@@ -41,37 +49,43 @@ function TemplateComponent({
                             height: "7vh", boxSizing: "border-box", marginBottom: "10px",
                             justifyContent: "space-between", alignItems: "flex-end"
                         }}>
-                            <Box sx={{ display: "flex", boxSizing: "border-box", width: "200px", justifyContent: "space-between" }}>
-                                {tabs.map((tab) => (
-                                    <React.Fragment key={tab}>
-                                        <Link
-                                            href="#"
-                                            underline="hover"
-                                            className="TabBookingButtons"
-                                            onClick={() => setActiveTab(tab)}
-                                        >
-                                            {tab}
-                                        </Link>
-                                        {tab !== tabs[tabs.length - 1] && <p>|</p>}
-                                    </React.Fragment>
-                                ))}
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    boxSizing: "border-box",
+                                    width: "200px",
+                                    justifyContent: tabs.length ? "space-between" : "center",
+                                }}
+                            >
+                                {tabs.length > 0 ? (
+                                    tabs.map((tab) => (
+                                        <React.Fragment key={tab}>
+                                            <Link
+                                                href="#"
+                                                underline="hover"
+                                                className="TabBookingButtons"
+                                                onClick={() => setActiveTab(tab)}
+                                            >
+                                                {tab}
+                                            </Link>
+                                            {tab !== tabs[tabs.length - 1] && <p>|</p>}
+                                        </React.Fragment>
+                                    ))
+                                ) : (
+                                    <Box sx={{ textAlign: "center", color: "#757575" }}></Box>
+                                )}
                             </Box>
 
                             <Box sx={{ display: "flex", boxSizing: "border-box", gap: "10px" }}>
                                 <TextField
                                     id="outlined-size-small"
-                                    label="Search bookings..."
+                                    label="Search bookings by name..."
                                     type="search"
                                     size="small"
                                     sx={{ width: "250px" }}
+                                    value={searchText}
+                                    onChange={(e) => setSearchText(e.target.value)}
                                 />
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<FilterListIcon />}
-                                    sx={{ height: "40px", backgroundColor: "#CFCFC4", border: "#000", color: "#000" }}
-                                >
-                                    Filter
-                                </Button>
                             </Box>
                         </Box>
 
@@ -84,14 +98,12 @@ function TemplateComponent({
                             ) : (
                                 <DataTable
                                     boxPadding={"0px"}
-                                    rows={fetchRows}
+                                    rows={filteredRows}
                                     columns={columns}
                                     onAcceptClick={onAcceptClick}
                                     onDeleteClick={onDeleteClick}
                                 />
                             )}
-
-
                         </Box>
                     </Box>
                 </Box>

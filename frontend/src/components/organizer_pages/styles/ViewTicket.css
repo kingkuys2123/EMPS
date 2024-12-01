@@ -1,0 +1,91 @@
+/* Main container for the ticket display */
+.mainTicketDisplay {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Styling for ticket labels (header row) */
+.ticketLabels {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #ffd700;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.ticketLabels p {
+    margin: 0;
+}
+
+/* Individual ticket entries */
+.ticketDisplay {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    list-style: none;
+}
+
+.ticketDisplay:last-child {
+    border-bottom: none;
+}
+
+.ticketDisplay p {
+    margin: 0;
+    text-align: center;
+}
+
+/* Specific columns styling */
+.ticketId {
+    color: #333;
+}
+
+.ticketName {
+    color: #555;
+    font-weight: bold;
+}
+
+.ticketType {
+    color: #777;
+    font-style: italic;
+}
+
+.ticketQuantity {
+    color: #333;
+}
+
+.ticketPrice {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.ticketAvailability {
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+.ticketAvailability.available {
+    color: #4caf50;
+}
+
+.ticketAvailability.not-available {
+    color: #f44336;
+}
+
+/* Empty columns for edit and delete buttons */
+.edit, .delete {
+    width: 24px;
+    height: 24px;
+}

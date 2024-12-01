@@ -15,13 +15,15 @@ const TicketService = {
     // Get Ticket by ID
     getTicketById: async (id) => {
         try {
-            const response = await axios.get(`/ticket/getById/${id}`);
+            const response = await axios.get(`/ticket/getTicket/${id}`);
+            console.log(`Fetched ticket with ID ${id}:`, response.data);
             return response.data;
         } catch (error) {
             console.error(`Error fetching ticket with ID ${id}:`, error);
-            throw error.response ? error.response.data : error.message;
+            throw error.response?.data || error.message;
         }
     },
+    
 
     // Create Ticket
     createTicket: async (ticketData) => {

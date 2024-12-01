@@ -8,6 +8,9 @@ import EventService from "../../services/EventService";
 import FeedbackServices from "../../services/FeedbackServices";
 
 import "./styles/FontStyle.css";
+import ViewTicketById from "./ViewTicketById";
+import ViewBookingById from "./ViewBookingById";
+
 
 function ViewEventPage() {
     const { eventId } = useParams();
@@ -93,10 +96,10 @@ function ViewEventPage() {
                             )}
 
                             {tabValue === 1 && (
-                                <Typography variant="body1">Tickets content goes here.</Typography>
+                                <ViewTicketById/>
                             )}
                             {tabValue === 2 && (
-                                <Typography variant="body1">Bookings content goes here.</Typography>
+                                <ViewBookingById/>
                             )}
                             {tabValue === 3 && (
                                 <Box>
