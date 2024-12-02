@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { AppBar, Box, Button, Toolbar, Typography, Menu, MenuItem } from "@mui/material";
-
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../utils/AuthContext";
-
 import "./styles/FontStyle.css";
 
 function CustomAppBar({ title }) {
     const nav = useNavigate();
-
-    const { currentUser, setCurrentUser } = getAuth();
-
+    const { currentUser } = getAuth();
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleOpenMenu = (event) => {
@@ -18,11 +14,12 @@ function CustomAppBar({ title }) {
     };
 
     const handleCloseMenu = () => {
-        if (window.location.pathname !== "/my_account") {
-            nav("/my_account");
-        } else {
-            setAnchorEl(null);
-        }
+        setAnchorEl(null);
+    };
+
+    const handleMenuClick = (path) => {
+        handleCloseMenu();
+        nav(path);
     };
 
     return (
@@ -40,8 +37,14 @@ function CustomAppBar({ title }) {
                                         <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '50px', height: '50px', borderRadius: '50%' }}/>
                                     </Button>
                                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-                                        <MenuItem onClick={(event) => {event.stopPropagation();handleCloseMenu();}}>
+                                        <MenuItem onClick={() => handleMenuClick("/profile")}>
+                                            <span>Profile</span>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => handleMenuClick("/my_account")}>
                                             <span>My Account</span>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => handleMenuClick("/billing")}>
+                                            <span>Billing</span>
                                         </MenuItem>
                                     </Menu>
                                 </>

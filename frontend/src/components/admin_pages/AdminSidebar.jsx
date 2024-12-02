@@ -7,14 +7,14 @@ import {
     ListItemText,
     Toolbar,
     Typography,
-    AppBar,
-    Link
+    AppBar
 } from "@mui/material";
 import React, {useContext, useState} from "react";
 import "../styles/Sidebar.css";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../../utils/AuthContext.jsx";
 import ConfirmDialog from "../ConfirmDialog.jsx";
+import { Link } from "react-router-dom";
 
 function AdminSidebar() {
     const nav = useNavigate();
@@ -55,7 +55,9 @@ function AdminSidebar() {
                         <Toolbar disableGutters sx={{ height: '80px', alignItems: 'center'}}>
                             <Typography variant="h6">
                                 <Box sx={{ flex: 1, display: "flex", justifyContent: "center", overflow: "hidden", padding: "30px" }}>
-                                    <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image" style={{width: '150px'}}/>
+                                    <Link to="/">
+                                        <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image" style={{width: '150px'}}/>
+                                    </Link>
                                 </Box>
                             </Typography>
                         </Toolbar>
