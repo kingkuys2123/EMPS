@@ -19,13 +19,15 @@ const BookingService = {
             const response = await axios.get(`/booking/getAllBookings`);
             console.log("Raw Booking Data:", response.data);
             // Mapping the response data to the required structure
-            const mappedBookings = response.data.map((booking) => ({
+            const mappedBookings = response.data
+            .filter((booking) => booking.isDeleted === 0)
+            .map((booking) => ({
                 booking: booking.bookingID,
                 customerName: booking.user.firstName || "Unknown",
                 event: booking.ticket.name,
                 tickets: booking.ticketQuantity,
                 totalPrice: booking.totalPrice,
-                date: new Date(booking.dateTimeBooked),
+                dateBooked: booking.dateTimeBooked,
                 status: booking.status,
             }));
             console.log("Mapped Booking Data:", mappedBookings);
@@ -92,9 +94,10 @@ const BookingService = {
 
 
     // Get booking by ID
-    getBooking: async (id) => {
+    getBookingById: async (id) => {
         try {
             const response = await axios.get(`/booking/getBooking/${id}`);
+            console.log("Bookingid: ", response.data);
             return response.data;
         } catch (error) {
             console.error(`Error fetching booking with ID ${id}:`, error);
@@ -112,7 +115,25 @@ const BookingService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+    updateTicketQuantity: async (id) => {
+        try {
+            const response = await axios.put(`/booking/updateTicketQuantity/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating booking quantity for ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 
+    updateBookingStatus: async (id) => {
+        try {
+            const response = await axios.put(`/booking/updateStatus/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating booking status for ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
     // Delete booking by ID
     deleteBooking: async (id) => {
         try {

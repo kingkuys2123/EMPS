@@ -114,9 +114,17 @@ function AdminEventsDashboard() {
         fetchEvents();
     };
 
-    const handleRefuseEvent = (eventId) => {
+    const handleRefuseEvent = async (eventId) => {
         setEvents((prevEvents) => prevEvents.filter((event) => event.eventId !== eventId));
         fetchEvents();
+
+        try {
+            await EventService.deleteEvent(eventId);
+            fetchEvents();
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            fetchEvents();
+        }
     };
 
     const tabFilteredEvents = filteredEvents.filter((event) => {

@@ -54,7 +54,7 @@ public class EventEntity {
     @JsonIgnore
     private List<FeedbackEntity> feedbacks;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "venue_id")
     private VenueEntity venue;
 

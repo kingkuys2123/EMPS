@@ -22,7 +22,7 @@ const OrganizerService = {
             throw error.response ? error.response.data : error.message;
         }
     },
-    
+
 
     // Assign an existing user as an organizer
     assignOrganizer: async ({ username }) => {
@@ -88,7 +88,18 @@ const OrganizerService = {
             console.error("Error creating organizer:", error);
             throw error.response ? error.response.data : error.message;
         }
-    }
+    },
+
+    // getTopOrganizers: async () => {
+    //     try {
+    //         const response = await axios.get(`/organizer/getDummyData`);
+    //         return response.data;
+    //     } catch (error) {
+    //         console.error("Error fetching top organizers:", error);
+    //         throw error.response ? error.response.data : error.message;
+    //     }
+    // }
+
 };
 
 export default OrganizerService;

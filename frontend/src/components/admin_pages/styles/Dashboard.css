@@ -1,0 +1,30 @@
+.cont1 {
+    
+    flex-direction: column;
+    float: left;
+    width: 70%;
+    justify-content: center;
+    height: 90vh;
+
+}
+
+.cont2 {
+    
+    float: right;
+    width: 30%;
+    justify-content: center;
+    height: 90vh;
+}
+
+.inside {
+    /* background-color: #c63f487e; */
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 4px;
+    width: 98%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+
+
+    
+}

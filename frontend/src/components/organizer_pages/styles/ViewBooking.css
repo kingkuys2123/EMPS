@@ -1,0 +1,91 @@
+/* Main container for the Booking display */
+.mainBookingDisplay {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Styling for Booking labels (header row) */
+.bookingLabels {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #ffd700;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.bookingLabels p {
+    margin: 0;
+}
+
+/* Individual booking entries */
+.bookingDisplay {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    list-style: none;
+}
+
+.bookingDisplay:last-child {
+    border-bottom: none;
+}
+
+.bookingDisplay p {
+    margin: 0;
+    text-align: center;
+}
+
+/* Specific columns styling */
+.bookingId {
+    color: #333;
+}
+
+.bookingName {
+    color: #555;
+    font-weight: bold;
+}
+
+.bookingType {
+    color: #777;
+    font-style: italic;
+}
+
+.bookingQuantity {
+    color: #333;
+}
+
+.bookingPrice {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.bookingAvailability {
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+.bookingAvailability.available {
+    color: #4caf50;
+}
+
+.bookingAvailability.not-available {
+    color: #f44336;
+}
+
+/* Empty columns for edit and delete buttons */
+.edit, .delete {
+    width: 24px;
+    height: 24px;
+}

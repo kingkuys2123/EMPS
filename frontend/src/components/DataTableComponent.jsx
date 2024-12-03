@@ -10,14 +10,6 @@ const DataTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) => 
         ...row,  // Spread other row properties
     }));
 
-    const handleEdit = (params) => {
-        if (onEditClick) onEditClick(params.row);  
-    };
-
-    const handleDelete = (userID) => {
-        if (onDeleteClick) onDeleteClick(userID);  
-    };
-
     return (
         <Box sx={{ padding: boxPadding || "50px"}}>
             <Paper sx={{ height: '550px', width: '100%', boxSizing: 'border-box'}}>

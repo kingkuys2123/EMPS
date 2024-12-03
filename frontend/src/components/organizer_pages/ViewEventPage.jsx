@@ -8,11 +8,15 @@ import EventService from "../../services/EventService";
 import FeedbackServices from "../../services/FeedbackServices";
 
 import "./styles/FontStyle.css";
+import ViewTicketById from "./ViewTicketById";
+import ViewBookingById from "./ViewBookingById";
+import VenueService from "../../services/VenueService.jsx";
 
 function ViewEventPage() {
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
-    const [feedbacks, setFeedbacks] = useState([]);  // State for feedback data
+    const [venues, setVenues] = useState([]); // State to store available venues
+    const [feedbacks, setFeedbacks] = useState([]);
     const [tabValue, setTabValue] = useState(0);
 
     const fetchEvent = async () => {
@@ -21,6 +25,16 @@ function ViewEventPage() {
             setEvent(response.data);
         } catch (error) {
             console.error("Error fetching event:", error);
+        }
+    };
+
+    // Fetch all venues
+    const fetchVenues = async () => {
+        try {
+            const response = await VenueService.getAllVenue();
+            setVenues(response); // Populate venues dropdown
+        } catch (error) {
+            console.error("Error fetching venues:", error);
         }
     };
 
@@ -36,16 +50,28 @@ function ViewEventPage() {
 
     useEffect(() => {
         fetchEvent();
+        fetchVenues(); // Fetch venues when component loads
     }, [eventId]);
 
     useEffect(() => {
-        if (tabValue === 3) {  // Fetch feedbacks when the Feedback tab is selected
+        if (tabValue === 3) {
             fetchFeedbacks();
         }
-    }, [tabValue, eventId]);  // Fetch feedbacks when the tab is selected
+    }, [tabValue, eventId]);
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
+    };
+
+    const handleUpdateEvent = async () => {
+        try {
+            await EventService.updateEvent(eventId, event);
+            alert("Event details updated successfully!");
+            fetchEvent();
+        } catch (error) {
+            console.error("Error updating event:", error);
+            alert("Failed to update event details.");
+        }
     };
 
     if (!event) return <p>This Event does not exist!</p>;
@@ -76,27 +102,145 @@ function ViewEventPage() {
                             </Tabs>
                         </Box>
 
-                        <Box sx={{ flexGrow: 1, padding: "50px", backgroundColor: "#FFFFFF", width: "80%" }}>
+                        <Box sx={{ flexGrow: 1, padding: "50px", backgroundColor: "#FFFFFF", width: "80%", position: 'relative' }}>
                             {tabValue === 0 && (
                                 <Box>
-                                    <Typography variant="h6">Event Details</Typography>
-                                    <Box sx={{ mt: 2 }}>
-                                        <Typography variant="body1"><strong>Description:</strong> {event.description}</Typography>
-                                        <Typography variant="body1"><strong>Type:</strong> {event.type}</Typography>
-                                        <Typography variant="body1"><strong>Status:</strong> {event.eventStatus}</Typography>
-                                        <Typography variant="body1"><strong>Start Date & Time:</strong> {new Date(event.startDatetime).toLocaleString()}</Typography>
-                                        <Typography variant="body1"><strong>End Date & Time:</strong> {new Date(event.endDatetime).toLocaleString()}</Typography>
-                                        <Typography variant="body1"><strong>Confirmation Status:</strong> {event.confirmationStatus}</Typography>
-                                        <Typography variant="body1"><strong>Number of Attendees:</strong> {event.attendees}</Typography>
+                                    {/* Save Changes Button */}
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={handleUpdateEvent}
+                                        sx={{
+                                            position: "absolute",
+                                            top: "20px",
+                                            right: "20px",
+                                        }}
+                                    >
+                                        Save Changes
+                                    </Button>
+
+                                    {/* Event Fields */}
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body1">
+                                            <strong>Event Name:</strong>
+                                        </Typography>
+                                        <input
+                                            type="text"
+                                            value={event.name}
+                                            onChange={(e) =>
+                                                setEvent({ ...event, name: e.target.value })
+                                            }
+                                            style={{
+                                                width: "100%",
+                                                padding: "8px",
+                                                marginTop: "4px",
+                                                fontSize: "16px",
+                                                boxSizing: "border-box",
+                                            }}
+                                        />
+                                    </Box>
+
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body1">
+                                            <strong>Event Description:</strong>
+                                        </Typography>
+                                        <textarea
+                                            value={event.description}
+                                            onChange={(e) =>
+                                                setEvent({ ...event, description: e.target.value })
+                                            }
+                                            style={{
+                                                width: "100%",
+                                                padding: "8px",
+                                                marginTop: "4px",
+                                                fontSize: "16px",
+                                                boxSizing: "border-box",
+                                                height: "100px",
+                                                resize: "none",
+                                            }}
+                                        />
+                                    </Box>
+
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body1">
+                                            <strong>Event Schedule:</strong>
+                                        </Typography>
+                                        <input
+                                            type="datetime-local"
+                                            value={event.startDateTime || ""}
+                                            onChange={(e) =>
+                                                setEvent({
+                                                    ...event,
+                                                    startDateTime: e.target.value,
+                                                })
+                                            }
+                                            style={{ marginRight: "10px" }}
+                                        />
+                                        <input
+                                            type="datetime-local"
+                                            value={event.endDateTime || ""}
+                                            onChange={(e) =>
+                                                setEvent({
+                                                    ...event,
+                                                    endDateTime: e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </Box>
+
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body1">
+                                            <strong>Event Type:</strong>
+                                        </Typography>
+                                        <input
+                                            type="text"
+                                            value={event.type}
+                                            onChange={(e) =>
+                                                setEvent({ ...event, type: e.target.value })
+                                            }
+                                            style={{
+                                                width: "100%",
+                                                padding: "8px",
+                                                marginTop: "4px",
+                                                fontSize: "16px",
+                                                boxSizing: "border-box",
+                                            }}
+                                        />
+                                    </Box>
+
+                                    <Box sx={{ mb: 2 }}>
+                                        <Typography variant="body1">
+                                            <strong>Venue:</strong>
+                                        </Typography>
+                                        <select
+                                            value={event.venue || ""}
+                                            onChange={(e) =>
+                                                setEvent({ ...event, venue: e.target.value })
+                                            }
+                                            style={{
+                                                width: "100%",
+                                                padding: "8px",
+                                                marginTop: "4px",
+                                                fontSize: "16px",
+                                                boxSizing: "border-box",
+                                            }}
+                                        >
+                                            <option value="">Select a venue</option>
+                                            {venues.map((venue) => (
+                                                <option key={venue.id} value={venue.name}>
+                                                    {venue.name}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </Box>
                                 </Box>
                             )}
 
                             {tabValue === 1 && (
-                                <Typography variant="body1">Tickets content goes here.</Typography>
+                                <ViewTicketById/>
                             )}
                             {tabValue === 2 && (
-                                <Typography variant="body1">Bookings content goes here.</Typography>
+                                <ViewBookingById/>
                             )}
                             {tabValue === 3 && (
                                 <Box>

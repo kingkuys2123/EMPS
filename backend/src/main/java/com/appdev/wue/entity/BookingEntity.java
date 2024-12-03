@@ -29,6 +29,17 @@ public class BookingEntity {
     @Column(name = "datetime_paid")
     private LocalDateTime datetime_paid;
 
+    @Column(name = "isDeleted")
+    private int isDeleted = 0;
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void IsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
