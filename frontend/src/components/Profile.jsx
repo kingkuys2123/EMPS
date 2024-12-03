@@ -7,8 +7,6 @@ import CustomAppBar from "./CustomAppBar.jsx";
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import UserService from "../services/UserService.jsx";
 import { getAuth } from "../utils/AuthContext.jsx";
-import ChangeEmailModal from "./user_pages/ChangeEmailModal.jsx";
-import ChangePasswordModal from "./user_pages/ChangePasswordModal.jsx";
 
 import './styles/FontStyle.css';
 import ConfirmDialog from "./ConfirmDialog.jsx";
@@ -25,7 +23,9 @@ function Profile() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
 
-    const [profilePicture, setProfilePicture] = useState(null);
+    const { profilePicture, setProfilePicture }  = getAuth();
+
+    const [newProfilePicture, setNewProfilePicture] = useState(null);
 
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -33,10 +33,6 @@ function Profile() {
     const [errors, setErrors] = useState({});
 
     const [openConfirmChangesDialog, setOpenConfirmChangesDialog] = useState(false);
-    const [openConfirmDeleteUserDialog, setOpenConfirmDeleteUserDialog] = useState(false);
-
-    const [openChangeEmailModal, setOpenChangeEmailModal] = useState(false);
-    const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
 
     const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
@@ -53,11 +49,10 @@ function Profile() {
             setFirstName(currentUser.firstName);
             setLastName(currentUser.lastName);
             setPhoneNumber(currentUser.phoneNumber);
-            setProfilePicture(currentUser.profilePicture);
             setEmail(currentUser.email);
             setErrors({});
         }
-    }, []);
+    }, [currentUser, nav]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -89,18 +84,6 @@ function Profile() {
         setOpenConfirmChangesDialog(true);
     };
 
-    const handleClickDeleteAccount = () => {
-        setOpenConfirmDeleteUserDialog(true);
-    }
-
-    const handleChangeEmail = () => {
-        setOpenChangeEmailModal(true);
-    }
-
-    const handleChangePassword = () => {
-        setOpenChangePasswordModal(true);
-    }
-
     const handleUpdateUser = async () => {
         try {
             await UserService.updateProfile(currentUser.userID, { username, firstName, lastName, phoneNumber });
@@ -116,36 +99,11 @@ function Profile() {
         }
     };
 
-    const handleDeleteUser = async () => {
-        try {
-            await UserService.deleteUser(currentUser.userID);
-
-            setSnackbarMessage('User deleted successfully.');
-            setOpenSnackbar(true);
-
-            localStorage.removeItem('token');
-            localStorage.removeItem("user");
-            setCurrentUser(null);
-
-            nav("/");
-        } catch (e) {
-            setSnackbarMessage(e);
-            setOpenSnackbar(true);
-        }
-    };
-
     const handleConfirmChangesDialogClose = (confirm) => {
         if (confirm) {
             handleUpdateUser();
         }
         setOpenConfirmChangesDialog(false);
-    };
-
-    const handleConfirmDeleteUserClose = (confirm) => {
-        if (confirm) {
-            handleDeleteUser();
-        }
-        setOpenConfirmDeleteUserDialog(false);
     };
 
     const Sidebars = {
@@ -154,10 +112,26 @@ function Profile() {
         organizer: <OrganizerSidebar />
     };
 
-    const handleProfilePictureChange = (event) => {
+    const handleProfilePictureChange = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            setProfilePicture(URL.createObjectURL(file));
+            const maxSize = 15 * 1024 * 1024; // 15MB in bytes
+            if (file.size > maxSize) {
+                setSnackbarMessage('File size must be under 15MB.');
+                setOpenSnackbar(true);
+                return;
+            }
+            const newProfilePictureUrl = URL.createObjectURL(file);
+            setNewProfilePicture(newProfilePictureUrl);
+            try {
+                const updatedUser = await UserService.uploadProfilePicture(currentUser.userID, file);
+                setCurrentUser(updatedUser);
+                setSnackbarMessage('Profile picture updated successfully.');
+                setOpenSnackbar(true);
+            } catch (error) {
+                setSnackbarMessage(error.message || 'Failed to upload profile picture.');
+                setOpenSnackbar(true);
+            }
         }
     };
 
@@ -169,80 +143,85 @@ function Profile() {
 
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                    <CustomAppBar title={"Profile"}/>
+                    <CustomAppBar title={"Profile"} newProfilePicture={newProfilePicture} />
 
                     <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         <Box sx={{ backgroundColor: "#FFFFFF", width: "100%", height: "100%", boxShadow: "5px 5px 5px #aaaaaa", position: "relative", overflowY: "auto" }}>
-                            <Box sx={{padding: '25px', display: 'flex'}}>
-                                <img
-                                    src={profilePicture || "/assets/placeholders/avatar-photo-placeholder.png"}
-                                    alt="profile-picture"
-                                    style={{width: '100px', height: '100px', borderRadius: '50%'}}
-                                />
-                                <Box sx={{
-                                    paddingLeft: "15px",
-                                    flexGrow: 1,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    textAlign: 'left'
-                                }}>
-                                    <Box sx={{fontWeight: 'bold'}}>
-                                        <span>Profile Picture</span>
-                                    </Box>
-                                    <Box sx={{color: "#7F7F7F"}}>
-                                        <span>PNG, JPEG under 15MB</span>
-                                    </Box>
-                                </Box>
-                                <Box sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    textAlign: 'left'
-                                }}>
-                                    <Box>
-                                        <Button
-                                            variant="contained"
-                                            component="label"
-                                            sx={{
-                                                backgroundColor: "#C63f47",
-                                                color: "#FFFFFF",
-                                                textTransform: 'none',
-                                                borderRadius: "0"
-                                            }}
-                                        >
-                                            <Typography>
-                                                <span>Upload a new picture</span>
-                                            </Typography>
-                                            <input
-                                                type="file"
-                                                hidden
-                                                accept="image/*"
-                                                onChange={handleProfilePictureChange}
-                                            />
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            sx={{
-                                                marginLeft: '10px',
-                                                backgroundColor: "#CFCFC4",
-                                                color: "#FFFFFF",
-                                                textTransform: 'none',
-                                                borderRadius: "0"
-                                            }}
-                                        >
-                                            <Typography>
-                                                <span>Delete</span>
-                                            </Typography>
-                                        </Button>
-                                    </Box>
-                                </Box>
-                            </Box>
-                            <Box sx={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                            <Box sx={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1, height: "95%" }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', flexGrow: 1 }}>
                                     <Box sx={{ width: '48%', display: 'flex', flexDirection: 'column' }}>
+                                        <Box sx={{ padding: '25px', display: 'flex' }}>
+                                            <div style={{ width: '100px', height: '100px', overflow: 'hidden', borderRadius: '50%' }}>
+                                                <img
+                                                    src={newProfilePicture ?? profilePicture}
+                                                    alt="profile-picture"
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                />
+                                            </div>
+                                            <Box sx={{
+                                                paddingLeft: "15px",
+                                                flexGrow: 1,
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
+                                                textAlign: 'left'
+                                            }}>
+                                                <Box sx={{ fontWeight: 'bold' }}>
+                                                    <span>Profile Picture</span>
+                                                </Box>
+                                                <Box sx={{ color: "#7F7F7F" }}>
+                                                    <span>PNG, JPEG under 15MB</span>
+                                                </Box>
+                                            </Box>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                justifyContent: 'center',
+                                                textAlign: 'left'
+                                            }}>
+                                                <Box>
+                                                    <Button
+                                                        variant="contained"
+                                                        component="label"
+                                                        sx={{
+                                                            backgroundColor: "#C63f47",
+                                                            color: "#FFFFFF",
+                                                            textTransform: 'none',
+                                                            borderRadius: "0"
+                                                        }}
+                                                    >
+                                                        <Typography>
+                                                            <span>Upload a new picture</span>
+                                                        </Typography>
+                                                        <input
+                                                            type="file"
+                                                            hidden
+                                                            accept="image/png, image/jpeg"
+                                                            onChange={handleProfilePictureChange}
+                                                        />
+                                                    </Button>
+                                                    <Button
+                                                        variant="contained"
+                                                        sx={{
+                                                            marginLeft: '10px',
+                                                            backgroundColor: "#CFCFC4",
+                                                            color: "#FFFFFF",
+                                                            textTransform: 'none',
+                                                            borderRadius: "0"
+                                                        }}
+                                                    >
+                                                        <Typography>
+                                                            <span>Delete</span>
+                                                        </Typography>
+                                                    </Button>
+                                                </Box>
+                                            </Box>
+                                        </Box>
                                         <Typography component="span" sx={{ fontWeight: "bold" }}>
                                             <span>Username</span>
+                                        </Typography>
+                                        <Typography sx={{ color: "#7F7F7F", marginBottom: '10px' }}>
+                                            Your desired username. This will be visible to other users.
                                         </Typography>
                                         <TextField fullWidth label="Username" variant="outlined" margin="normal"
                                                    value={username} error={!!errors.username}
@@ -251,78 +230,31 @@ function Profile() {
                                         <Typography component="span" sx={{ fontWeight: "bold" }}>
                                             <span>Full Name</span>
                                         </Typography>
-                                        <TextField fullWidth label="First Name" variant="outlined" margin="normal" value={firstName} error={!!errors.firstName} onChange={(e) => setFirstName(e.target.value)} />
-
-                                        <Typography component="span" sx={{ fontWeight: "bold" }}>
-                                            <span>Last Name</span>
+                                        <Typography sx={{ color: "#7F7F7F", marginBottom: '10px' }}>
+                                            Your first and last name. This information will be used for your profile.
                                         </Typography>
+                                        <TextField fullWidth label="First Name" variant="outlined" margin="normal" value={firstName} error={!!errors.firstName} onChange={(e) => setFirstName(e.target.value)} />
                                         <TextField fullWidth label="Last Name" variant="outlined" margin="normal" value={lastName} error={!!errors.lastName} onChange={(e) => setLastName(e.target.value)} />
 
                                         <Typography component="span" sx={{ fontWeight: "bold" }}>
                                             <span>Phone Number</span>
                                         </Typography>
+                                        <Typography sx={{ color: "#7F7F7F", marginBottom: '10px' }}>
+                                            Your phone number. This will be used for direct contact.
+                                        </Typography>
                                         <TextField fullWidth label="Phone Number" variant="outlined" margin="normal" value={phoneNumber} error={!!errors.phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                                    </Box>
 
-                                    <Box sx={{ width: '48%', display: 'flex', flexDirection: 'column' }}>
-                                        <Typography component="span" sx={{ fontWeight: "bold" }}>
-                                            <span>Email</span>
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <TextField
-                                                fullWidth
-                                                disabled
-                                                label="Email"
-                                                variant="outlined"
-                                                margin="normal"
-                                                value={email}
-                                                sx={{ flexGrow: 1 }}
-                                            />
-                                            <Button
-                                                variant="contained"
-                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px', height: '70%' }}
-                                                onClick={handleChangeEmail}
-                                            >
-                                                <Typography>Change</Typography>
-                                            </Button>
-                                        </Box>
-
-                                        <Typography component="span" sx={{ fontWeight: "bold" }}>
-                                            <span>Password</span>
-                                        </Typography>
-                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                            <TextField
-                                                fullWidth
-                                                disabled
-                                                label="Password"
-                                                type="password"
-                                                value="nothingtoseehere"
-                                                variant="outlined"
-                                                margin="normal"
-                                                sx={{ flexGrow: 1 }}
-                                            />
-                                            <Button
-                                                variant="contained"
-                                                sx={{ backgroundColor: "#C63f47", color: "white", textTransform: 'none', borderRadius: "0", marginLeft: '10px', height: '70%' }}
-                                                onClick={handleChangePassword}
-                                            >
-                                                <Typography>Change</Typography>
-                                            </Button>
-                                        </Box>
-                                    </Box>
-                                </Box>
-                                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '20px 0' }}>
-                                    <Box sx={{ display: 'flex', paddingTop: '20px' }}>
-                                        <Button variant="contained" onClick={handleSubmit} sx={{ width: "100%", backgroundColor: "#C63f47", color: "#FFFFFF", textTransform: 'none', borderRadius: "0", marginRight: '10px' }}>
+                                        <Button variant="contained" onClick={handleSubmit} sx={{ width: "100%", backgroundColor: "#C63f47", color: "#FFFFFF", textTransform: 'none', borderRadius: "0", marginRight: '10px', marginTop: '25px' }}>
                                             <Typography>
                                                 <span>Save Changes</span>
                                             </Typography>
                                         </Button>
-                                        <Button variant="contained" onClick={handleClickDeleteAccount} sx={{ width: "100%", backgroundColor: "#C63f47", color: "#FFFFFF", textTransform: 'none', borderRadius: "0" }}>
-                                            <Typography>
-                                                <span>Delete Account</span>
-                                            </Typography>
-                                        </Button>
+                                    </Box>
+
+                                    <Box sx={{ width: '48%', display: 'flex', flexDirection: 'column' }}>
+                                        <Box sx={{padding: 2, flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                            <img src="/assets/images/extras/extra-people-dance-5.png" alt="People Dancing" style={{borderRadius: '10px', maxWidth: '100%', height: 'auto'}} />
+                                        </Box>
                                     </Box>
                                 </Box>
                             </Box>
@@ -338,25 +270,6 @@ function Profile() {
                 onClose={handleConfirmChangesDialogClose}
                 message={"Are you sure you want to save changes?"}
                 title={"Confirm Changes"}
-            />
-
-            <ConfirmDialog
-                openDialog={openConfirmDeleteUserDialog}
-                setOpenDialog={setOpenConfirmDeleteUserDialog}
-                onClose={handleConfirmDeleteUserClose}
-                message={"Are you sure you want to delete your account?"}
-                title={"Confirm Delete Account"}
-            />
-
-            <ChangeEmailModal
-                open={openChangeEmailModal}
-                onClose={() => setOpenChangeEmailModal(false)}
-                oldEmail={setEmail}
-            />
-
-            <ChangePasswordModal
-                open={openChangePasswordModal}
-                onClose={() => setOpenChangePasswordModal(false)}
             />
 
             <CustomSnackbar open={openSnackbar} message={snackbarMessage} onClose={handleCloseSnackbar} />

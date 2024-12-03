@@ -20,6 +20,7 @@ import Ticket from './components/organizer_pages/Ticket.jsx'
 import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
 import OrganizerEventAnalytics from "./components/organizer_pages/OrganizerEventAnalytics.jsx";
 import AboutUs from "./components/AboutUs.jsx";
+import MyAccount from "./components/MyAccount.jsx";
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
 
                 {/* Account */}
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/my_account" element={<MyAccount />} />
 
                 {/* User Routes */}
                 <Route path="/user/bookings" element={<UserBookings />} />

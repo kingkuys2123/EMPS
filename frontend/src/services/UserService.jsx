@@ -115,7 +115,38 @@ const UserService = {
             console.error(`Error changing password:`, error);
             throw error.response ? error.response.data : error.message;
         }
-    }
+    },
+
+    // Upload Profile Picture
+    uploadProfilePicture: async (userId, file) => {
+        try {
+            const formData = new FormData();
+            formData.append('userId', userId);
+            formData.append('file', file);
+
+            const response = await axios.post(`/user/uploadProfilePicture`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Error uploading profile picture:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get Profile Picture
+    getProfilePicture: async (filename) => {
+        try {
+            const response = await axios.get(`/user/getProfilePicture/${filename}`, { responseType: 'blob' });
+            return URL.createObjectURL(response.data);
+        } catch (error) {
+            console.error(`Error fetching profile picture:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
 };
 
 export default UserService;
