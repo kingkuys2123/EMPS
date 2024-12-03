@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Grid, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import EventService from "../../services/EventService.jsx"; // Service to handle updating event
+import EventService from "../../services/EventService.jsx"; 
 
 const EditEventModal = ({ open, onClose, event, onSave }) => {
   const [name, setName] = useState('');
