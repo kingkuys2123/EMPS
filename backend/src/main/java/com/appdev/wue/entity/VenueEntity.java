@@ -1,6 +1,9 @@
 package com.appdev.wue.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "venue")
@@ -25,8 +28,9 @@ public class   VenueEntity {
      @Column(name = "status")
      private String status;
 
-     @OneToOne(mappedBy = "venue")
-     private EventEntity event;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "venue", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<EventEntity> events;
 
     public int getVenueId() {
         return venue_id;
@@ -76,11 +80,11 @@ public class   VenueEntity {
         this.status = status;
     }
 
-    public EventEntity getEvent() {
-        return event;
+    public List<EventEntity> getEvents() {
+        return events;
     }
 
-    public void setEvent(EventEntity event) {
-        this.event = event;
+    public void setEvents(List<EventEntity> events) {
+        this.events = events;
     }
 }

@@ -1,28 +1,28 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { AppBar, Box, Button, Toolbar, Typography, Menu, MenuItem } from "@mui/material";
-
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "../utils/AuthContext";
-
 import "./styles/FontStyle.css";
+import UserService from "../services/UserService.jsx";
 
-function CustomAppBar({ title }) {
+function CustomAppBar({ title, newProfilePicture }) {
     const nav = useNavigate();
-
-    const { currentUser, setCurrentUser } = getAuth();
-
+    const { currentUser } = getAuth();
     const [anchorEl, setAnchorEl] = useState(null);
+
+    const { profilePicture, setProfilePicture } = getAuth();
 
     const handleOpenMenu = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
     const handleCloseMenu = () => {
-        if (window.location.pathname !== "/my_account") {
-            nav("/my_account");
-        } else {
-            setAnchorEl(null);
-        }
+        setAnchorEl(null);
+    };
+
+    const handleMenuClick = (path) => {
+        handleCloseMenu();
+        nav(path);
     };
 
     return (
@@ -37,11 +37,19 @@ function CustomAppBar({ title }) {
                             {currentUser ? (
                                 <>
                                     <Button sx={{ borderRadius: '50%' }} onClick={handleOpenMenu} aria-haspopup="true" aria-expanded={Boolean(anchorEl) ? 'true' : 'false'}>
-                                        <img src="/assets/placeholders/avatar-photo-placeholder.png" alt="profile-picture" style={{ width: '50px', height: '50px', borderRadius: '50%' }}/>
+                                        <div style={{ width: '50px', height: '50px', overflow: 'hidden', borderRadius: '50%' }}>
+                                            <img src={newProfilePicture ?? profilePicture} alt="profile-picture" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        </div>
                                     </Button>
                                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-                                        <MenuItem onClick={(event) => {event.stopPropagation();handleCloseMenu();}}>
+                                        <MenuItem onClick={() => handleMenuClick("/profile")}>
+                                            <span>Profile</span>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => handleMenuClick("/my_account")}>
                                             <span>My Account</span>
+                                        </MenuItem>
+                                        <MenuItem onClick={() => handleMenuClick("/billing")}>
+                                            <span>Billing</span>
                                         </MenuItem>
                                     </Menu>
                                 </>

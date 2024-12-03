@@ -1,16 +1,26 @@
 package com.appdev.wue.service;
 
-import com.appdev.wue.entity.UserEntity;
-import com.appdev.wue.repository.UserRepository;
-import com.appdev.wue.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import javax.naming.NameNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+import javax.naming.NameNotFoundException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.appdev.wue.entity.UserEntity;
+import com.appdev.wue.repository.UserRepository;
+import com.appdev.wue.util.JwtUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UserService {
@@ -23,6 +33,9 @@ public class UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Value("${upload.dir}")
+    private String uploadDir;
 
     // Create User
     public UserEntity createUser(UserEntity user) {
@@ -40,11 +53,12 @@ public class UserService {
     }
 
     // Update User By ID (PUT)
+    @SuppressWarnings("finally")
     public UserEntity updateUser(int id, UserEntity newUserDetails) {
         UserEntity user = new UserEntity();
         try {
             user = uRepo.findById(id).get();
-
+            System.out.println("Before update: " + user); // Log the current user before update
             user.setUsername(newUserDetails.getUsername());
             user.setPassword(newUserDetails.getPassword());
             user.setEmail(newUserDetails.getEmail());
@@ -53,14 +67,17 @@ public class UserService {
             user.setAccountType(newUserDetails.getAccountType());
             user.setPhoneNumber(newUserDetails.getPhoneNumber());
             user.setDateTimeCreated(newUserDetails.getDateTimeCreated());
+            System.out.println("After update: " + user); // Log the updated user
         } catch (Exception e) {
             throw new NameNotFoundException("User with ID " + id + " not found!");
         } finally {
             return uRepo.save(user);
         }
     }
+    
 
     // Update Profile
+    @SuppressWarnings("finally")
     public UserEntity updateProfile(int id, UserEntity newUserDetails) {
         UserEntity user = new UserEntity();
         try {
@@ -125,6 +142,62 @@ public class UserService {
     // Get User By Username
     public UserEntity findByUsername(String username) {
         return uRepo.findByUsername(username).orElse(null);
+    }
+
+    // Change Email
+    public UserEntity changeEmail(int id, UserEntity newUserDetails) {
+        if (uRepo.findByEmail(newUserDetails.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already taken!");
+        }
+
+        UserEntity user = uRepo.findById(id).get();
+
+        user.setEmail(newUserDetails.getEmail());
+        return uRepo.save(user);
+    }
+
+    // Change Password
+    public UserEntity changePassword(int id, String oldPassword, String newPassword){
+        UserEntity user = uRepo.findById(id).get();
+
+        if(!passwordEncoder.matches(oldPassword, user.getPassword())){
+            throw new RuntimeException("Invalid password!");
+        }
+        if(oldPassword.equals(newPassword)){
+            throw new RuntimeException("New password cannot be the old password!");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        return uRepo.save(user);
+    }
+
+    // Upload Profile Picture
+    public UserEntity uploadProfilePicture(int id, MultipartFile file) throws IOException {
+        UserEntity user = uRepo.findById(id).orElseThrow(() -> new NoSuchElementException("User with ID " + id + " not found!"));
+
+        String originalFileName = file.getOriginalFilename();
+        assert originalFileName != null;
+        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String fileName = id + "_profile_picture" + fileExtension;
+
+        Path filePath = Paths.get(uploadDir + fileName);
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath, file.getBytes());
+
+        user.setProfilePicture(fileName);
+        return uRepo.save(user);
+    }
+
+    // Get Profile Picture
+    public Resource getProfilePicture(String filename) throws IOException {
+        Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+
+        if (resource.exists()) {
+            return resource;
+        } else {
+            throw new NoSuchElementException("Profile picture not found");
+        }
     }
 
 }

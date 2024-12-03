@@ -1,6 +1,5 @@
 package com.appdev.wue.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -30,14 +29,23 @@ public class BookingEntity {
     @Column(name = "datetime_paid")
     private LocalDateTime datetime_paid;
 
+    @Column(name = "isDeleted")
+    private int isDeleted = 0;
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void IsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "ticket_id")
-    @JsonIgnore
     private TicketEntity ticket;
 
     public int getBookingID() {

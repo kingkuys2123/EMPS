@@ -1,7 +1,10 @@
 package com.appdev.wue.service;
 
 import com.appdev.wue.entity.BookingEntity;
+import com.appdev.wue.entity.TicketEntity;
 import com.appdev.wue.repository.BookingRepository;
+import com.appdev.wue.repository.TicketRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,8 @@ import java.util.NoSuchElementException;
 public class BookingService {
     @Autowired
     private BookingRepository bRepo;
-
+    @Autowired
+    private TicketRepository ticketRepo;
     // Create Booking
     public BookingEntity createBooking(BookingEntity booking) {
         return bRepo.save(booking);
@@ -30,6 +34,7 @@ public class BookingService {
     }
 
     // Update Booking By ID
+    @SuppressWarnings("finally")
     public BookingEntity updateBooking(int id, BookingEntity updatedBooking) {
         BookingEntity booking = new BookingEntity();
         try {
@@ -47,16 +52,40 @@ public class BookingService {
             return bRepo.save(booking);
         }
     }
-
-    // Delete Booking By ID
-    public String deleteBooking(int id) {
-        String msg;
-        if (bRepo.existsById(id)) {
-            bRepo.deleteById(id);
-            msg = "Booking with ID " + id + " deleted successfully!";
-        } else {
-            msg = "Booking with ID " + id + " not found!";
+    public BookingEntity updateTicketQuantity(int bookingId) {
+        BookingEntity booking = bRepo.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + bookingId));
+        
+        TicketEntity ticket = booking.getTicket();
+        if (ticket == null) {
+            throw new RuntimeException("Ticket not associated with this booking");
         }
-        return msg;
+
+        int currentQuantity = ticket.getQuantity();
+        if (booking.getTicketQuantity() > currentQuantity) {
+            throw new IllegalArgumentException("Not enough tickets available. Current stock: " + currentQuantity);
+        }
+
+        // Subtract ticket quantity from available quantity
+        int updatedQuantity = currentQuantity - booking.getTicketQuantity();
+        ticket.setQuantity(updatedQuantity);
+
+        // Save the updated ticket entity
+        ticketRepo.save(ticket);
+
+        return booking;
+    }
+    public BookingEntity acceptBookingStatus(int bookingId) {
+        BookingEntity booking = bRepo.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + bookingId));
+        booking.setStatus("Confirmed");
+        return bRepo.save(booking);
+    }
+    // Delete Booking By ID
+    public BookingEntity deleteBooking(int id) {
+        BookingEntity delete = bRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
+        delete.IsDeleted(1);
+        return bRepo.save(delete);
     }
 }

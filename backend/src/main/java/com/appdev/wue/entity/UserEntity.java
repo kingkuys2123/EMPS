@@ -1,5 +1,6 @@
 package com.appdev.wue.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -36,16 +37,23 @@ public class UserEntity {
     @Column(name = "datetime_created")
     private LocalDateTime datetime_created;
 
+    @Column(name = "profile_picture")
+    private String profile_picture;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<BookingEntity> bookings;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private FeedbackEntity feedback;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private OrganizerEntity organizer;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private PaymentDetailsEntity payment_details;
 
     public int getUserID() {
@@ -144,11 +152,19 @@ public class UserEntity {
         this.organizer = organizer;
     }
 
-    public PaymentDetailsEntity getPayment_details() {
+    public PaymentDetailsEntity getPaymentDetails() {
         return payment_details;
     }
 
-    public void setPayment_details(PaymentDetailsEntity payment_details) {
+    public void setPaymentDetails(PaymentDetailsEntity payment_details) {
         this.payment_details = payment_details;
+    }
+
+    public String getProfilePicture() {
+        return profile_picture;
+    }
+
+    public void setProfilePicture(String profile_picture) {
+        this.profile_picture = profile_picture;
     }
 }

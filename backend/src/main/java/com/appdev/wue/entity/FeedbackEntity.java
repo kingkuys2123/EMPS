@@ -2,12 +2,11 @@ package com.appdev.wue.entity;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "feedback")
-public class FeedbackEntity{
+public class FeedbackEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int feedback_id;
@@ -27,7 +26,6 @@ public class FeedbackEntity{
 
     @ManyToOne
     @JoinColumn(name = "event_id")
-    @JsonIgnore
     private EventEntity event;
 
     public int getFeedbackId() {
@@ -57,6 +55,7 @@ public class FeedbackEntity{
     public LocalDateTime getDatetime_created() {
         return datetime_created;
     }
+
     public void setDatetime_created(LocalDateTime datetime_created) {
         this.datetime_created = datetime_created;
     }

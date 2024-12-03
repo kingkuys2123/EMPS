@@ -11,15 +11,21 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^6.1.6",
+    "@mui/icons-material": "^6.1.9",
+    "@mui/lab": "^6.0.0-beta.14",
     "@mui/material": "^6.1.6",
     "@mui/styled-engine-sc": "^6.1.6",
+    "@mui/x-charts": "^7.23.0",
+    "@mui/x-data-grid": "^7.22.2",
     "axios": "^1.7.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-image-crop": "^11.0.7",
+    "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.27.0",
     "recharts": "^2.13.3",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "wue": "file:"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

@@ -1,5 +1,6 @@
 package com.appdev.wue.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -42,6 +43,7 @@ public class EventEntity {
     private String confirmation_status;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<TicketEntity> tickets;
 
     @ManyToOne
@@ -49,9 +51,10 @@ public class EventEntity {
     private OrganizerEntity organizer;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "event", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<FeedbackEntity> feedbacks;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "venue_id")
     private VenueEntity venue;
 

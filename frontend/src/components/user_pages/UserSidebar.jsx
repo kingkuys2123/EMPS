@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar, Link } from "@mui/material";
+import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import LoginModal from "../LoginModal.jsx";
@@ -8,6 +8,9 @@ import { getAuth } from "../../utils/AuthContext.jsx";
 
 import '../styles/FontStyle.css';
 import "../styles/Sidebar.css";
+import ConfirmDialog from "../ConfirmDialog.jsx";
+
+import { Link } from "react-router-dom";
 
 function UserSidebar() {
     const nav = useNavigate();
@@ -15,7 +18,20 @@ function UserSidebar() {
     const { currentUser, setCurrentUser } = getAuth();
     const [openModal, setOpenModal] = useState(null);
 
-    const handleLogOutButton = () => {
+    const [openConfirmLogoutDialog, setOpenConfirmLogoutDialog] = useState(false);
+
+    const handleClickLogoutButton = () => {
+        setOpenConfirmLogoutDialog(true);
+    }
+
+    const handleConfirmLogoutDialogClose = (confirm) => {
+        if (confirm) {
+            handleLogout();
+        }
+        setOpenConfirmLogoutDialog(false);
+    };
+
+    const handleLogout = () => {
         if (currentUser) {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
@@ -48,7 +64,9 @@ function UserSidebar() {
                         <Toolbar disableGutters sx={{ height: '80px', alignItems: 'center' }}>
                             <Typography variant="h6">
                                 <Box sx={{ flex: 1, display: "flex", justifyContent: "center", overflow: "hidden", padding: "30px" }}>
-                                    <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image" style={{ width: '150px' }} />
+                                    <Link to="/">
+                                        <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image" style={{width: '150px'}}/>
+                                    </Link>
                                 </Box>
                             </Typography>
                         </Toolbar>
@@ -87,7 +105,7 @@ function UserSidebar() {
                     <hr style={{ width: '100%', margin: '0 auto', marginTop: 'auto' }} />
                     <ListItem>
                         {currentUser ? (
-                            <ListItemButton onClick={handleLogOutButton} sx={{ paddingTop: '0', paddingBottom: '0' }}>
+                            <ListItemButton onClick={handleClickLogoutButton} sx={{ paddingTop: '0', paddingBottom: '0' }}>
                                 <ListItemText>
                                     <span>LOG OUT</span>
                                 </ListItemText>
@@ -102,6 +120,15 @@ function UserSidebar() {
                     </ListItem>
                 </List>
             </Drawer>
+
+            <ConfirmDialog
+                openDialog={openConfirmLogoutDialog}
+                setOpenDialog={setOpenConfirmLogoutDialog}
+                onClose={handleConfirmLogoutDialogClose}
+                message={"Are you sure you want to log out?"}
+                title={"Confirm Logout"}
+            />
+
             <LoginModal open={openModal === 'loginModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('registerModal')} />
             <RegisterModal open={openModal === 'registerModal'} onClose={handleCloseModal} switchModal={() => handleOpenModal('loginModal')} label={"Register"} />
         </div>

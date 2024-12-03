@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Typography, Box, Grid, Paper } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import OrganizerSidebar from "./OrganizerSidebar";
-import CustomAppBar from "./CustomAppBar";
+import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
 
 function OrganizerDashboard() {
@@ -53,7 +53,7 @@ function OrganizerDashboard() {
 
     return (
         <div className="template-page">
-            <Box sx={{ display: "flex" }}>
+            <Box sx={{ display: "flex", width: '100%' }}>
                 {/* Sidebar */}
                 <OrganizerSidebar />
 

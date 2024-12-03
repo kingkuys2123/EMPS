@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.appdev.wue.entity.OrganizerEntity;
 import com.appdev.wue.repository.OrganizerRepository;
+import com.appdev.wue.repository.UserRepository;
 
 @Service
 public class OrganizerService {
@@ -15,8 +16,16 @@ public class OrganizerService {
     @Autowired
     private OrganizerRepository oRepo;
 
+    @Autowired
+    private UserRepository userRepo;
+
     // Create Organizer
     public OrganizerEntity createOrganizer(OrganizerEntity organizer) {
+        return oRepo.save(organizer);
+    }
+
+    public OrganizerEntity createOrganizerWithUserId(OrganizerEntity organizer, int userid){
+        organizer.setUser(userRepo.findById(userid).get());
         return oRepo.save(organizer);
     }
 
@@ -59,6 +68,19 @@ public class OrganizerService {
             msg = "Error occurred while deleting organizer with ID " + id + ": " + e.getMessage();
         }
         return msg;
+    }
+
+    //Add Organizer
+    public OrganizerEntity addOrganizer(OrganizerEntity organizer) {
+        if (organizer.getApprovalStatus() == null || organizer.getApprovalStatus().isEmpty()) {
+            organizer.setApprovalStatus("pending"); // Default status
+        }
+        
+        if (organizer.getUser() == null) {
+            throw new IllegalArgumentException("User cannot be null for an organizer.");
+        }
+    
+        return oRepo.save(organizer);
     }
 
 }

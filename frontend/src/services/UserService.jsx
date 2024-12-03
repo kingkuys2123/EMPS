@@ -27,12 +27,18 @@ const UserService = {
     getUser: async (userId) => {
         try {
             const response = await axios.get(`/user/getUser/${userId}`);
-            return response.data;
+            return response.data; // Return user data if found
         } catch (error) {
-            console.error("Error fetching user with ID:", error);
-            throw error.response ? error.response.data : error.message;
+            // Handle 404 or other errors gracefully
+            if (error.response?.status === 404) {
+                console.error(`User with ID ${userId} not found.`);
+                throw new Error("User not found.");
+            }
+            console.error("Error fetching user:", error);
+            throw new Error("Error fetching user. Please try again.");
         }
     },
+    
 
     // Update User
     updateUser: async (userId, newUserDetails) => {
@@ -41,17 +47,6 @@ const UserService = {
             return response.data;
         } catch (error) {
             console.error(`Error updating user with ID ${id}:`, error);
-            throw error.response ? error.response.data : error.message;
-        }
-    },
-
-    // Update Profile
-    updateProfile: async (userId, newUserDetails) => {
-        try {
-            const response = await axios.put(`/user/updateProfile?id=${userId}`, newUserDetails);
-            return response.data;
-        } catch (error) {
-            console.error(`Error updating user profile:`, error);
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -88,6 +83,70 @@ const UserService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    // Update Profile
+    updateProfile: async (userId, newUserDetails) => {
+        try {
+            const response = await axios.put(`/user/updateProfile?id=${userId}`, newUserDetails);
+            return response.data;
+        } catch (error) {
+            console.error(`Error updating user profile:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Change Email
+    changeEmail: async(userId, newEmail) => {
+        try {
+            const response = await axios.put(`/user/changeEmail?id=${userId}`, newEmail);
+            return response.data;
+        } catch (error) {
+            console.error(`Error changing email:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Change Password
+    changePassword: async(id, oldPassword, newPassword) => {
+        try {
+            const response = await axios.put(`/user/changePassword?id=${id}`, {oldPassword, newPassword});
+            return response.data;
+        } catch (error) {
+            console.error(`Error changing password:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Upload Profile Picture
+    uploadProfilePicture: async (userId, file) => {
+        try {
+            const formData = new FormData();
+            formData.append('userId', userId);
+            formData.append('file', file);
+
+            const response = await axios.post(`/user/uploadProfilePicture`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Error uploading profile picture:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get Profile Picture
+    getProfilePicture: async (filename) => {
+        try {
+            const response = await axios.get(`/user/getProfilePicture/${filename}`, { responseType: 'blob' });
+            return URL.createObjectURL(response.data);
+        } catch (error) {
+            console.error(`Error fetching profile picture:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
 };
 
 export default UserService;
