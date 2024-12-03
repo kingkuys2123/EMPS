@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Grid, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import EventService from "../../services/EventService.jsx"; 
+import EventService from "../../services/EventService.jsx";
 
 const EditEventModal = ({ open, onClose, event, onSave }) => {
   const [name, setName] = useState('');
@@ -137,10 +137,18 @@ const EditEventModal = ({ open, onClose, event, onSave }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="secondary">
+        <Button onClick={onClose} sx={{
+          backgroundColor: "#D32F2F",
+          color: "#FFFFFF",
+          "&:hover": { backgroundColor: "#B71C1C" },
+        }}>
           Cancel
         </Button>
-        <Button onClick={handleEditEvent} color="primary">
+        <Button onClick={handleEditEvent} sx={{
+          backgroundColor: "#D32F2F",
+          color: "#FFFFFF",
+          "&:hover": { backgroundColor: "#B71C1C" },
+        }}>
           Save Changes
         </Button>
       </DialogActions>

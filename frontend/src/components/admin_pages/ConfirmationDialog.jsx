@@ -65,9 +65,6 @@ function ConfirmationDialog({ open, onClose, event, onConfirm, onRefuse }) {
                 <p>Are you sure you want to {event.confirmationStatus === "Pending" ? "approve" : "refuse"} this event?</p>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="primary">
-                    Cancel
-                </Button>
                 <Button onClick={handleApprove} color="primary" variant="contained">
                     Approve
                 </Button>

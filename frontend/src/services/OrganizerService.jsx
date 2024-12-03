@@ -58,16 +58,16 @@ const OrganizerService = {
     },
 
     // Update organizer
-    updateOrganizer: async (organizerId, neworganizerDetails) => {
+    updateOrganizer: async (organizerId, newOrganizerDetails) => {
         try {
-            const response = await axios.put(`/organizer/updateOrganizer?id=${organizerId}`, neworganizerDetails);
+            const response = await axios.put(`/organizer/updateOrganizer?id=${organizerId}`, newOrganizerDetails);
             return response.data;
         } catch (error) {
-            console.error(`Error updating organizer with ID ${id}:`, error);
+            console.error(`Error updating organizer with ID ${organizerId}:`, error);  // Fixed reference to organizerId
             throw error.response ? error.response.data : error.message;
         }
     },
-
+    
     // Delete organizer
     deleteOrganizer: async (organizerId) => {
         try {
@@ -86,6 +86,16 @@ const OrganizerService = {
             return response.data
         }catch (error) {
             console.error("Error creating organizer:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    approveOrganizer: async (organizerId, organizerData) => {
+        try {
+            const response = await axios.put(`/organizer/approveOrganizer?id=${organizerId}`, organizerData);
+            return response.data;
+        } catch (error) {
+            console.error(`Error approving organizer with ID ${organizerId}:`, error);
             throw error.response ? error.response.data : error.message;
         }
     },

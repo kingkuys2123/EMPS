@@ -213,6 +213,7 @@ function AdminEventsDashboard() {
                                                     onDelete={() => handleDeleteEvent(event.eventId)}
                                                     activeTab={tabValue}
                                                     onApprove={() => handleOpenConfirmationDialog(event)}
+                                                    onRefuse={() => handleDeleteEvent(event.eventId)}
                                                 />
                                             </td>
                                         </tr>

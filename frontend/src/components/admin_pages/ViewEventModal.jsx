@@ -7,7 +7,7 @@ import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
 import FeedbackServices from "../../services/FeedbackServices";
 
-import "./styles/FontStyle.css";
+import "../styles/FontStyle.css";
 
 function ViewEventModal() {
     const { eventId } = useParams();
@@ -52,7 +52,7 @@ function ViewEventModal() {
 
     return (
         <div className="template-page">
-            <AdminSidebarSidebar />
+            <AdminSidebar/>
 
             <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 

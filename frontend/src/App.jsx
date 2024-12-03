@@ -15,7 +15,7 @@ import { AuthProvider } from './utils/AuthContext.jsx';
 import AdminVenue from './components/admin_pages/AdminVenue.jsx';
 import AdminEventsDashboard from './components/admin_pages/AdminEventsDashboard.jsx';
 import UserFeedback from './components/user_pages/UserFeedback.jsx';
-
+import ViewEventModal from './components/admin_pages/ViewEventModal.jsx'
 import Ticket from './components/organizer_pages/Ticket.jsx'
 import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
 import OrganizerEventAnalytics from "./components/organizer_pages/OrganizerEventAnalytics.jsx";
@@ -55,6 +55,7 @@ function App() {
                 <Route path='/admin/users' element={<AdminUsers/>} />
                 <Route path='/admin/organizers' element={<AdminOrganizer/>} />
                 <Route path='/admin/events' element={<AdminEventsDashboard/>} />
+                <Route path="/organizer/my_events" element={<ViewEventModal />} />
 
             </Routes>
         </AuthProvider>
