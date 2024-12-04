@@ -16,12 +16,6 @@ export function AuthProvider({ children }) {
     const [profilePicture, setProfilePicture] = useState(null);
 
     useEffect(() => {
-        const user = localStorage.getItem('user');
-
-        if (user) {
-            setCurrentUser(JSON.parse(user));
-        }
-
         const getProfilePicture = async () => {
             if (currentUser && currentUser.profilePicture) {
                 try {

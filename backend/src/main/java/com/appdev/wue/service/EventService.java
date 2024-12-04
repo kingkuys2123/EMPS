@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.appdev.wue.entity.EventEntity;
+import com.appdev.wue.entity.VenueEntity;
 import com.appdev.wue.repository.EventRepository;
 
 import javax.naming.NameNotFoundException;
@@ -16,6 +17,9 @@ public class EventService {
 
     @Autowired
     private EventRepository eRepo;
+
+    @Autowired
+    private VenueService venueService;
 
     // Create Event
     public EventEntity createEvent(EventEntity event) {
@@ -38,6 +42,12 @@ public class EventService {
             existingEvent.setDateCreated(updatedEvent.getDateCreated());
             existingEvent.setEventStatus(updatedEvent.getEventStatus());
             existingEvent.setConfirmationStatus(updatedEvent.getConfirmationStatus());
+
+            if (updatedEvent.getVenue() != null && updatedEvent.getVenue().getVenueId() != 0) {
+                VenueEntity venue = venueService.getVenue(updatedEvent.getVenue().getVenueId());
+                existingEvent.setVenue(venue);
+            }
+
         } catch (Exception e) {
             throw new NameNotFoundException("Event with ID " + id + " not found!");
         } finally {

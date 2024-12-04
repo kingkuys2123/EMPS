@@ -36,17 +36,20 @@ public class BookingController {
     public BookingEntity updateUser(@RequestParam int id, @RequestBody BookingEntity updatedBooking) {
         return bServ.updateBooking(id, updatedBooking);
     }
+
     @PutMapping("/updateTicketQuantity/{id}")
     public BookingEntity updateTicketQuantity(@PathVariable int id) {
         return bServ.updateTicketQuantity(id);
     }
+
     @PutMapping("/updateStatus/{id}")
     public BookingEntity updateStatus(@PathVariable int id) {
         return bServ.acceptBookingStatus(id);
     }
+
     // Delete Booking By ID
     @DeleteMapping("/deleteBooking/{id}")
-    public BookingEntity deleteUser(@PathVariable int id) {
+    public BookingEntity deleteBooking(@PathVariable int id) {
         return bServ.deleteBooking(id);
     }
 

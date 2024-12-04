@@ -38,7 +38,6 @@ public class TicketController {
     public TicketEntity updateTicket(@RequestParam int id, @RequestBody TicketEntity updatedTicket) {
         return tServ.updateTicket(id, updatedTicket);
     }
-
     // Dalete Ticket
     @DeleteMapping("/deleteTicket/{id}")
     public TicketEntity deleteTicket(@PathVariable int id) {
