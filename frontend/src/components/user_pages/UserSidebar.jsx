@@ -18,6 +18,8 @@ function UserSidebar() {
     const { currentUser, setCurrentUser } = getAuth();
     const [openModal, setOpenModal] = useState(null);
 
+    const { profilePicture, setProfilePicture } = getAuth();
+
     const [openConfirmLogoutDialog, setOpenConfirmLogoutDialog] = useState(false);
 
     const handleClickLogoutButton = () => {
@@ -36,6 +38,7 @@ function UserSidebar() {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
             setCurrentUser(null);
+            setProfilePicture(null);
             nav("/");
         }
     };

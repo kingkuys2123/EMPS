@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useEffect, useState} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import UserService from "../services/UserService.jsx";
 
 const AuthContext = createContext();
@@ -17,19 +17,19 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         const user = localStorage.getItem('user');
+
         if (user) {
             setCurrentUser(JSON.parse(user));
         }
 
-    }, []);
-
-    useEffect(() => {
         const getProfilePicture = async () => {
-            try {
-                const blobUrl = await UserService.getProfilePicture("2_profile_picture.jpg");
-                setProfilePicture(blobUrl);
-            } catch (error) {
-                console.error("Error fetching profile picture:", error);
+            if (currentUser && currentUser.profilePicture) {
+                try {
+                    const blobUrl = await UserService.getProfilePicture(currentUser.profilePicture);
+                    setProfilePicture(blobUrl);
+                } catch (error) {
+                    console.error("Error fetching profile picture:", error);
+                }
             }
         };
 
@@ -41,9 +41,12 @@ export function AuthProvider({ children }) {
                 URL.revokeObjectURL(profilePicture);
             }
         };
-    }, []);
 
-    const value = { currentUser, setCurrentUser, profilePicture, setProfilePicture };
+    }, [currentUser]);
+
+    const displayPicture = profilePicture ?? '/assets/placeholders/avatar-photo-placeholder.png';
+
+    const value = { currentUser, setCurrentUser, profilePicture, setProfilePicture, displayPicture };
 
     return (
         <AuthContext.Provider value={value}>

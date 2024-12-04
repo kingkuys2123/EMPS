@@ -21,6 +21,8 @@ function OrganizerSidebar() {
 
     const { currentUser, setCurrentUser } = getAuth();
 
+    const { profilePicture, setProfilePicture } = getAuth();
+
     const [openConfirmLogoutDialog, setOpenConfirmLogoutDialog] = useState(false);
 
     const handleClickLogoutButton = () => {
@@ -39,6 +41,7 @@ function OrganizerSidebar() {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
             setCurrentUser(null);
+            setProfilePicture(null);
             nav("/");
         }
     };

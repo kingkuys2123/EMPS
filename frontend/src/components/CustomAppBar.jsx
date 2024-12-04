@@ -7,7 +7,7 @@ import UserService from "../services/UserService.jsx";
 
 function CustomAppBar({ title, newProfilePicture }) {
     const nav = useNavigate();
-    const { currentUser } = getAuth();
+    const { currentUser, displayPicture } = getAuth();
     const [anchorEl, setAnchorEl] = useState(null);
 
     const { profilePicture, setProfilePicture } = getAuth();
@@ -38,7 +38,7 @@ function CustomAppBar({ title, newProfilePicture }) {
                                 <>
                                     <Button sx={{ borderRadius: '50%' }} onClick={handleOpenMenu} aria-haspopup="true" aria-expanded={Boolean(anchorEl) ? 'true' : 'false'}>
                                         <div style={{ width: '50px', height: '50px', overflow: 'hidden', borderRadius: '50%' }}>
-                                            <img src={newProfilePicture ?? profilePicture} alt="profile-picture" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            <img src={newProfilePicture ?? displayPicture} alt="profile-picture" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         </div>
                                     </Button>
                                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>

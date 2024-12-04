@@ -15,7 +15,7 @@ import OrganizerSidebar from "./organizer_pages/OrganizerSidebar.jsx";
 
 function Profile() {
     const nav = useNavigate();
-    const { currentUser, setCurrentUser } = getAuth();
+    const { currentUser, setCurrentUser, displayPicture } = getAuth();
 
     const [username, setUsername] = useState('');
     const [firstName, setFirstName] = useState('');
@@ -23,7 +23,7 @@ function Profile() {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
 
-    const { profilePicture, setProfilePicture }  = getAuth();
+    const { profilePicture, setProfilePicture } = getAuth();
 
     const [newProfilePicture, setNewProfilePicture] = useState(null);
 
@@ -151,11 +151,16 @@ function Profile() {
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', flexGrow: 1 }}>
                                     <Box sx={{ width: '48%', display: 'flex', flexDirection: 'column' }}>
                                         <Box sx={{ padding: '25px', display: 'flex' }}>
-                                            <div style={{ width: '100px', height: '100px', overflow: 'hidden', borderRadius: '50%' }}>
+                                            <div style={{
+                                                width: '100px',
+                                                height: '100px',
+                                                overflow: 'hidden',
+                                                borderRadius: '50%'
+                                            }}>
                                                 <img
-                                                    src={newProfilePicture ?? profilePicture}
+                                                    src={newProfilePicture ?? displayPicture}
                                                     alt="profile-picture"
-                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    style={{width: '100%', height: '100%', objectFit: 'cover'}}
                                                 />
                                             </div>
                                             <Box sx={{
