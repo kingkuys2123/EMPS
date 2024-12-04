@@ -1,8 +1,9 @@
 import React from "react";
 import { Menu, MenuItem, IconButton } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { act } from "react";
 
-export default function EventMenu({ onView, onEdit, onDelete }) {
+export default function EventMenu({ activeTab, onRefuse, onApprove, onView, onEdit, onDelete }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
@@ -52,9 +53,22 @@ export default function EventMenu({ onView, onEdit, onDelete }) {
           },
         }}
       >
-        <MenuItem onClick={handleView}>View Event</MenuItem>
-        <MenuItem onClick={handleEdit}>Edit Event</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete Event</MenuItem>
+        {activeTab === 2 ? (
+          <div>
+            <MenuItem onClick={() => { onApprove(); handleClose(); }}>
+              Approve
+            </MenuItem>
+            <MenuItem onClick={() => { onRefuse(); handleClose(); }}>
+              Refuse
+            </MenuItem>
+          </div>
+        ) : (
+          <div>
+            <MenuItem onClick={handleView}>View Event</MenuItem>
+            <MenuItem onClick={handleEdit}>Edit Event</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete Event</MenuItem>
+          </div>
+        )}
       </Menu>
     </div>
   );

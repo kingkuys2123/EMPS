@@ -36,16 +36,17 @@ function AdminUsers() {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
+    const fetchData = async () => {
+        try {
+            const data = await UserService.getAllUsers();
+            setUsers(data);
+            setFilteredUsers(data);
+        } catch (error) {
+            console.error("Failed to fetch Users", error);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await UserService.getAllUsers();
-                setUsers(data);
-                setFilteredUsers(data);
-            } catch (error) {
-                console.error("Failed to fetch Users", error);
-            }
-        };
         fetchData();
     }, [currentUser, nav]);
 
@@ -70,11 +71,10 @@ function AdminUsers() {
     const handleDeleteUser = async () => {
         try {
             await UserService.deleteUser(userToDelete);
-            setUsers((prevUsers) => prevUsers.filter((user) => user.userID !== userToDelete));
-            setFilteredUsers((prevUsers) => prevUsers.filter((user) => user.userID !== userToDelete));
             setSnackbarMessage("User has been deleted successfully.");
             setOpenSnackbar(true);
             setOpenDeleteDialog(false);
+            await fetchData(); // Refresh data
         } catch (e) {
             setSnackbarMessage("Failed to delete user.");
             setOpenSnackbar(true);
@@ -82,22 +82,22 @@ function AdminUsers() {
         }
     };
 
-    const handleEditUserSuccess = (updatedUser) => {
-        setUsers((prevUsers) =>
-            prevUsers.map((user) => (user.userID === updatedUser.userID ? updatedUser : user))
-        );
-        setFilteredUsers((prevUsers) =>
-            prevUsers.map((user) => (user.userID === updatedUser.userID ? updatedUser : user))
-        );
+    const handleEditUserSuccess = async (updatedUser) => {
         setSnackbarMessage("User has been updated successfully.");
         setOpenSnackbar(true);
         setOpenEditModal(false);
+        await fetchData(); // Refresh data
+    };
+
+    const handleRegisterUserSuccess = async (newUser) => {
+        setSnackbarMessage("User has been added successfully.");
+        setOpenSnackbar(true);
+        setOpenRegisterModal(false);
+        await fetchData(); // Refresh data
     };
 
     const handleEditClick = (user) => {
-        // Check the user object to ensure all required fields exist
         console.log("Selected user:", user);
-        
         setSelectedUser({
             userID: user.userID,
             firstName: user.firstName,
@@ -105,14 +105,12 @@ function AdminUsers() {
             accountType: user.accountType,
             phoneNumber: user.phoneNumber,
             dateTimeCreated: user.dateTimeCreated,
-            email: user.email || "",  
-            username: user.username || "",  
-            password: user.password || "" 
+            email: user.email || "",
+            username: user.username || "",
+            password: user.password || ""
         });
         setOpenEditModal(true);
     };
-    
-    
 
     const handleDeleteClick = (userID) => {
         setUserToDelete(userID);
@@ -137,9 +135,8 @@ function AdminUsers() {
             sortable: false,
             renderCell: (params) => (
                 <Box>
-                    {/* check pass row for empty username,email, password*/}
                     <LongMenu
-                        onEdit={() => handleEditClick(params.row)} 
+                        onEdit={() => handleEditClick(params.row)}
                         onDelete={() => handleDeleteClick(params.row.userID)}
                     />
                 </Box>
@@ -157,9 +154,9 @@ function AdminUsers() {
         accountType: user.accountType,
         phoneNumber: user.phoneNumber,
         dateTimeCreated: user.dateTimeCreated,
-        email: user.email || "",  
-        username: user.username || "",  
-        password: user.password || "" 
+        email: user.email || "",
+        username: user.username || "",
+        password: user.password || ""
     }));
 
     return (
@@ -220,13 +217,7 @@ function AdminUsers() {
             <AddUserModal
                 open={openRegisterModal}
                 onClose={() => setOpenRegisterModal(false)}
-                onSuccess={(newUser) => {
-                    setUsers((prevUsers) => [...prevUsers, newUser]);
-                    setFilteredUsers((prevUsers) => [...prevUsers, newUser]);
-                    setSnackbarMessage("User has been added successfully.");
-                    setOpenSnackbar(true);
-                    setOpenRegisterModal(false);
-                }}
+                onSuccess={handleRegisterUserSuccess}
             />
 
             {/* Edit User Modal */}
@@ -239,7 +230,7 @@ function AdminUsers() {
 
             {/* Delete User Dialog */}
             <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog} sx={{padding: '20px'}}>
-                <DialogTitle  sx={{width: '250px', height: '50px'}}>Confirm Delete User?</DialogTitle>
+                <DialogTitle sx={{width: '250px', height: '50px'}}>Confirm Delete User?</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleCloseDeleteDialog} sx={{color: 'white', backgroundColor: '#C63F47', width:'150px'}}>Cancel</Button>
                     <Button onClick={handleDeleteUser} sx={{color: 'white', backgroundColor: '#C63F47', width:'150px'}}>Delete</Button>

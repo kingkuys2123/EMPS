@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@mui/x-charts": "^7.23.0",
+    "react-responsive-carousel": "^3.2.23",
+    "recharts": "^2.14.1"
+  }
+}

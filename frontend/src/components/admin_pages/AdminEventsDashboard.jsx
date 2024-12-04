@@ -7,7 +7,7 @@ import EditEventModal from "./EditEventModal.jsx";
 import AdminSidebar from "./AdminSidebar.jsx";
 import CustomAppBar from "../CustomAppBar.jsx";
 import EventService from '../../services/EventService';
-
+import ConfirmationDialog from './ConfirmationDialog.jsx';
 
 import "../styles/FontStyle.css";
 import "./styles/EventList.css";
@@ -20,7 +20,8 @@ function AdminEventsDashboard() {
     const [openEditEventModal, setOpenEditEventModal] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [tabValue, setTabValue] = useState(0);
-
+    const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+    
     const navigate = useNavigate();
 
     const fetchEvents = async () => {
@@ -69,26 +70,6 @@ function AdminEventsDashboard() {
         navigate(`/organizer/my_events/${eventId}`);
     };
 
-    const handleUpdateEvent = async (eventId, updatedEvent) => {
-        try {
-            const response = await EventService.updateEvent(eventId, updatedEvent);
-            if (response.status === 200) {
-                setEvents((prevEvents) =>
-                    prevEvents.map((event) =>
-                        event.eventId === eventId ? { ...event, ...updatedEvent } : event
-                    )
-                );
-                fetchEvents();
-                //navigate(`/myevents/${eventId}`);
-            } else {
-                console.error('Failed to update event:', response);
-            }
-        } catch (error) {
-            console.error('Error updating event:', error);
-            fetchEvents();
-        }
-    };
-
     const handleOpenEditEventModal = (event) => {
         setSelectedEvent(event);
         setOpenEditEventModal(true);
@@ -100,13 +81,44 @@ function AdminEventsDashboard() {
     };
 
     const handleEditEventSuccess = (updatedEvent) => {
-        handleUpdateEvent(updatedEvent.eventId, updatedEvent);
-        handleCloseEditEventModal();
+        // Handle event update success
+        fetchEvents();
     };
 
     const handleDeleteEvent = async (eventId) => {
         try {
-            setEvents((prevEvents) => prevEvents.filter((event) => event.eventId !== eventId));
+            await EventService.deleteEvent(eventId);
+            fetchEvents();
+        } catch (error) {
+            console.error('Error deleting event:', error);
+            fetchEvents();
+        }
+    };
+
+    const handleOpenConfirmationDialog = (event) => {
+        setSelectedEvent(event);
+        setOpenConfirmationDialog(true);
+        
+    };
+
+    const handleCloseConfirmationDialog = () => {
+        setOpenConfirmationDialog(false);
+    };
+
+    const handleConfirmEvent = (eventId) => {
+        setEvents((prevEvents) =>
+            prevEvents.map((event) =>
+                event.eventId === eventId ? { ...event, confirmationStatus: "Confirmed" } : event
+            )
+        );
+        fetchEvents();
+    };
+
+    const handleRefuseEvent = async (eventId) => {
+        setEvents((prevEvents) => prevEvents.filter((event) => event.eventId !== eventId));
+        fetchEvents();
+
+        try {
             await EventService.deleteEvent(eventId);
             fetchEvents();
         } catch (error) {
@@ -199,6 +211,9 @@ function AdminEventsDashboard() {
                                                     onView={() => handleViewEvent(event.eventId)}
                                                     onEdit={() => handleOpenEditEventModal(event)}
                                                     onDelete={() => handleDeleteEvent(event.eventId)}
+                                                    activeTab={tabValue}
+                                                    onApprove={() => handleOpenConfirmationDialog(event)}
+                                                    onRefuse={() => handleDeleteEvent(event.eventId)}
                                                 />
                                             </td>
                                         </tr>
@@ -207,11 +222,13 @@ function AdminEventsDashboard() {
                             </table>
                         </div>
                     </div>
+
                     <AddEventModal
                         open={openAddEventModal}
                         onClose={handleCloseAddEventModal}
                         onEventAdded={handleAddEventSuccess}
                     />
+
                     {selectedEvent && (
                         <EditEventModal
                             open={openEditEventModal}
@@ -220,8 +237,17 @@ function AdminEventsDashboard() {
                             onSave={handleEditEventSuccess}
                         />
                     )}
-                </Box>
 
+                    {selectedEvent && (
+                        <ConfirmationDialog
+                            open={openConfirmationDialog}
+                            onClose={handleCloseConfirmationDialog}
+                            event={selectedEvent}
+                            onConfirm={handleConfirmEvent}
+                            onRefuse={handleRefuseEvent}
+                        />
+                    )}
+                </Box>
             </Box>
         </div>
     );

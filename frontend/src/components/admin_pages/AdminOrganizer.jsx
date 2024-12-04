@@ -21,6 +21,7 @@ import AddOrganizerModal from "./AddOrganizerModal.jsx";
 import EditUserModal from "./EditUserModal.jsx";
 import OrganizerMenu from "./OrganizerMenu.jsx";
 import "../styles/FontStyle.css";
+import OrganizerConfirm from "./OrganizerConfirm.jsx";
 
 function AdminOrganizer() {
     const nav = useNavigate();
@@ -35,6 +36,7 @@ function AdminOrganizer() {
     const [userToDelete, setUserToDelete] = useState(null);
     const [openRegisterModal, setOpenRegisterModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
+    const [openOrganizerConfirm, setOrganizerConfirm] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
     // Fetch data for organizers and users
@@ -45,19 +47,19 @@ function AdminOrganizer() {
         const fetchData = async () => {
             try {
                 const data = await OrganizerService.getAllOrganizers();
-                
+
 
                 // Filter to include only organizers with valid user data
                 const organizers = data.filter((organizer) => {
-                    
+
                     return organizer.user && organizer.user.accountType;
                 });
 
-           
+
                 setUsers(organizers);
                 setFilteredUsers(organizers);
             } catch (error) {
-               
+
             }
         };
         fetchData();
@@ -158,7 +160,9 @@ function AdminOrganizer() {
                         organizer={params.row}
                         onEdit={() => handleEditClick(params.row)}
                         onDelete={() => handleDeleteClick(params.row.userID)}
-                        activeTab={tabValue}  // Pass the activeTab here
+                        activeTab={tabValue}
+                        onApprove={() => handleOpenConfirmationDialog(params.row.userID)}
+                        onRefuse={() => handleDeleteClick(params.row.userID)}
                     />
                 </Box>
             ),
@@ -192,6 +196,12 @@ function AdminOrganizer() {
         setOpenDeleteDialog(true);
     };
 
+    const handleOpenConfirmationDialog = (user) => {
+        setSelectedUser(user);
+        setOrganizerConfirm(true);
+    };
+
+
     // Close delete dialog
     const handleCloseDeleteDialog = () => {
         setOpenDeleteDialog(false);
@@ -201,7 +211,7 @@ function AdminOrganizer() {
     return (
         <div className="template-page">
             <Box sx={{ display: "flex", width: "100vw", maxWidth: "100%" }}>
-                <AdminSidebar/>
+                <AdminSidebar />
                 <Box component="main" sx={{
                     flexGrow: 1,
                     backgroundColor: "#F3F3F3",
@@ -217,13 +227,13 @@ function AdminOrganizer() {
                         backgroundColor: "#F3F3F3"
                     }}>
                         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                            <Tabs value={tabValue} onChange={handleTabChange}  sx={{
-                                    "& .MuiTab-root.Mui-selected": {
-                                        backgroundColor: "#FFFFFF", 
-                                        color: "#000000", 
-                                        borderRadius: "5px", 
-                                    },
-                                }} >
+                            <Tabs value={tabValue} onChange={handleTabChange} sx={{
+                                "& .MuiTab-root.Mui-selected": {
+                                    backgroundColor: "#FFFFFF",
+                                    color: "#000000",
+                                    borderRadius: "5px",
+                                },
+                            }} >
                                 <Tab label="All" />
                                 <Tab label="Approved" />
                                 <Tab label="Pending" />
@@ -265,13 +275,28 @@ function AdminOrganizer() {
                 open={openEditModal}
                 onClose={() => setOpenEditModal(false)}
                 user={selectedUser}
-                onEditSuccess={handleEditUserSuccess}
+                onSuccess={handleEditUserSuccess}
+            />
+            <OrganizerConfirm
+                open={openOrganizerConfirm}
+                onClose={() => setOrganizerConfirm(false)}
+                user={users}
+                selectedUser={selectedUser}
+                onSuccess={handleEditUserSuccess}
             />
             <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
                 <DialogTitle>Are you sure you want to delete this user?</DialogTitle>
                 <DialogActions>
-                    <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
-                    <Button onClick={handleDeleteUser} color="error">Delete</Button>
+                    <Button sx={{
+                        backgroundColor: "#D32F2F",
+                        color: "#FFFFFF",
+                        "&:hover": { backgroundColor: "#B71C1C" },
+                    }} onClick={handleCloseDeleteDialog}>Cancel</Button>
+                    <Button sx={{
+                            backgroundColor: "#D32F2F",
+                            color: "#FFFFFF",
+                            "&:hover": { backgroundColor: "#B71C1C" },
+                        }} onClick={handleDeleteUser} color="error">Delete</Button>
                 </DialogActions>
             </Dialog>
             <Snackbar

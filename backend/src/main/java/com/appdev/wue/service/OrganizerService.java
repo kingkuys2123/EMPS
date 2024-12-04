@@ -44,7 +44,6 @@ public class OrganizerService {
         OrganizerEntity existingOrganizer;
         try {
             existingOrganizer = oRepo.findById(id).get();
-
             existingOrganizer.setApprovalStatus(newOrganizer.getApprovalStatus());
             existingOrganizer.setDateTimeApproved(newOrganizer.getDateTimeApproved());
 
