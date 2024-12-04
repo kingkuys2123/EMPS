@@ -7,10 +7,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+
 
 @RestController
 @RequestMapping(method = RequestMethod.GET, path = "api/user")
@@ -35,11 +41,18 @@ public class UserController {
         return uServ.getAllUsers();
     }
 
-    // Get User By ID
-    @GetMapping("/getUser/{id}")
-    public UserEntity getUser(@PathVariable int id) {
-        return uServ.getUser(id);
+   // Backend: Get User By ID
+@GetMapping("/getUser/{id}")
+public ResponseEntity<?> getUser(@PathVariable int id) {
+    try {
+        UserEntity user = uServ.getUser(id);
+        return ResponseEntity.ok(user); // Return the user if found
+    } catch (NoSuchElementException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                             .body("User with ID " + id + " not found!"); // Return 404
     }
+}
+
 
     // Update User By ID
     @PutMapping("/updateUser")
@@ -114,6 +127,34 @@ public class UserController {
         }
         catch(RuntimeException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // Upload Profile Picture
+    @PostMapping("/uploadProfilePicture")
+    public ResponseEntity<?> uploadProfilePicture(@RequestParam int userId, @RequestParam("file") MultipartFile file) {
+        try {
+            UserEntity user = uServ.uploadProfilePicture(userId, file);
+            return ResponseEntity.ok(user);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading profile picture: " + e.getMessage());
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    // Get Profile Picture
+    @GetMapping("/getProfilePicture/{filename}")
+    public ResponseEntity<Resource> getProfilePicture(@PathVariable String filename) {
+        try {
+            Resource resource = uServ.getProfilePicture(filename);
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().build();
         }
     }
 

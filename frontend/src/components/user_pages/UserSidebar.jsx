@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar, Link } from "@mui/material";
+import { Drawer, Box, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography, AppBar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import LoginModal from "../LoginModal.jsx";
@@ -9,6 +9,8 @@ import { getAuth } from "../../utils/AuthContext.jsx";
 import '../styles/FontStyle.css';
 import "../styles/Sidebar.css";
 import ConfirmDialog from "../ConfirmDialog.jsx";
+
+import { Link } from "react-router-dom";
 
 function UserSidebar() {
     const nav = useNavigate();
@@ -62,7 +64,9 @@ function UserSidebar() {
                         <Toolbar disableGutters sx={{ height: '80px', alignItems: 'center' }}>
                             <Typography variant="h6">
                                 <Box sx={{ flex: 1, display: "flex", justifyContent: "center", overflow: "hidden", padding: "30px" }}>
-                                    <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image" style={{ width: '150px' }} />
+                                    <Link to="/">
+                                        <img className="drawer-wild-up-events-white" src="/assets/images/wild-up-events-white.png" alt="homepage-image" style={{width: '150px'}}/>
+                                    </Link>
                                 </Box>
                             </Typography>
                         </Toolbar>

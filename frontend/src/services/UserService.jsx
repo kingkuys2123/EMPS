@@ -27,12 +27,18 @@ const UserService = {
     getUser: async (userId) => {
         try {
             const response = await axios.get(`/user/getUser/${userId}`);
-            return response.data;
+            return response.data; // Return user data if found
         } catch (error) {
-            console.error("Error fetching user with ID:", error);
-            throw error.response ? error.response.data : error.message;
+            // Handle 404 or other errors gracefully
+            if (error.response?.status === 404) {
+                console.error(`User with ID ${userId} not found.`);
+                throw new Error("User not found.");
+            }
+            console.error("Error fetching user:", error);
+            throw new Error("Error fetching user. Please try again.");
         }
     },
+    
 
     // Update User
     updateUser: async (userId, newUserDetails) => {
@@ -109,7 +115,38 @@ const UserService = {
             console.error(`Error changing password:`, error);
             throw error.response ? error.response.data : error.message;
         }
-    }
+    },
+
+    // Upload Profile Picture
+    uploadProfilePicture: async (userId, file) => {
+        try {
+            const formData = new FormData();
+            formData.append('userId', userId);
+            formData.append('file', file);
+
+            const response = await axios.post(`/user/uploadProfilePicture`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error(`Error uploading profile picture:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get Profile Picture
+    getProfilePicture: async (filename) => {
+        try {
+            const response = await axios.get(`/user/getProfilePicture/${filename}`, { responseType: 'blob' });
+            return URL.createObjectURL(response.data);
+        } catch (error) {
+            console.error(`Error fetching profile picture:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
 };
 
 export default UserService;

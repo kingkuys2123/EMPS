@@ -1,4 +1,5 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
+import UserService from "../services/UserService.jsx";
 
 const AuthContext = createContext();
 
@@ -12,6 +13,8 @@ export function AuthProvider({ children }) {
         return user ? JSON.parse(user) : null;
     });
 
+    const [profilePicture, setProfilePicture] = useState(null);
+
     useEffect(() => {
         const user = localStorage.getItem('user');
         if (user) {
@@ -20,7 +23,27 @@ export function AuthProvider({ children }) {
 
     }, []);
 
-    const value = { currentUser, setCurrentUser };
+    useEffect(() => {
+        const getProfilePicture = async () => {
+            try {
+                const blobUrl = await UserService.getProfilePicture("2_profile_picture.jpg");
+                setProfilePicture(blobUrl);
+            } catch (error) {
+                console.error("Error fetching profile picture:", error);
+            }
+        };
+
+        getProfilePicture();
+
+        return () => {
+            // Cleanup the blob URL when the component unmounts
+            if (profilePicture) {
+                URL.revokeObjectURL(profilePicture);
+            }
+        };
+    }, []);
+
+    const value = { currentUser, setCurrentUser, profilePicture, setProfilePicture };
 
     return (
         <AuthContext.Provider value={value}>

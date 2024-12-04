@@ -31,6 +31,7 @@
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  width: 250px;
 }
 
 .add-event-button {

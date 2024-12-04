@@ -4,7 +4,7 @@ import LandingPage from "./components/LandingPage.jsx";
 import UserHome from "./components/user_pages/UserHome.jsx";
 import UserBookings from "./components/user_pages/UserBookings.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
-import MyAccount from "./components/MyAccount.jsx";
+import Profile from "./components/Profile.jsx";
 import OrganizerDashboard from './components/organizer_pages/OrganizerDashboard.jsx';
 import MyEvents from './components/organizer_pages/MyEvents.jsx';
 import ViewEventPage from './components/organizer_pages/ViewEventPage.jsx';
@@ -18,6 +18,10 @@ import UserFeedback from './components/user_pages/UserFeedback.jsx';
 
 import Ticket from './components/organizer_pages/Ticket.jsx'
 import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
+import OrganizerEventAnalytics from "./components/organizer_pages/OrganizerEventAnalytics.jsx";
+import AboutUs from "./components/AboutUs.jsx";
+import MyAccount from "./components/MyAccount.jsx";
+
 function App() {
     return (
         <AuthProvider>
@@ -26,6 +30,10 @@ function App() {
                 <Route path="/" element={<LandingPage />} />
 
                 <Route path="/home" element={<UserHome />} />
+                <Route path="/about_us" element={<AboutUs />} />
+
+                {/* Account */}
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/my_account" element={<MyAccount />} />
 
                 {/* User Routes */}
@@ -39,6 +47,7 @@ function App() {
                 <Route path='/organizer/bookings' element={<OrganizerBookings/>} />
                 <Route path='/organizer/tickets' element={<Ticket/>} />
                 <Route path='/organizer/dashboard/' element={<OrganizerDashboard />} />
+                <Route path='/organizer/dashboard/:eventId' element={<OrganizerEventAnalytics />}/>
 
                 {/* Admin Routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />

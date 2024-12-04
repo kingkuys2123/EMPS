@@ -15,7 +15,7 @@ const FeedbackService = {
   // Get all feedbacks
   getAllFeedback: async () => {
     try {
-      const response = await axios.get(`/feedback/getAllFeedback`);
+      const response = await axios.get(`/feedback/getAllFeedbacks`);
       return response.data;
     } catch (error) {
       console.error("Error fetching all feedback:", error);
