@@ -70,6 +70,7 @@ function ViewEventPage() {
             fetchEvent();
         } catch (error) {
             console.error("Error updating event:", error);
+            console.log(venues);
             alert("Failed to update event details.");
         }
     };
@@ -192,9 +193,8 @@ function ViewEventPage() {
                                         <Typography variant="body1">
                                             <strong>Event Type:</strong>
                                         </Typography>
-                                        <input
-                                            type="text"
-                                            value={event.type}
+                                        <select
+                                            value={event.type || "Public"} // Default to "Public" if undefined
                                             onChange={(e) =>
                                                 setEvent({ ...event, type: e.target.value })
                                             }
@@ -205,7 +205,10 @@ function ViewEventPage() {
                                                 fontSize: "16px",
                                                 boxSizing: "border-box",
                                             }}
-                                        />
+                                        >
+                                            <option value="Public">Public</option>
+                                            <option value="Private">Private</option>
+                                        </select>
                                     </Box>
 
                                     <Box sx={{ mb: 2 }}>
@@ -215,7 +218,7 @@ function ViewEventPage() {
                                         <select
                                             value={event.venue || ""}
                                             onChange={(e) =>
-                                                setEvent({ ...event, venue: e.target.value })
+                                                setEvent({ ...event, venue: parseInt(e.target.value, 10) || "" })
                                             }
                                             style={{
                                                 width: "100%",
@@ -227,7 +230,7 @@ function ViewEventPage() {
                                         >
                                             <option value="">Select a venue</option>
                                             {venues.map((venue) => (
-                                                <option key={venue.id} value={venue.name}>
+                                                <option key={venue.id} value={venue.venueId}>
                                                     {venue.name}
                                                 </option>
                                             ))}

@@ -20,27 +20,28 @@ function OrganizerEventAnalytics() {
                 // Fetch event details
                 const eventResponse = await EventService.getEvent(eventId);
                 setEventDetails(eventResponse.data);
-
+    
                 // Fetch bookings for the event
                 const bookingResponse = await BookingService.getAllBookings();
-                const eventBookings = bookingResponse.data.filter(
-                    (booking) => booking.eventId === eventId
+                const eventBookings = (bookingResponse.data || []).filter(
+                    (booking) => String(booking.eventId) === String(eventId) // Ensure type matching
                 );
                 setBookings(eventBookings);
-
+    
                 // Fetch feedbacks by eventId
                 const feedbackResponse = await FeedbackService.getFeedbackByEventId(eventId);
-                setFeedbacks(feedbackResponse.data);
-
+                setFeedbacks(feedbackResponse.data || []);
+    
                 setLoading(false);
             } catch (error) {
                 console.error("Error fetching event analytics:", error);
                 setLoading(false);
             }
         };
-
+    
         fetchEventAnalytics();
     }, [eventId]);
+    
 
     // Calculate total revenue
     const totalRevenue = bookings

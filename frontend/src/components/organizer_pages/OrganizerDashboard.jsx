@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import { Typography, Box, Grid, Paper } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useNavigate } from "react-router-dom";
 import OrganizerSidebar from "./OrganizerSidebar";
 import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
@@ -8,6 +9,7 @@ import EventService from "../../services/EventService";
 function OrganizerDashboard() {
     const [events, setEvents] = useState([]);
     const [analyticsData, setAnalyticsData] = useState([]);
+    const navigate = useNavigate();
 
     // Fetch all events and calculate analytics
     const fetchEvents = async () => {
@@ -29,7 +31,7 @@ function OrganizerDashboard() {
             Confirmed: 0,
             Pending: 0,
         };
-    
+
         events.forEach((event) => {
             if (event.confirmationStatus === "Confirmed") {
                 categoryCounts.Confirmed += 1;
@@ -37,23 +39,26 @@ function OrganizerDashboard() {
                 categoryCounts.Pending += 1;
             }
         });
-    
+
         return Object.entries(categoryCounts).map(([name, value]) => ({
             name,
             value,
         }));
     };
-    
 
     useEffect(() => {
         fetchEvents();
     }, []);
 
+    const handleEventClick = (eventId) => {
+        navigate(`/organizer/dashboard/${eventId}`);
+    };
+
     const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
     return (
         <div className="template-page">
-            <Box sx={{ display: "flex", width: '100%' }}>
+            <Box sx={{ display: "flex", width: "100%" }}>
                 {/* Sidebar */}
                 <OrganizerSidebar />
 
@@ -115,6 +120,47 @@ function OrganizerDashboard() {
                                 </Paper>
                             </Grid>
                         </Grid>
+
+                        {/* Events List */}
+                        <Box sx={{ marginTop: "30px" }}>
+                            <Typography variant="h6" gutterBottom>
+                                Events
+                            </Typography>
+                            <Grid container spacing={3}>
+                                {events.map((event) => (
+                                    <Grid item xs={12} sm={6} md={4} key={event.id}>
+                                        <Paper
+                                            sx={{
+                                                padding: "16px",
+                                                backgroundColor: "#fff",
+                                                cursor: "pointer",
+                                                transition: "box-shadow 0.2s ease",
+                                                "&:hover": {
+                                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                                },
+                                            }}
+                                            onClick={() => handleEventClick(event.eventId)}
+                                        >
+                                            <img
+                                                //src={event.image || "/placeholder-image.png"}
+                                                //alt={event.name}
+                                                style={{
+                                                    width: "100%",
+                                                    height: "150px",
+                                                    objectFit: "cover",
+                                                    borderRadius: "4px",
+                                                    marginBottom: "8px",
+                                                }}
+                                            />
+                                            <Typography variant="h6">{event.name}</Typography>
+                                            <Typography variant="body2" color="textSecondary">
+                                                {event.description.substring(0, 100)}...
+                                            </Typography>
+                                        </Paper>
+                                    </Grid>
+                                ))}
+                            </Grid>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
