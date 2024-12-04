@@ -25,8 +25,8 @@ const BookingService = {
                 booking: booking.bookingID,
                 customerName: booking.user.firstName || "Unknown",
                 event: booking.ticket.name,
-                tickets: booking.ticketQuantity,
-                totalPrice: booking.totalPrice,
+                tickets: booking.ticketQuantity,    
+                totalPrice: booking.ticket.price * booking.ticketQuantity,
                 dateBooked: booking.dateTimeBooked,
                 status: booking.status,
             }));

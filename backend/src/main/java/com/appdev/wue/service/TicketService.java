@@ -6,6 +6,7 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.appdev.wue.entity.BookingEntity;
 import com.appdev.wue.entity.TicketEntity;
 import com.appdev.wue.repository.TicketRepository;
 
@@ -52,12 +53,10 @@ public class TicketService {
         }
     }
 
-    public String deleteTicket(int id) {
-        String msg = "Ticket Invalid";
-        if (tRepo.findById(id) != null) {
-            tRepo.deleteById(id);
-            msg = "Ticket with id " + id + " is deleted successfully";
-        }
-        return msg;
+    public TicketEntity deleteTicket(int id) {
+        TicketEntity delete = tRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
+        delete.IsDeleted(1);
+        return tRepo.save(delete);
     }
 }

@@ -41,7 +41,7 @@ public class TicketController {
 
     // Dalete Ticket
     @DeleteMapping("/deleteTicket/{id}")
-    public String deleteTicket(@PathVariable int id) {
+    public TicketEntity deleteTicket(@PathVariable int id) {
         return tServ.deleteTicket(id);
     }
 }

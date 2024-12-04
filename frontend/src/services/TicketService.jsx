@@ -5,12 +5,29 @@ const TicketService = {
     getAllTickets: async () => {
         try {
             const response = await axios.get(`/ticket/getAllTickets`);
-            return response.data;
+            console.log("Raw ticket Data:", response.data);
+    
+            // Filter and map the raw data
+            const mappedTickets = response.data
+                .filter((ticket) => ticket.isDeleted === 0) // Filter out deleted tickets
+                .map((ticket) => ({
+                    ticketId: ticket.ticketId, // Maps ticketId from raw data
+                    name: ticket.name || "Unknown", // Maps name or defaults to "Unknown"
+                    description: ticket.description || "No Description", // Maps description
+                    type: ticket.type || "General", // Maps type
+                    quantity: ticket.quantity || 0, // Maps quantity
+                    price: ticket.price || 0, // Maps price
+                    isAvailable: ticket.isAvailable, // Maps availability
+                }));
+    
+            console.log("Mapped ticket Data:", mappedTickets);
+            return mappedTickets;
         } catch (error) {
             console.error("Error fetching all tickets:", error);
             throw error.response ? error.response.data : error.message;
         }
     },
+    
 
     // Get Ticket by ID
     getTicketById: async (id) => {

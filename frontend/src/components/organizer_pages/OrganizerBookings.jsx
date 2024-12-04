@@ -5,27 +5,24 @@ import BookingService from "../../services/BookingService.jsx";
 import { Button } from "@mui/material";
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-
+import '../../components/organizer_pages/styles/OrganizerBookings.css'
 function OrganizerBookings() {
     const [rows, setRows] = useState([]);
     const [activeTab, setActiveTab] = useState("All");
     const [checker, checked] = useState(true);
     const columns = [
-        { field: 'booking', headerName: 'Booking', minWidth: 80 },
-        { field: 'customerName', headerName: 'Customer Name', minWidth: 200, display: "flex", flex: 1 },
-        { field: 'event', headerName: 'Event', minWidth: 300, display: "flex", flex: 2 },
-        { field: 'tickets', headerName: 'Tickets', minWidth: 80, type: 'number', align: 'left', headerAlign: 'left', flex: .5 },
-        { field: 'totalPrice', headerName: 'Total Price', minWidth: "20px", type: 'number', align: 'left', headerAlign: 'left', display: "flex", flex: .5 },
+        { field: 'booking', headerName: 'Booking'},
+        { field: 'customerName', headerName: 'Customer Name', display: "flex", flex: 1},
+        { field: 'event', headerName: 'Event', display: "flex", flex: 1},
+        { field: 'tickets', headerName: 'Tickets', type: 'number', align: 'left', headerAlign: 'left'},
+        { field: 'totalPrice', headerName: 'Total Price', type: 'number', align: 'left', headerAlign: 'left'},
         {
             field: 'dateBooked',
             headerName: 'Date Booked',
-            minWidth: "200px",
+            width: 200,
             type: 'date',
-            display: "flex",
-            flex: 1.5,
             valueFormatter: (params) => {
-                const date = new Date(params);  // Accessing the date value
-                console.log("Raw Date Value:", params.value);  // Log the raw date value
+                const date = new Date(params);
                 return date.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -35,7 +32,7 @@ function OrganizerBookings() {
         },
 
         {
-            field: 'status', headerName: 'Status', minWidth: 120, display: "flex", flex: 1,
+            field: 'status', headerName: 'Status', width: 150,
             renderCell: (params) => {
                 return (
                     <div style={{ color: params.row.status === "Pending" ? "red" : "green", display: "flex", alignItems: "center" }}>
@@ -49,8 +46,6 @@ function OrganizerBookings() {
             field: 'actions',
             headerName: 'Actions',
             width: 180,
-            display: "flex",
-            flex: 1,
             renderCell: (params) => {
                 // Display buttons only for "Pending" bookings
                 if (params.row.status === "Pending") {
@@ -146,6 +141,7 @@ function OrganizerBookings() {
             onEditClick={handleAcceptClick}
             onDeleteClick={handleDeleteClick}
             setActiveTab={setActiveTab}
+            searchLabel={"Search bookings by name..."}
         />
     );
 }
