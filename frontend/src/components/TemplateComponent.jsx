@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Link } from "@mui/material";
 import CustomAppBar from "./CustomAppBar.jsx";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import "./styles/FontStyle.css";
 import DataTable from "./DataTableComponent.jsx";
 
@@ -17,7 +17,8 @@ function TemplateComponent({
     body,
     checkBoxTemplate,
     newButton,
-    onCreateNewTicketClick, // Add a new prop to handle the creation
+    onCreateNewTicketClick,
+    searchLabel
 }) {
     // State for search input
     const [searchText, setSearchText] = useState("");
@@ -88,7 +89,7 @@ function TemplateComponent({
                             <Box sx={{ display: "flex", boxSizing: "border-box", gap: "10px" }}>
                                 <TextField
                                     id="outlined-size-small"
-                                    label="Search bookings by name..."
+                                    label={searchLabel}
                                     type="search"
                                     size="small"
                                     sx={{ width: "250px" }}
@@ -101,7 +102,7 @@ function TemplateComponent({
                                             variant="contained"
                                             color="primary"
                                             onClick={onCreateNewTicketClick}
-                                            startIcon={<FilterListIcon />}
+                                            startIcon={<AddCircleIcon />}
                                         >
                                             New Ticket
                                         </Button>

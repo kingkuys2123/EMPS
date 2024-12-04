@@ -22,8 +22,7 @@ function OrganizerBookings() {
             width: 200,
             type: 'date',
             valueFormatter: (params) => {
-                const date = new Date(params);  // Accessing the date value
-                console.log("Raw Date Value:", params.value);  // Log the raw date value
+                const date = new Date(params);
                 return date.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
@@ -142,6 +141,7 @@ function OrganizerBookings() {
             onEditClick={handleAcceptClick}
             onDeleteClick={handleDeleteClick}
             setActiveTab={setActiveTab}
+            searchLabel={"Search bookings by name..."}
         />
     );
 }
