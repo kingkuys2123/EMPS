@@ -37,7 +37,18 @@ public class TicketEntity {
     @ManyToOne
     @JoinColumn(name = "event_id")
     private EventEntity event;
+    
+    @Column(name = "isDeleted")
+    private int isDeleted = 0;
 
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void IsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+    
     // Getters and setters
 
     public void setTicketId(int ticketId) {

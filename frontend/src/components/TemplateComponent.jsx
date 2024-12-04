@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Link } from "@mui/material";
 import CustomAppBar from "./CustomAppBar.jsx";
-import FilterListIcon from '@mui/icons-material/FilterList';
+import FilterListIcon from "@mui/icons-material/FilterList";
 import "./styles/FontStyle.css";
 import DataTable from "./DataTableComponent.jsx";
 
@@ -14,14 +14,17 @@ function TemplateComponent({
     setActiveTab,
     onAcceptClick,
     onDeleteClick,
-    body
+    body,
+    checkBoxTemplate,
+    newButton,
+    onCreateNewTicketClick, // Add a new prop to handle the creation
 }) {
     // State for search input
     const [searchText, setSearchText] = useState("");
 
     // Filter rows based on search text
     const filteredRows = fetchRows.filter((row) =>
-        row.customerName.toLowerCase().includes(searchText.toLowerCase())
+        (row.customerName || "").toLowerCase().includes(searchText.toLowerCase())
     );
 
     return (
@@ -37,18 +40,24 @@ function TemplateComponent({
                         width: "100%",
                         display: "flex",
                         flexDirection: "column",
-                        boxSizing: "border-box"
+                        boxSizing: "border-box",
                     }}
                 >
-                    {/* ADD TITLE */}
+                    {/* Add Title */}
                     <CustomAppBar title={title} />
 
                     <Box sx={{ flexGrow: 1, margin: "10px 20px", boxSizing: "border-box" }}>
-                        <Box sx={{
-                            display: "flex", flexGrow: 1,
-                            height: "7vh", boxSizing: "border-box", marginBottom: "10px",
-                            justifyContent: "space-between", alignItems: "flex-end"
-                        }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexGrow: 1,
+                                height: "7vh",
+                                boxSizing: "border-box",
+                                marginBottom: "10px",
+                                justifyContent: "space-between",
+                                alignItems: "flex-end",
+                            }}
+                        >
                             <Box
                                 sx={{
                                     display: "flex",
@@ -86,13 +95,31 @@ function TemplateComponent({
                                     value={searchText}
                                     onChange={(e) => setSearchText(e.target.value)}
                                 />
+                                {newButton === true ?
+                                    <Box sx={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={onCreateNewTicketClick}
+                                            startIcon={<FilterListIcon />}
+                                        >
+                                            New Ticket
+                                        </Button>
+                                    </Box> : ''
+                                }
                             </Box>
                         </Box>
 
-                        <Box sx={{
-                            display: "flex", flex: 1, flexDirection: "column", boxSizing: "border-box",
-                            height: 'calc(100vh - 230px)'
-                        }}>
+
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flex: 1,
+                                flexDirection: "column",
+                                boxSizing: "border-box",
+                                height: "calc(100vh - 230px)",
+                            }}
+                        >
                             {body ? (
                                 body
                             ) : (
@@ -102,6 +129,7 @@ function TemplateComponent({
                                     columns={columns}
                                     onAcceptClick={onAcceptClick}
                                     onDeleteClick={onDeleteClick}
+                                    checkBox={checkBoxTemplate}
                                 />
                             )}
                         </Box>

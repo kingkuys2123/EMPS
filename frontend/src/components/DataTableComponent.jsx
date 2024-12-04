@@ -3,7 +3,7 @@ import { Box, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 
-const DataTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) => {
+const DataTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding, checkBox}) => {
     // Ensure rows have unique ids if not already present
     const rowsWithIds = (rows || []).map((row, index) => ({
         id: row.id || index,  // Use `userID` if available, otherwise fall back to `index`
@@ -18,8 +18,9 @@ const DataTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding}) => 
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5, 10]}
-                    checkboxSelection
-                    sx={{ border: 0 }}
+                    checkboxSelection={checkBox}
+                    disableColumnResize
+                    sx={{ border: 0, padding: '0 10px'}}
                     components={{
                         Toolbar: null,  
                     }}
