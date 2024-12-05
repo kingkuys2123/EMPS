@@ -110,7 +110,7 @@ function MyAccount() {
                                                 Settings
                                             </Typography>
                                             <Typography sx={{ color: "#7F7F7F", marginTop: '10px' }}>
-                                                Here, you can manage your personal information, update your email address, and change your password to ensure your account remains secure. You can also delete your account if you no longer wish to use our services.
+                                                Manage your personal information, update your email address, and change your password to ensure your account remains secure. You can also delete your account if you no longer wish to use our services.
                                             </Typography>
                                             <Typography sx={{ color: "#7F7F7F", marginTop: '10px' }}>
                                                 Please note that deleting your account is irreversible and all your data will be permanently lost. Use the options provided to make any necessary changes to your account settings.

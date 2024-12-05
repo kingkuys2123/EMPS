@@ -15,7 +15,7 @@ public interface EventRepository extends JpaRepository<EventEntity, Integer> {
     List<EventEntity> findTop4EventsOrderByBookingsDesc();
 
     @Query(value = "SELECT e FROM EventEntity e WHERE e.event_status = 'Upcoming' ORDER BY RAND() LIMIT 3")
-    List<EventEntity> findTop3UpcomingEventsInRandomOrder();
+    List<EventEntity> getRandomUpcomingEvents();
 
 
 }

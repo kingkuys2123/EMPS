@@ -27,8 +27,8 @@ public class EventService {
     }
 
     // Get Top 4 Upcoming Events In Random Order
-    public List<EventEntity> getTop3UpcomingEventsInRandomOrder() {
-        return eRepo.findTop3UpcomingEventsInRandomOrder();
+    public List<EventEntity> getRandomUpcomingEvents() {
+        return eRepo.getRandomUpcomingEvents();
     }
 
     // Create Event

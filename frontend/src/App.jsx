@@ -23,6 +23,7 @@ import AboutUs from "./components/AboutUs.jsx";
 import MyAccount from "./components/MyAccount.jsx";
 import UserEvents from "./components/user_pages/UserEvents.jsx";
 import UserViewEvent from "./components/user_pages/UserViewEvent.jsx";
+import Billing from "./components/Billing.jsx";
 
 function App() {
     return (
@@ -33,12 +34,13 @@ function App() {
 
                 <Route path="/home" element={<UserHome />} />
                 <Route path="/about_us" element={<AboutUs />} />
+                <Route path="/events/:eventId" element={<UserViewEvent />} />
 
                 {/* Account */}
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/my_account" element={<MyAccount />} />
                 <Route path="/events" element={<UserEvents />} />
-                <Route path="/events/:eventId" element={<UserViewEvent />} />
+                <Route path="/billing" element={<Billing />} />`
 
                 {/* User Routes */}
                 <Route path="/user/bookings" element={<UserBookings />} />

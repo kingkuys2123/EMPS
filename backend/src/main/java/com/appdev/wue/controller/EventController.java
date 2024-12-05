@@ -21,9 +21,9 @@ public class EventController {
     }
 
     // Get Top 4 Upcoming Events In Random Order
-    @GetMapping("/getTop3UpcomingEventsInRandomOrder")
-    public List<EventEntity> getTop3UpcomingEventsInRandomOrder() {
-        return eServ.getTop3UpcomingEventsInRandomOrder();
+    @GetMapping("/getRandomUpcomingEvents")
+    public List<EventEntity> getRandomUpcomingEvents() {
+        return eServ.getRandomUpcomingEvents();
     }
 
     // Create Event

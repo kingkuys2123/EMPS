@@ -19,8 +19,8 @@ const EventService = {
   getFeaturedEvents: async () => {
     return await axios.get(`/event/getFeaturedEvents`);
   },
-  getTop4UpcomingEventsInRandomOrder: async () => {
-    return await axios.get(`/event/getTop4UpcomingEventsInRandomOrder`);
+  getRandomUpcomingEvents: async () => {
+    return await axios.get(`/event/getRandomUpcomingEvents`);
   },
 };
 
