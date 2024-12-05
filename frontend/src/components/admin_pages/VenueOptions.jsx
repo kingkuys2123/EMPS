@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Menu, MenuItem, IconButton, Modal, Box, Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
+import { Menu, MenuItem, IconButton, Modal, Box, Dialog, DialogTitle, DialogContent, DialogActions, Alert } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CheckIcon from '@mui/icons-material/Check';
 import './styles/venue.css';
 import VenueService from '../../services/VenueService.jsx';
 import UpdateVenue from "../admin_pages/UpdateVenue.jsx"
@@ -17,6 +18,8 @@ function VenueOptions({ venue,  refreshData}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); 
+    const [showAlert, setShowAlert] = useState(false);
+    const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
     const open = Boolean(anchorEl);
 
@@ -50,9 +53,13 @@ function VenueOptions({ venue,  refreshData}) {
         
       try {
         const response = await VenueService.deleteVenue(venue.venueId);
-        setOpenDeleteConfirm(false); 
-          alert("Deleted");
+          setOpenDeleteConfirm(false); 
           refreshData();
+          setShowDeleteAlert(true);
+          console.log("Venue deleted successfully, showing delete alert.");
+          setTimeout(() => {
+            setShowDeleteAlert(false);
+          }, 3000);
       } catch (error) {
           console.error('Error deleting venue:', error);
       }
@@ -102,7 +109,7 @@ function VenueOptions({ venue,  refreshData}) {
                 className="mod"
             >
                 <Box className="updateBox">
-                    <UpdateVenue venue={venue} onClose={handleCloseModal} /> 
+                    <UpdateVenue venue={venue} onClose={handleCloseModal} setShowAlert={setShowAlert} /> 
                 </Box>
             </Modal>
 
@@ -124,6 +131,41 @@ function VenueOptions({ venue,  refreshData}) {
                     </button>
                 </DialogActions>
             </Dialog>
+
+            {showAlert && (
+              <Alert
+                icon={<CheckIcon fontSize="inherit" />}
+                severity="success"
+                sx={{
+                  position: "fixed",
+                  top: 20,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "80%",
+                  maxWidth: "400px",
+                }}
+              >
+                Update complete
+              </Alert>
+            )}
+
+            {showDeleteAlert && (
+              <Alert
+                icon={<CheckIcon fontSize="inherit" />}
+                severity="success"
+                sx={{
+                  position: "fixed",
+                  top: 20,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "80%",
+                  maxWidth: "400px",
+                  zIndex: 9999, 
+                }}
+              >
+                Venue deleted successfully
+              </Alert>
+            )}
         </div>
     );
 }

@@ -1,25 +1,28 @@
 package com.appdev.wue.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.yaml.snakeyaml.events.Event;
-
-import com.appdev.wue.entity.OrganizerEntity;
-import com.appdev.wue.entity.UserEntity;
-import com.appdev.wue.repository.UserRepository;
-import com.appdev.wue.service.OrganizerService;
-import com.appdev.wue.service.UserService;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.appdev.wue.entity.OrganizerEntity;
+import com.appdev.wue.entity.UserEntity;
+import com.appdev.wue.service.OrganizerService;
+import com.appdev.wue.service.UserService;
 
 
 @RestController
@@ -98,35 +101,35 @@ public class OrganizerController {
 //    }
 //
 //
-//    @GetMapping("/getDummyData")
-//    public ResponseEntity<List<Map<String, Object>>> getDummyData() {
-//        List<Map<String, Object>> dummyOrganizers = new ArrayList<>();
-//
-//        // Create first dummy organizer
-//        Map<String, Object> organizer1 = new HashMap<>();
-//        organizer1.put("organizerId", 1);
-//        organizer1.put("organizerName", "John Doe");
-//        organizer1.put("rating", 4.8);
-//        organizer1.put("eventCount", 2);
-//        organizer1.put("events", Arrays.asList(
-//            Map.of("eventId", 1, "eventName", "Summer Festival 2024", "attendees", 500),
-//            Map.of("eventId", 2, "eventName", "Tech Conference 2024", "attendees", 300)
-//        ));
-//        dummyOrganizers.add(organizer1);
-//
-//        // Create second dummy organizer
-//        Map<String, Object> organizer2 = new HashMap<>();
-//        organizer2.put("organizerId", 2);
-//        organizer2.put("organizerName", "Jane Smith");
-//        organizer2.put("rating", 4.9);
-//        organizer2.put("eventCount", 2);
-//        organizer2.put("events", Arrays.asList(
-//            Map.of("eventId", 3, "eventName", "Music Festival 2024", "attendees", 1000),
-//            Map.of("eventId", 4, "eventName", "Food & Wine Expo", "attendees", 750)
-//        ));
-//        dummyOrganizers.add(organizer2);
-//
-//        return ResponseEntity.ok(dummyOrganizers);
-//    }
+   @GetMapping("/getDummyData")
+   public ResponseEntity<List<Map<String, Object>>> getDummyData() {
+       List<Map<String, Object>> dummyOrganizers = new ArrayList<>();
+
+       // Create first dummy organizer
+       Map<String, Object> organizer1 = new HashMap<>();
+       organizer1.put("organizerId", 1);
+       organizer1.put("organizerName", "John Doe");
+       organizer1.put("rating", 4.8);
+       organizer1.put("eventCount", 2);
+       organizer1.put("events", Arrays.asList(
+           Map.of("eventId", 1, "eventName", "Summer Festival 2024", "attendees", 500),
+           Map.of("eventId", 2, "eventName", "Tech Conference 2024", "attendees", 300)
+       ));
+       dummyOrganizers.add(organizer1);
+
+       // Create second dummy organizer
+       Map<String, Object> organizer2 = new HashMap<>();
+       organizer2.put("organizerId", 2);
+       organizer2.put("organizerName", "Jane Smith");
+       organizer2.put("rating", 4.9);
+       organizer2.put("eventCount", 2);
+       organizer2.put("events", Arrays.asList(
+           Map.of("eventId", 3, "eventName", "Music Festival 2024", "attendees", 1000),
+           Map.of("eventId", 4, "eventName", "Food & Wine Expo", "attendees", 750)
+       ));
+       dummyOrganizers.add(organizer2);
+
+       return ResponseEntity.ok(dummyOrganizers);
+   }
 
 }

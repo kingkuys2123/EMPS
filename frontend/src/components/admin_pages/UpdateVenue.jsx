@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Box } from "@mui/material";
+import { Container, Box  } from "@mui/material";
 import VenueService from '../../services/VenueService.jsx';
 import './styles/venue.css';
 
-function UpdateVenue({ venue, onClose }) {
+function UpdateVenue({ venue, onClose, setShowAlert }) {
     const [updatedVenue, setUpdatedVenue] = useState(venue);
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -21,8 +22,11 @@ function UpdateVenue({ venue, onClose }) {
       if (updatedVenue.name && updatedVenue.address && updatedVenue.capacity) {
         try {
           const response = await VenueService.updateVenue(updatedVenue.venueId, updatedVenue);
-            onClose();
-            alert("Updated");
+          onClose();
+          setShowAlert(true); 
+          setTimeout(() => {
+            setShowAlert(false);
+          }, 3000);
         } catch (error) {
             console.error('Error updating venue:', error);
         }
