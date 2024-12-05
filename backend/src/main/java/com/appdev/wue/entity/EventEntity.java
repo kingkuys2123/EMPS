@@ -12,7 +12,7 @@ import java.util.List;
 public class EventEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long event_id;
+    private int event_id;
 
     @Column(name = "name")
     private String name;
@@ -58,11 +58,11 @@ public class EventEntity {
     @JoinColumn(name = "venue_id")
     private VenueEntity venue;
 
-    public Long getEventId() {
+    public int getEventId() {
         return event_id;
     }
 
-    public void setEventId(Long eventId) {
+    public void setEventId(int eventId) {
         this.event_id = eventId;
     }
 

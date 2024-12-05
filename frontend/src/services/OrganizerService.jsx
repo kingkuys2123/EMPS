@@ -49,7 +49,12 @@ const OrganizerService = {
     // Get organizer by ID
     getOrganizer: async (organizerId) => {
         try {
-            const response = await axios.get(`/organizer/getOrganizer/${organizerId}`);
+            const token = localStorage.getItem('authToken'); // Retrieve the token from local storage or any other secure place
+            const response = await axios.get(`/organizer/getOrganizer/${organizerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Include the token in the request headers
+                }
+            });
             return response.data;
         } catch (error) {
             console.error("Error fetching organizer with ID:", error);

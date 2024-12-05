@@ -16,6 +16,12 @@ const EventService = {
   deleteEvent: async (id) => {
     return await axios.delete(`/event/deleteEvent/${id}`);
   },
+  getFeaturedEvents: async () => {
+    return await axios.get(`/event/getFeaturedEvents`);
+  },
+  getTop4UpcomingEventsInRandomOrder: async () => {
+    return await axios.get(`/event/getTop4UpcomingEventsInRandomOrder`);
+  },
 };
 
 export default EventService;

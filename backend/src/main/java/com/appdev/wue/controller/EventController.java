@@ -14,6 +14,18 @@ public class EventController {
     @Autowired
     private EventService eServ;
 
+    // Get Featured Events
+    @GetMapping("/getFeaturedEvents")
+    public List<EventEntity> getFeaturedEvents() {
+        return eServ.getFeaturedEvents();
+    }
+
+    // Get Top 4 Upcoming Events In Random Order
+    @GetMapping("/getTop3UpcomingEventsInRandomOrder")
+    public List<EventEntity> getTop3UpcomingEventsInRandomOrder() {
+        return eServ.getTop3UpcomingEventsInRandomOrder();
+    }
+
     // Create Event
     @PostMapping("/createEvent")
     public EventEntity createEvent(@RequestBody EventEntity event) {

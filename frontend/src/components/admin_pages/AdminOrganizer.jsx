@@ -48,18 +48,15 @@ function AdminOrganizer() {
             try {
                 const data = await OrganizerService.getAllOrganizers();
 
-
                 // Filter to include only organizers with valid user data
                 const organizers = data.filter((organizer) => {
-
                     return organizer.user && organizer.user.accountType;
                 });
-
 
                 setUsers(organizers);
                 setFilteredUsers(organizers);
             } catch (error) {
-
+                console.error("Error fetching organizers:", error);
             }
         };
         fetchData();
@@ -92,8 +89,6 @@ function AdminOrganizer() {
         }
         setFilteredUsers(filtered);
     };
-
-
 
     // Search handler
     const handleSearch = (event) => {
@@ -142,6 +137,34 @@ function AdminOrganizer() {
         setOpenEditModal(false);
     };
 
+    // Handle confirm success
+    const handleConfirm = (updatedOrganizer) => {
+        setUsers((prevUsers) =>
+            prevUsers.map((user) => (user.organizerId === updatedOrganizer.organizerId ? updatedOrganizer : user))
+        );
+        setFilteredUsers((prevUsers) =>
+            prevUsers.map((user) => (user.organizerId === updatedOrganizer.organizerId ? updatedOrganizer : user))
+        );
+        setSnackbarMessage("Organizer has been approved successfully.");
+        setOpenSnackbar(true);
+        setOrganizerConfirm(false);
+    };
+
+    // Handle refuse
+    const handleRefuse = async (userId) => {
+        try {
+            await OrganizerService.deleteOrganizer(userId);
+            setUsers((prevUsers) => prevUsers.filter((user) => user.organizerId !== userId));
+            setFilteredUsers((prevUsers) => prevUsers.filter((user) => user.organizerId !== userId));
+            setSnackbarMessage("Organizer has been refused successfully.");
+            setOpenSnackbar(true);
+            setOrganizerConfirm(false);
+        } catch (error) {
+            setSnackbarMessage("Failed to refuse organizer.");
+            setOpenSnackbar(true);
+        }
+    };
+
     // Columns definition for the table
     const columns = [
         { field: "userID", headerName: "User ID", flex: 1, minWidth: 100 },
@@ -161,7 +184,7 @@ function AdminOrganizer() {
                         onEdit={() => handleEditClick(params.row)}
                         onDelete={() => handleDeleteClick(params.row.userID)}
                         activeTab={tabValue}
-                        onApprove={() => handleOpenConfirmationDialog(params.row.userID)}
+                        onApprove={() => handleOpenConfirmationDialog(params.row)}
                         onRefuse={() => handleDeleteClick(params.row.userID)}
                     />
                 </Box>
@@ -200,7 +223,6 @@ function AdminOrganizer() {
         setSelectedUser(user);
         setOrganizerConfirm(true);
     };
-
 
     // Close delete dialog
     const handleCloseDeleteDialog = () => {
@@ -280,9 +302,9 @@ function AdminOrganizer() {
             <OrganizerConfirm
                 open={openOrganizerConfirm}
                 onClose={() => setOrganizerConfirm(false)}
-                user={users}
                 selectedUser={selectedUser}
-                onSuccess={handleEditUserSuccess}
+                onConfirm={handleConfirm}
+                onRefuse={handleRefuse}
             />
             <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
                 <DialogTitle>Are you sure you want to delete this user?</DialogTitle>
@@ -293,10 +315,10 @@ function AdminOrganizer() {
                         "&:hover": { backgroundColor: "#B71C1C" },
                     }} onClick={handleCloseDeleteDialog}>Cancel</Button>
                     <Button sx={{
-                            backgroundColor: "#D32F2F",
-                            color: "#FFFFFF",
-                            "&:hover": { backgroundColor: "#B71C1C" },
-                        }} onClick={handleDeleteUser} color="error">Delete</Button>
+                        backgroundColor: "#D32F2F",
+                        color: "#FFFFFF",
+                        "&:hover": { backgroundColor: "#B71C1C" },
+                    }} onClick={handleDeleteUser} color="error">Delete</Button>
                 </DialogActions>
             </Dialog>
             <Snackbar

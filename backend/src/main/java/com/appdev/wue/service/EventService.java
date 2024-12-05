@@ -21,6 +21,16 @@ public class EventService {
     @Autowired
     private VenueService venueService;
 
+    // Get Featured Events
+    public List<EventEntity> getFeaturedEvents() {
+        return eRepo.findTop4EventsOrderByBookingsDesc();
+    }
+
+    // Get Top 4 Upcoming Events In Random Order
+    public List<EventEntity> getTop3UpcomingEventsInRandomOrder() {
+        return eRepo.findTop3UpcomingEventsInRandomOrder();
+    }
+
     // Create Event
     public EventEntity createEvent(EventEntity event) {
         event.setDateCreated(LocalDateTime.now());

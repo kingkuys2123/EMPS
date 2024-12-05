@@ -1,12 +1,13 @@
 import axios from "../utils/AxiosConfig";
 
 const TicketService = {
+
     // Get All Tickets
     getAllTickets: async () => {
         try {
             const response = await axios.get(`/ticket/getAllTickets`);
             console.log("Raw ticket Data:", response.data);
-    
+
             // Filter and map the raw data
             const mappedTickets = response.data
                 .filter((ticket) => ticket.isDeleted === 0) // Filter out deleted tickets
@@ -19,7 +20,7 @@ const TicketService = {
                     price: ticket.price || 0, // Maps price
                     isAvailable: ticket.isAvailable, // Maps availability
                 }));
-    
+
             console.log("Mapped ticket Data:", mappedTickets);
             return mappedTickets;
         } catch (error) {

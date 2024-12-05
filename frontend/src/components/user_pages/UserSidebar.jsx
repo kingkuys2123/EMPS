@@ -85,7 +85,7 @@ function UserSidebar() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton>
+                        <ListItemButton component={Link} to="/events">
                             <ListItemText>
                                 <span>EVENTS</span>
                             </ListItemText>

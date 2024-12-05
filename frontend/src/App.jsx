@@ -21,6 +21,8 @@ import OrganizerBookings from './components/organizer_pages/OrganizerBookings.js
 import OrganizerEventAnalytics from "./components/organizer_pages/OrganizerEventAnalytics.jsx";
 import AboutUs from "./components/AboutUs.jsx";
 import MyAccount from "./components/MyAccount.jsx";
+import UserEvents from "./components/user_pages/UserEvents.jsx";
+import UserViewEvent from "./components/user_pages/UserViewEvent.jsx";
 
 function App() {
     return (
@@ -35,6 +37,8 @@ function App() {
                 {/* Account */}
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/my_account" element={<MyAccount />} />
+                <Route path="/events" element={<UserEvents />} />
+                <Route path="/events/:eventId" element={<UserViewEvent />} />
 
                 {/* User Routes */}
                 <Route path="/user/bookings" element={<UserBookings />} />
@@ -48,6 +52,7 @@ function App() {
                 <Route path='/organizer/tickets' element={<Ticket/>} />
                 <Route path='/organizer/dashboard/' element={<OrganizerDashboard />} />
                 <Route path='/organizer/dashboard/:eventId' element={<OrganizerEventAnalytics />}/>
+                <Route path="/organizer/my_events" element={<ViewEventModal />} />
 
                 {/* Admin Routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -55,7 +60,6 @@ function App() {
                 <Route path='/admin/users' element={<AdminUsers/>} />
                 <Route path='/admin/organizers' element={<AdminOrganizer/>} />
                 <Route path='/admin/events' element={<AdminEventsDashboard/>} />
-                <Route path="/organizer/my_events" element={<ViewEventModal />} />
 
             </Routes>
         </AuthProvider>
