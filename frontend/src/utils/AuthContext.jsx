@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import UserService from "../services/UserService.jsx";
 
-const AuthContext = createContext();
+const AuthContext = createContext(undefined);
 
 export function getAuth() {
     return useContext(AuthContext);
@@ -13,30 +13,32 @@ export function AuthProvider({ children }) {
         return user ? JSON.parse(user) : null;
     });
 
-    const [profilePicture, setProfilePicture] = useState(null);
+    const [profilePicture, setProfilePicture] = useState(() => {
+        return localStorage.getItem('profilePicture') || null;
+    });
 
     useEffect(() => {
-        const getProfilePicture = async () => {
-            if (currentUser && currentUser.profilePicture) {
-                try {
-                    const blobUrl = await UserService.getProfilePicture(currentUser.profilePicture);
-                    setProfilePicture(blobUrl);
-                } catch (error) {
-                    console.error("Error fetching profile picture:", error);
-                }
-            }
-        };
+        const user = localStorage.getItem('user');
+        if (user) {
+            setCurrentUser(JSON.parse(user));
+        }
+    }, []);
 
-        getProfilePicture();
-
-        return () => {
-            // Cleanup the blob URL when the component unmounts
-            if (profilePicture) {
-                URL.revokeObjectURL(profilePicture);
-            }
-        };
-
+    useEffect(() => {
+        getProfilePicture().then(r => r);
     }, [currentUser]);
+
+    const getProfilePicture = async () => {
+        if (currentUser && currentUser.profilePicture) {
+            try {
+                const blobUrl = await UserService.getProfilePicture(currentUser.profilePicture);
+                setProfilePicture(blobUrl);
+                localStorage.setItem('profilePicture', blobUrl); // Save to local storage
+            } catch (error) {
+                console.error("Error fetching profile picture:", error);
+            }
+        }
+    };
 
     const displayPicture = profilePicture ?? '/assets/placeholders/avatar-photo-placeholder.png';
 

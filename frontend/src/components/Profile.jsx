@@ -60,7 +60,6 @@ function Profile() {
         const validErrors = {};
 
         if (!firstName || !lastName || !email ) {
-            if (!username) validErrors.username = true;
             if (!firstName) validErrors.firstName = true;
             if (!lastName) validErrors.lastName = true;
 
@@ -86,9 +85,10 @@ function Profile() {
 
     const handleUpdateUser = async () => {
         try {
-            await UserService.updateProfile(currentUser.userID, { username, firstName, lastName, phoneNumber });
-            const updatedUser = { ...currentUser, username, firstName, lastName, phoneNumber };
+            await UserService.updateProfile(currentUser.userID, { firstName, lastName, phoneNumber });
+            const updatedUser = { ...currentUser, firstName, lastName, phoneNumber };
             localStorage.setItem('user', JSON.stringify(updatedUser));
+            setCurrentUser(updatedUser);
 
             setSnackbarMessage('User updated successfully.');
             setOpenSnackbar(true);
@@ -230,7 +230,7 @@ function Profile() {
                                         </Typography>
                                         <TextField fullWidth label="Username" variant="outlined" margin="normal"
                                                    value={username} error={!!errors.username}
-                                                   onChange={(e) => setUsername(e.target.value)} />
+                                                   onChange={(e) => setUsername(e.target.value)} disabled />
 
                                         <Typography component="span" sx={{ fontWeight: "bold" }}>
                                             <span>Full Name</span>

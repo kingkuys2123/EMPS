@@ -18,6 +18,7 @@ import OrganizerSidebar from "./organizer_pages/OrganizerSidebar.jsx";
 function MyAccount() {
     const nav = useNavigate();
     const { currentUser, setCurrentUser } = getAuth();
+    const { profilePicture, setProfilePicture } = getAuth();
 
     const [email, setEmail] = useState('');
 
@@ -69,6 +70,7 @@ function MyAccount() {
             localStorage.removeItem('token');
             localStorage.removeItem("user");
             setCurrentUser(null);
+            setProfilePicture(null);
 
             nav("/");
         } catch (e) {

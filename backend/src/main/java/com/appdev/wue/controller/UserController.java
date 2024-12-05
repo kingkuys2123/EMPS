@@ -42,16 +42,16 @@ public class UserController {
     }
 
    // Backend: Get User By ID
-@GetMapping("/getUser/{id}")
-public ResponseEntity<?> getUser(@PathVariable int id) {
-    try {
-        UserEntity user = uServ.getUser(id);
-        return ResponseEntity.ok(user); // Return the user if found
-    } catch (NoSuchElementException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                             .body("User with ID " + id + " not found!"); // Return 404
+    @GetMapping("/getUser/{id}")
+    public ResponseEntity<?> getUser(@PathVariable int id) {
+        try {
+            UserEntity user = uServ.getUser(id);
+            return ResponseEntity.ok(user); // Return the user if found
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                 .body("User with ID " + id + " not found!"); // Return 404
+        }
     }
-}
 
 
     // Update User By ID
