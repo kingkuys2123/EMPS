@@ -7,6 +7,12 @@ import "../styles/FontStyle.css";
 function AddVenue({ onClose, refreshData }) {
     const [venue, setVenue] = useState({ name: '', address: '', capacity: '', description: '' });
     const [error, setError] = useState("");
+    const [touched, setTouched] = useState({
+        name: false,
+        address: false,
+        capacity: false,
+        description: false,
+    });
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -16,16 +22,21 @@ function AddVenue({ onClose, refreshData }) {
       const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setTouched({
+            name: true,
+            address: true,
+            capacity: true,
+            description: true,
+        });
     
 
-        if (!venue.name || !venue.address || !venue.capacity) {
+        if (!venue.name || !venue.address || !venue.capacity || !venue.description) {
           setError("All fields are required.");
           console.error("Validation error: Missing fields", venue);
           return;
         }
     
         try {
-            console.log("Submitting venue:", venue);
         const response = await VenueService.createVenue(venue);
             
           setVenue({ name: "", capacity: "", address: "", description: "" });
@@ -41,6 +52,12 @@ function AddVenue({ onClose, refreshData }) {
         onClose(); 
     };
     
+    const getInputStyle = (fieldName) => {
+      if (touched[fieldName] && !venue[fieldName]) {
+        return { borderColor: "red" };
+      }
+      return {};
+    };
   
     return (
         
@@ -55,6 +72,7 @@ function AddVenue({ onClose, refreshData }) {
                         type="text"
                         name="name"
                           onChange={handleChange}
+                          style={getInputStyle("name")}
                         />
                         <input
                         className='capacity'
@@ -62,6 +80,7 @@ function AddVenue({ onClose, refreshData }) {
                         type="number"
                         name="capacity"
                           onChange={handleChange}
+                          style={getInputStyle("capacity")}
                         />
                     
                         <input
@@ -71,6 +90,7 @@ function AddVenue({ onClose, refreshData }) {
                         name="address"
                         id="address"
                           onChange={handleChange}
+                          style={getInputStyle("address")}
                         />
                     
                         <textarea
@@ -78,6 +98,7 @@ function AddVenue({ onClose, refreshData }) {
                         placeholder="Description"
                         name="description"
                           onChange={handleChange}
+                          style={getInputStyle("description")}
                         />
                     </div>
                     <div className='buttons'>
@@ -85,8 +106,8 @@ function AddVenue({ onClose, refreshData }) {
                     <button className='btn' type="submit">Add</button>
                     </div>
                 </form>
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 </Box>
-
             </Container>
       
     );

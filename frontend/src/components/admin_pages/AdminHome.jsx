@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Box} from "@mui/material";
+import { Typography, Box, Button} from "@mui/material";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import Grid from '@mui/material/Grid2';
@@ -13,6 +13,14 @@ import OrganizerService from "../../services/OrganizerService.jsx";
 
 export default function AdminDashboard() {
     const [topOrganizers, setTopOrganizers] = useState([]);
+    const [pendingEvents, setPendingEvents] = useState([
+        { name: 'Event A', date: '2024-12-10', organizer: 'John Doe' },
+        { name: 'Event B', date: '2024-12-12', organizer: 'Jane Smith' }
+    ]);
+    const [badFeedback, setBadFeedback] = useState([
+        { name: 'John Doe', rating: 0, comment: 'Needs improvement.' },
+        { name: 'Jane Smith', rating: 1, comment: 'Very disappointing experience.' }
+    ]);
     const formatter = (data) => data?.map(datum => ({
         ...datum,
         averageTicketsSold: datum?.events?.reduce((sum, event) => sum + event.attendees, 0) / datum?.events?.length / 100,
@@ -27,11 +35,11 @@ export default function AdminDashboard() {
         return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
     };
 
-    // useEffect(() => {
-    //     OrganizerService.getTopOrganizers()
-    //         .then(data => setTopOrganizers(formatter(data)))
-    //         .catch(error => console.error("Error fetching top organizers:", error));
-    // }, []);
+    useEffect(() => {
+        OrganizerService.getTopOrganizers()
+            .then(data => setTopOrganizers(formatter(data)))
+            .catch(error => console.error("Error fetching top organizers:", error));
+    }, []);
 
     const chartSetting = {
         yAxis: [
@@ -39,8 +47,8 @@ export default function AdminDashboard() {
               label: 'Value',  
             },
           ],
-          width: 700,         
-          height: 400,       
+          width: 1450,         
+          height: 700,       
           sx: {
             [`.${axisClasses.left} .${axisClasses.label}`]: {
               transform: 'translate(-20px, 0)',
@@ -51,6 +59,16 @@ export default function AdminDashboard() {
             paddingRight: 50
           }
         };
+
+     const handleConfirmEvent = (eventName) => {
+       
+        console.log(`Event Confirmed: ${eventName}`);
+    };
+
+    const handleFeedbackClick = (feedbackName) => {
+       
+        console.log(`Feedback clicked for: ${feedbackName}`);
+    };
 
       
 
@@ -69,8 +87,9 @@ export default function AdminDashboard() {
                             <Grid container spacing={2} className="cont1">
                                 <Grid  className="inside">
                                     
-                                        <span>Best organizer by Sells</span>
+                                        <span>Top Organizers</span>
                                         <BarChart
+                                        className="chart"
                                         dataset={topOrganizers} 
                                         xAxis={[{ 
                                             scaleType: 'band', 
@@ -89,12 +108,25 @@ export default function AdminDashboard() {
                                 <Grid  className="inside">
                                    
                                         <span>Pending Event Upcoming</span>
-                                 
+                                        <ul>
+                                        {pendingEvents.map((event, index) => (
+                                            <li key={index} className="pending-event" onClick={() => handleConfirmEvent(event.name)} style={{ cursor: "pointer"}} >
+                                                {event.name} - {event.date} (Organized by {event.organizer})
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </Grid>
                             </Grid>
                             <Grid container space={2} className="cont2">
                                 <Grid  className="inside">
                                 <span>Bad Feedback</span>
+                                <ul>
+                                        {badFeedback.map((feedback, index) => (
+                                            <li key={index} className="bad-feedback" style={{ cursor: "pointer", color: "red" }} onClick={() => handleFeedbackClick(feedback.name)}>
+                                                {feedback.name} - Rating: {feedback.rating} - {feedback.comment}
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </Grid>
                             </Grid>
                         </Typography>
