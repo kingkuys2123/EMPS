@@ -32,7 +32,7 @@ const TicketService = {
     // Get Ticket by ID
     getTicketById: async (id) => {
         try {
-            const response = await axios.get(`/ticket/getTicket/${id}`);
+            const response = await axios.get(`/ticket/getAllTicketsFromOrganizer/${id}`);
             console.log(`Fetched ticket with ID ${id}:`, response.data);
             return response.data;
         } catch (error) {

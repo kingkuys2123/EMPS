@@ -26,7 +26,10 @@ public class TicketController {
     public TicketEntity getTicket(@PathVariable int id) {
         return tServ.getTicket(id);
     }
-
+    @GetMapping("/getAllTicketsFromOrganizer/{id}")
+    public List<TicketEntity> getAllTicketsFromOrganizer(@PathVariable int id) {
+        return tServ.getAllTicketsFromOrganizer(id);
+    }
     // Create Ticket
     @PostMapping("/createTicket")
     public TicketEntity createTicket(@RequestBody TicketEntity ticket) {
