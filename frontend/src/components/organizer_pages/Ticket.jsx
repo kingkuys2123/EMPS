@@ -157,22 +157,22 @@ function Tickets() {
                     <h1>Create New Ticket</h1>
                     <div>
                         <div style={modalContentStyle}>
-                            <TextField label="Name" value={ticketForm.name} onChange={(e) => handleFormChange('name', e.target.value)} required />
-                            <TextField label="Description" value={ticketForm.description} onChange={(e) => handleFormChange('description', e.target.value)} required />
+                            <TextField style={{display: 'flex', flex: 1}} label="Name" value={ticketForm.name} onChange={(e) => handleFormChange('name', e.target.value)} required />
+                            <TextField style={{display: 'flex', flex: 1}} label="Description" value={ticketForm.description} onChange={(e) => handleFormChange('description', e.target.value)} required />
                         </div>
                         <div style={modalContentStyle}>
-                            <FormControl>
+                            <FormControl style={{display: 'flex', flex: 1}}>
                                 <InputLabel>Type</InputLabel>
                                 <Select value={ticketForm.type} onChange={(e) => handleFormChange('type', e.target.value)} required>
                                     <MenuItem value="Premium">Premium</MenuItem>
                                     <MenuItem value="Regular">Regular</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField label="Quantity" type="number" value={ticketForm.quantity} onChange={(e) => handleFormChange('quantity', parseInt(e.target.value))} required />
+                            <TextField style={{display: 'flex', flex: 1}} label="Quantity" type="number" value={ticketForm.quantity} onChange={(e) => handleFormChange('quantity', parseInt(e.target.value))} required />
                         </div>
                         <div style={modalContentStyle}>
-                            <TextField label="Price" type="number" value={ticketForm.price} onChange={(e) => handleFormChange('price', parseInt(e.target.value))} required />
-                            <FormControlLabel control={<Checkbox checked={ticketForm.isAvailable} onChange={(e) => handleFormChange('isAvailable', e.target.checked)} />} label="Available" />
+                            <TextField style={{display: 'flex', flex: 1}} label="Price" type="number" value={ticketForm.price} onChange={(e) => handleFormChange('price', parseInt(e.target.value))} required />
+                            <FormControlLabel style={{display: 'flex', flex: 1}} control={<Checkbox checked={ticketForm.isAvailable} onChange={(e) => handleFormChange('isAvailable', e.target.checked)} />} label="Available" />
                         </div>
                     </div>
                     <Button variant="contained" color="primary" type="submit">Create</Button>
