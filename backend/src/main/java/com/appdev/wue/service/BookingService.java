@@ -86,6 +86,7 @@ public class BookingService {
         BookingEntity delete = bRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
         delete.IsDeleted(1);
+        delete.setStatus("Cancelled");
         return bRepo.save(delete);
     }
 }

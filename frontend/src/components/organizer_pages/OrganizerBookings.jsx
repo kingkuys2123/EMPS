@@ -39,7 +39,7 @@ function OrganizerBookings() {
             headerName: 'Status',
             width: 150,
             renderCell: (params) => (
-                <div style={{ color: params.row.status === "Pending" ? "red" : "green", display: "flex", alignItems: "center" }}>
+                <div style={{ color: params.row.status === "Pending" || params.row.status === "Cancelled" ? "red" : "green", display: "flex", alignItems: "center" }}>
                     {params.row.status === "Confirmed" ? <CheckCircleIcon sx={{ height: "18px" }} /> : <ReportGmailerrorredIcon sx={{ height: "18px" }} />}
                     {params.row.status}
                 </div>
@@ -130,7 +130,7 @@ function OrganizerBookings() {
         if (!selectedRow) return;
         try {
             await BookingService.deleteBooking(selectedRow.booking);
-            setRows((prevRows) => prevRows.filter((row) => row.booking !== selectedRow.booking));
+            checked(!checker);
             handleDeleteModalClose();
         } catch (error) {
             console.error("Error deleting booking:", error);
