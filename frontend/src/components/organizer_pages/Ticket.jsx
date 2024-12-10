@@ -181,7 +181,21 @@ function Tickets() {
             {/* Edit Modal */}
             <Modal open={openEditModal} onClose={() => setOpenEditModal(false)}>
                 <Box component="form" sx={modalBoxStyle} onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
-                    <h1>Edit Ticket</h1>
+                    <h1>Update Ticket</h1>
+                    <div style={{ height: '275px' }}>
+                        <div style={modalContentStyle}>
+                            <TextField label="Name" value={ticketForm.name} onChange={(e) => handleFormChange('name', e.target.value)} required />
+                            <TextField label="Description" value={ticketForm.description} onChange={(e) => handleFormChange('description', e.target.value)} required />
+                        </div>
+                        <div style={modalContentStyle}>
+                            <TextField label="Type" value={ticketForm.type} onChange={(e) => handleFormChange('type', e.target.value)} required />
+                            <TextField label="Quantity" type="number" value={ticketForm.quantity} onChange={(e) => handleFormChange('quantity', parseInt(e.target.value))} required />
+                        </div>
+                        <div style={modalContentStyle}>
+                            <TextField label="Price" type="number" value={ticketForm.price} onChange={(e) => handleFormChange('price', parseInt(e.target.value))} required />
+                            <FormControlLabel control={<Checkbox checked={ticketForm.isAvailable} onChange={(e) => handleFormChange('isAvailable', e.target.checked)} />} label="Available" />
+                        </div>
+                    </div>
                     <Button variant="contained" color="primary" type="submit">Update</Button>
                 </Box>
             </Modal>
