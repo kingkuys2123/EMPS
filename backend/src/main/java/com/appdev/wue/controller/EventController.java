@@ -43,4 +43,10 @@ public class EventController {
     public String deleteEvent(@PathVariable int id) {
         return eServ.deleteEvent(id);
     }
+    
+    @GetMapping("/getPendingEvents")
+    public List<EventEntity> getPendingEvents() {
+        return eServ.getPendingEvents();
+    }
+
 }

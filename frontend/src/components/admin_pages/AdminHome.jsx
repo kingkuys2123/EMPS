@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Typography, Box, Button} from "@mui/material";
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
@@ -8,24 +9,51 @@ import CustomAppBar from "../CustomAppBar.jsx";
 import './styles/Dashboard.css';
 import "../styles/FontStyle.css";
 import OrganizerService from "../../services/OrganizerService.jsx";
-
+import FeedbackServices from "../../services/FeedbackServices";
+import EventService from "../../services/EventService.jsx";
 
 
 export default function AdminDashboard() {
     const [topOrganizers, setTopOrganizers] = useState([]);
-    const [pendingEvents, setPendingEvents] = useState([
-        { name: 'Event A', date: '2024-12-10', organizer: 'John Doe' },
-        { name: 'Event B', date: '2024-12-12', organizer: 'Jane Smith' }
-    ]);
-    const [badFeedback, setBadFeedback] = useState([
-        { name: 'John Doe', rating: 0, comment: 'Needs improvement.' },
-        { name: 'Jane Smith', rating: 1, comment: 'Very disappointing experience.' }
-    ]);
+    const [badFeedback, setBadFeedback] = useState([]);
+    const [pendingEvent, setPendingEvents] = useState([]);
+
     const formatter = (data) => data?.map(datum => ({
         ...datum,
         averageTicketsSold: datum?.events?.reduce((sum, event) => sum + event.attendees, 0) / datum?.events?.length / 100,
         
     }));
+
+    useEffect(() => {
+        const fetchBadFeedback = async () => {
+          try {
+            const feedbackData = await FeedbackServices.getBadFeedback();
+            
+              setBadFeedback(feedbackData); 
+            } catch (error) {
+              console.error("Error fetching bad feedback:", error);
+            }
+          };
+        
+          fetchBadFeedback();
+      }, []);
+
+      useEffect(() => {
+        const fetchPendingEvent= async () => {
+          try {
+            const pendingEvent = await EventService.getPendingEvent();
+            
+              setPendingEvents(pendingEvent); 
+            } catch (error) {
+              console.error("Error fetching pending events:", error);
+            }
+          };
+        
+          fetchPendingEvent();
+      }, []);
+    
+
+    const navigate = useNavigate();
 
     const valueFormatter = (value) => {
         if (value === null || value === undefined) return '-';
@@ -53,6 +81,7 @@ export default function AdminDashboard() {
             [`.${axisClasses.left} .${axisClasses.label}`]: {
               transform: 'translate(-20px, 0)',
             },
+
           },
           layout: {
             paddingLeft: 50,  
@@ -62,12 +91,11 @@ export default function AdminDashboard() {
 
      const handleConfirmEvent = (eventName) => {
        
-        console.log(`Event Confirmed: ${eventName}`);
+        navigate(`/admin/organizers?tab=3`);
     };
 
-    const handleFeedbackClick = (feedbackName) => {
-       
-        console.log(`Feedback clicked for: ${feedbackName}`);
+    const handleFeedbackClick = (eventId) => {
+        navigate(`/organizer/my_events/${eventId}?tab=3`);
     };
 
       
@@ -109,23 +137,36 @@ export default function AdminDashboard() {
                                    
                                         <span>Pending Event Upcoming</span>
                                         <ul>
-                                        {pendingEvents.map((event, index) => (
+                                        {pendingEvent.length > 0 ? (
+                                        pendingEvent.map((event, index) => (
                                             <li key={index} className="pending-event" onClick={() => handleConfirmEvent(event.name)} style={{ cursor: "pointer"}} >
-                                                {event.name} - {event.date} (Organized by {event.organizer})
+                                                {event.name} - {event.date} (Organized by {event.organizer.user.username})
                                             </li>
-                                        ))}
+                                        ))) : (
+                                            <li>No bad Pending event.</li>
+                                            )}
+                                        
                                     </ul>
                                 </Grid>
                             </Grid>
                             <Grid container space={2} className="cont2">
                                 <Grid  className="inside">
                                 <span>Bad Feedback</span>
-                                <ul>
-                                        {badFeedback.map((feedback, index) => (
-                                            <li key={index} className="bad-feedback" style={{ cursor: "pointer", color: "red" }} onClick={() => handleFeedbackClick(feedback.name)}>
-                                                {feedback.name} - Rating: {feedback.rating} - {feedback.comment}
+                                    <ul>
+                                        {badFeedback.length > 0 ? (
+                                        badFeedback.map((feedback, index) => (
+                                            <li
+                                            key={index}
+                                            className="bad-feedback"
+                                            style={{ cursor: "pointer", color: "red" }}
+                                            onClick={() => handleFeedbackClick(feedback.event.eventId)}
+                                            >
+                                            {feedback.event.name} - Rating: {feedback.rating} - " {feedback.comment} "
                                             </li>
-                                        ))}
+                                        ))
+                                        ) : (
+                                        <li>No bad feedback available.</li>
+                                        )}
                                     </ul>
                                 </Grid>
                             </Grid>

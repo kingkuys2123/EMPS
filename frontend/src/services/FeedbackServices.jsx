@@ -24,9 +24,9 @@ const FeedbackService = {
   },
 
   // Get feedback by ID
-  getFeedback: async () => {
+  getFeedback: async (id) => {
     try {
-      const response = await axios.get(`/feedback/getFeedback`);
+      const response = await axios.get(`/feedback/getFeedback`, {params: { id }},);
       return response.data;
     } catch (error) {
       console.error("Error fetching feedback:", error);
@@ -54,6 +54,17 @@ const FeedbackService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+
+  getBadFeedback: async () => {
+    try {
+      const response = await axios.get(`/feedback/getBadFeedback`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching bad feedbacks:", error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+
 };
 
 export default FeedbackService;

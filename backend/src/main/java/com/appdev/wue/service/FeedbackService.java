@@ -14,6 +14,11 @@ public class FeedbackService {
 
 	@Autowired 
 	private FeedbackRepository feedbackRepo;
+	
+	// Fetch feedback with 0-1 rating
+	public List<FeedbackEntity> getBadFeedback() {
+        return feedbackRepo.getBadFeedback(0, 1); 
+    }
 
 	// Get All Feedbacks
 	public List<FeedbackEntity> getAllFeedbacks(){

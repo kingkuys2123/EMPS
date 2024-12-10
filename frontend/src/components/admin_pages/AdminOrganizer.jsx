@@ -21,6 +21,7 @@ import AddOrganizerModal from "./AddOrganizerModal.jsx";
 import EditUserModal from "./EditUserModal.jsx";
 import OrganizerMenu from "./OrganizerMenu.jsx";
 import "../styles/FontStyle.css";
+import queryString from "query-string";
 
 function AdminOrganizer() {
     const nav = useNavigate();
@@ -36,6 +37,13 @@ function AdminOrganizer() {
     const [openRegisterModal, setOpenRegisterModal] = useState(false);
     const [openEditModal, setOpenEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+
+    useEffect(() => {
+        const queryParams = queryString.parse(location.search);
+        if (queryParams.tab) {
+            setTabValue(parseInt(queryParams.tab, 10));
+        }
+    }, [location.search]);
 
     // Fetch data for organizers and users
     useEffect(() => {

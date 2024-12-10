@@ -16,6 +16,16 @@ const EventService = {
   deleteEvent: async (id) => {
     return await axios.delete(`/event/deleteEvent/${id}`);
   },
+  getPendingEvent: async (id) => {
+    try {
+      const response = await axios.get(`/event/getPendingEvents`);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching pending events:", error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+
 };
 
 export default EventService;

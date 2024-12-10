@@ -16,6 +16,10 @@ public class EventService {
 
     @Autowired
     private EventRepository eRepo;
+    
+    public List<EventEntity> getPendingEvents() {
+        return eRepo.findByStatus("Pending");
+    }
 
     // Create Event
     public EventEntity createEvent(EventEntity event) {

@@ -92,7 +92,7 @@ const OrganizerService = {
 
     getTopOrganizers: async () => {
         try {
-            const response = await axios.get(`/organizer/getDummyData`);
+            const response = await axios.get(`/organizer/getTop`);
             return response.data;
         } catch (error) {
             console.error("Error fetching top organizers:", error);

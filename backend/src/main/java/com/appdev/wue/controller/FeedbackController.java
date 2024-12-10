@@ -45,4 +45,9 @@ public class FeedbackController {
     public String deleteFeedback(@PathVariable int id) {
         return feedbackServ.deleteFeedback(id);
     }
+    
+    @GetMapping("/getBadFeedback")
+   	public List<FeedbackEntity> getBadFeedback() {
+   		return feedbackServ.getBadFeedback();
+   	}
 }

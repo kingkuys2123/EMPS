@@ -6,7 +6,7 @@ import OrganizerSidebar from "./OrganizerSidebar";
 import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
 import FeedbackServices from "../../services/FeedbackServices";
-
+import queryString from "query-string";
 import "./styles/FontStyle.css";
 import ViewTicketById from "./ViewTicketById";
 import ViewBookingById from "./ViewBookingById";
@@ -18,6 +18,13 @@ function ViewEventPage() {
     const [venues, setVenues] = useState([]); // State to store available venues
     const [feedbacks, setFeedbacks] = useState([]);
     const [tabValue, setTabValue] = useState(0);
+
+    useEffect(() => {
+        const queryParams = queryString.parse(location.search);
+        if (queryParams.tab) {
+            setTabValue(parseInt(queryParams.tab, 10));
+        }
+    }, [location.search]);
 
     const fetchEvent = async () => {
         try {
@@ -38,7 +45,7 @@ function ViewEventPage() {
         }
     };
 
-    const fetchFeedbacks = async () => {
+    const fetchFeedbacks = async (id) => {
         try {
             const allFeedbacks = await FeedbackServices.getAllFeedback();  // Fetch all feedbacks
             const eventFeedbacks = allFeedbacks.filter(feedback => feedback.event.id === eventId);  // Filter by event ID
