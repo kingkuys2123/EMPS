@@ -14,11 +14,12 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface OrganizerRepository extends JpaRepository<OrganizerEntity, Integer> {
-	@Query("SELECT o FROM OrganizerEntity o " +
-	           "JOIN o.events e " +
-	           "JOIN e.tickets t " +
-	           "GROUP BY o.id " +
-	           "ORDER BY SUM(t.quantity) DESC")
-	List<OrganizerEntity> findTopOrganizersByTicketCount(Pageable pageable);
+//	@Query("SELECT o.organizer_id, SUM(t.quantity) AS total_quantity " +
+//			 "FROM OrganizerEntity o " +
+//			 "JOIN o.events e " +
+//			 "JOIN e.tickets t " +
+//			 "GROUP BY o.organizer_id " +
+//			 "ORDER BY total_quantity DESC")
+//	List<OrganizerEntity> findTopOrganizersByTicketCount(Pageable pageable);
 
 }

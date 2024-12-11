@@ -18,12 +18,6 @@ export default function AdminDashboard() {
     const [badFeedback, setBadFeedback] = useState([]);
     const [pendingEvent, setPendingEvents] = useState([]);
 
-    const formatter = (data) => data?.map(datum => ({
-        ...datum,
-        averageTicketsSold: datum?.events?.reduce((sum, event) => sum + event.attendees, 0) / datum?.events?.length / 100,
-        
-    }));
-
     useEffect(() => {
         const fetchBadFeedback = async () => {
           try {
@@ -64,9 +58,41 @@ export default function AdminDashboard() {
     };
 
     useEffect(() => {
-        OrganizerService.getTopOrganizers()
-            .then(data => setTopOrganizers(formatter(data)))
-            .catch(error => console.error("Error fetching top organizers:", error));
+        // Fetch and process the organizers data
+        const fetchOrganizers = async () => {
+          try {
+            const organizers = await OrganizerService.getAllOrganizers();
+    
+            // Calculate the total ticket quantity and other metrics
+            const formattedOrganizers = organizers.map(organizer => {
+              const totalQuantity = organizer.events.reduce((sum, event) => sum + event.ticket.quantity, 0);
+              const eventCount = organizer.events.length;
+              const averageTicketsSold = totalQuantity / eventCount;
+              const totalRating = organizer.events.reduce((ratingSum, event) => {
+                // Assuming `feedbacks` is an array and `rating` is within each feedback object
+                const eventRatings = event.feedbacks.map(feedback => feedback.rating);
+                const averageEventRating = eventRatings.length > 0 ? eventRatings.reduce((a, b) => a + b, 0) / eventRatings.length : 0;
+                return ratingSum + averageEventRating;
+             }, 0);
+             
+              return {
+                organizerName: organizer.name,
+                eventCount: eventCount,
+                averageTicketsSold: averageTicketsSold,
+                rating: rating,
+              };
+            });
+    
+            // Sort organizers by total ticket quantity in descending order and get top 5
+            const sortedOrganizers = formattedOrganizers.sort((a, b) => b.averageTicketsSold - a.averageTicketsSold);
+            const top5 = sortedOrganizers.slice(0, 5);
+    
+            setTopOrganizers(top5);
+          } catch (error) {
+            console.error('Error fetching organizers:', error);
+          }
+        };
+        fetchOrganizers();
     }, []);
 
     const chartSetting = {

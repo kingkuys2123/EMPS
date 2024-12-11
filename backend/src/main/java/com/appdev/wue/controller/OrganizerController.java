@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.appdev.wue.dto.TopOrganizerDto;
 import com.appdev.wue.entity.OrganizerEntity;
 import com.appdev.wue.entity.UserEntity;
 import com.appdev.wue.service.OrganizerService;
@@ -134,9 +133,9 @@ public class OrganizerController {
        return ResponseEntity.ok(dummyOrganizers);
    }
    
-   @GetMapping("/top")
-   public List<OrganizerEntity> getTopOrganizers(Pageable pageable) {
-       return oServ.getTopOrganizers(pageable);
-   }
+//   @GetMapping("/top")
+//   public List<OrganizerEntity> getTopOrganizers(Pageable pageable) {
+//       return oServ.getTopOrganizers(pageable);
+//   }
 
 }

@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.appdev.wue.dto.TopOrganizerDto;
 import com.appdev.wue.entity.OrganizerEntity;
 import com.appdev.wue.repository.OrganizerRepository;
 import com.appdev.wue.repository.UserRepository;
@@ -23,10 +22,10 @@ public class OrganizerService {
     @Autowired
     private UserRepository userRepo;
     
-    public List<OrganizerEntity> getTopOrganizers(Pageable pageable) {
-    	
-        return oRepo.findTopOrganizersByTicketCount(pageable);
-    }
+//    public List<OrganizerEntity> getTopOrganizers() {
+//    	Pageable pageable = PageRequest.of(0, 5);
+//        return oRepo.findTopOrganizersByTicketCount(pageable);
+//    }
 
     // Create Organizer
     public OrganizerEntity createOrganizer(OrganizerEntity organizer) {
