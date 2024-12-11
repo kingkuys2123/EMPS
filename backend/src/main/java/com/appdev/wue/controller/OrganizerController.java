@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -95,13 +94,7 @@ public class OrganizerController {
         }
     }
 
-//    @GetMapping("/getTopOrganizers")
-//    public ResponseEntity<List<Map<String, Object>>> getTopOrganizers() {
-//        List<Map<String, Object>> topOrganizers = oServ.getTopOrganizers();
-//        return ResponseEntity.ok(topOrganizers);
-//    }
-//
-//
+
    @GetMapping("/getDummyData")
    public ResponseEntity<List<Map<String, Object>>> getDummyData() {
        List<Map<String, Object>> dummyOrganizers = new ArrayList<>();
@@ -133,9 +126,5 @@ public class OrganizerController {
        return ResponseEntity.ok(dummyOrganizers);
    }
    
-//   @GetMapping("/top")
-//   public List<OrganizerEntity> getTopOrganizers(Pageable pageable) {
-//       return oServ.getTopOrganizers(pageable);
-//   }
 
 }

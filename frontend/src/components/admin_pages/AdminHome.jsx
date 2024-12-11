@@ -49,13 +49,13 @@ export default function AdminDashboard() {
 
     const navigate = useNavigate();
 
-    const valueFormatter = (value) => {
-        if (value === null || value === undefined) return '-';
+    // const valueFormatter = (value) => {
+    //     if (value === null || value === undefined) return '-';
 
-        if (value <= 5) return value.toFixed(1);
+    //     if (value <= 5) return value.toFixed(1);
 
-        return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
-    };
+    //     return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    // };
 
     useEffect(() => {
         // Fetch and process the organizers data
@@ -65,21 +65,24 @@ export default function AdminDashboard() {
     
             // Calculate the total ticket quantity and other metrics
             const formattedOrganizers = organizers.map(organizer => {
-              const totalQuantity = organizer.events.reduce((sum, event) => sum + event.ticket.quantity, 0);
-              const eventCount = organizer.events.length;
-              const averageTicketsSold = totalQuantity / eventCount;
-              const totalRating = organizer.events.reduce((ratingSum, event) => {
-                // Assuming `feedbacks` is an array and `rating` is within each feedback object
-                const eventRatings = event.feedbacks.map(feedback => feedback.rating);
-                const averageEventRating = eventRatings.length > 0 ? eventRatings.reduce((a, b) => a + b, 0) / eventRatings.length : 0;
-                return ratingSum + averageEventRating;
-             }, 0);
-             
+                const events = organizer.events || []; // Fallback to an empty array if events is undefined
+                const totalQuantity = events.reduce((sum, event) => sum + (event.ticket?.quantity || 0), 0); // Safe chaining and default
+                const eventCount = events.length;
+          
+                const totalRating = events.reduce((ratingSum, event) => {
+                  const feedbacks = event.feedbacks || []; // Fallback to an empty array if feedbacks is undefined
+                  const eventRatings = feedbacks.map(feedback => feedback.rating || 0); // Default rating to 0 if undefined
+                  const averageEventRating = eventRatings.length > 0 
+                    ? eventRatings.reduce((a, b) => a + b, 0) / eventRatings.length 
+                    : 0;
+                  return ratingSum + averageEventRating;
+                }, 0);
+
               return {
-                organizerName: organizer.name,
+                organizerName: organizer.user.username,
                 eventCount: eventCount,
-                averageTicketsSold: averageTicketsSold,
-                rating: rating,
+                averageTicketsSold: totalQuantity,
+                rating: totalRating/ eventCount,
               };
             });
     
@@ -95,6 +98,10 @@ export default function AdminDashboard() {
         fetchOrganizers();
     }, []);
 
+    const calculatedHeight = topOrganizers.length *150; // Example logic for height based on items
+    const safeHeight = isNaN(calculatedHeight) ? 0 : calculatedHeight;
+    const styles = { height: `${safeHeight}px` };
+
     const chartSetting = {
         yAxis: [
             {
@@ -102,7 +109,7 @@ export default function AdminDashboard() {
             },
           ],
           width: 1450,         
-          height: 700,       
+          height: calculatedHeight,       
           sx: {
             [`.${axisClasses.left} .${axisClasses.label}`]: {
               transform: 'translate(-20px, 0)',
@@ -148,12 +155,13 @@ export default function AdminDashboard() {
                                         xAxis={[{ 
                                             scaleType: 'band', 
                                             dataKey: 'organizerName', 
-                                            categoryGapRatio: 0.3,                                            barGapRatio: 0.1
+                                            categoryGapRatio: 0.3,                                           
+                                            barGapRatio: 0.1
                                         }]}
                                         series={[
-                                            { dataKey: 'eventCount', label: 'Events', valueFormatter },
-                                            { dataKey: 'averageTicketsSold', label: 'Sales', valueFormatter },
-                                            { dataKey: 'rating', label: 'Rating', valueFormatter }, 
+                                            { dataKey: 'eventCount', label: 'Events',  },
+                                            { dataKey: 'averageTicketsSold', label: 'Sales',  },
+                                            { dataKey: 'rating', label: 'Rating',  }, 
                                         ]}
                                         {...chartSetting}
                                         legend={{ hidden: false }}  
