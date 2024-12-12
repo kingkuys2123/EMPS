@@ -24,8 +24,10 @@
     "react-image-crop": "^11.0.7",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.27.0",
+    "react-text-mask": "^5.5.0",
     "recharts": "^2.14.1",
     "styled-components": "^6.1.13",
+    "text-mask-addons": "^3.8.0",
     "wue": "file:"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
+// src/utils/AuthContext.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
-import UserService from "../services/UserService.jsx";
 
 const AuthContext = createContext(undefined);
 
@@ -13,36 +13,28 @@ export function AuthProvider({ children }) {
         return user ? JSON.parse(user) : null;
     });
 
-    const [profilePicture, setProfilePicture] = useState(() => {
-        return localStorage.getItem('profilePicture') || null;
+    const [toggleOrganizer, setToggleOrganizer] = useState(() => {
+        const storedToggle = localStorage.getItem('toggleOrganizer');
+        return storedToggle ? JSON.parse(storedToggle) : false;
     });
 
     useEffect(() => {
         const user = localStorage.getItem('user');
         if (user) {
-            setCurrentUser(JSON.parse(user));
+            const parsedUser = JSON.parse(user);
+            setCurrentUser(parsedUser);
+            if (parsedUser.accountType === "organizer") {
+                const storedToggle = localStorage.getItem('toggleOrganizer');
+                setToggleOrganizer(storedToggle ? JSON.parse(storedToggle) : true);
+            }
         }
     }, []);
 
     useEffect(() => {
-        getProfilePicture().then(r => r);
-    }, [currentUser]);
+        localStorage.setItem('toggleOrganizer', JSON.stringify(toggleOrganizer));
+    }, [toggleOrganizer]);
 
-    const getProfilePicture = async () => {
-        if (currentUser && currentUser.profilePicture) {
-            try {
-                const blobUrl = await UserService.getProfilePicture(currentUser.profilePicture);
-                setProfilePicture(blobUrl);
-                localStorage.setItem('profilePicture', blobUrl); // Save to local storage
-            } catch (error) {
-                console.error("Error fetching profile picture:", error);
-            }
-        }
-    };
-
-    const displayPicture = profilePicture ?? '/assets/placeholders/avatar-photo-placeholder.png';
-
-    const value = { currentUser, setCurrentUser, profilePicture, setProfilePicture, displayPicture };
+    const value = { currentUser, setCurrentUser, toggleOrganizer, setToggleOrganizer };
 
     return (
         <AuthContext.Provider value={value}>

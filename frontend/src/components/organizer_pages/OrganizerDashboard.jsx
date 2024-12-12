@@ -6,10 +6,14 @@ import OrganizerSidebar from "./OrganizerSidebar";
 import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
 
+import { getAuth } from "../../utils/AuthContext.jsx";
+
 function OrganizerDashboard() {
+    const { currentUser, toggleOrganizer } = getAuth();
+
     const [events, setEvents] = useState([]);
     const [analyticsData, setAnalyticsData] = useState([]);
-    const navigate = useNavigate();
+    const nav = useNavigate();
 
     // Fetch all events and calculate analytics
     const fetchEvents = async () => {
@@ -45,14 +49,30 @@ function OrganizerDashboard() {
             value,
         }));
     };
-    
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav("/home")
+        }
+        else if(currentUser.accountType === "admin"){
+            nav("/admin/dashboard");
+        }
+        else if (currentUser.accountType === "organizer") {
+            if(!toggleOrganizer) {
+                nav('/home');
+            }
+        }
+    }, []);
 
     useEffect(() => {
         fetchEvents();
     }, []);
 
     const handleEventClick = (eventId) => {
-        navigate(`/organizer/dashboard/${eventId}`);
+        nav(`/organizer/dashboard/event/${eventId}`);
     };
 
     const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];

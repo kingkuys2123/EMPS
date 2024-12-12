@@ -9,8 +9,13 @@ import ViewVenue from "../admin_pages/ViewVenue.jsx";
 import AddVenue from "../admin_pages/AddVenue.jsx";
 import VenueService from '../../services/VenueService.jsx';
 
+import { getAuth } from "../../utils/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 function AdminVenue() {
+    const nav = useNavigate();
+    const { currentUser, setCurrentUser } = getAuth();
+
     const [openModal, setOpenModal] = useState(false);
     const [venue, setVenues] = useState({ name: '', address: '', capacity: '', description: '' });
     const [searchTerm, setSearchTerm] = useState(""); 
@@ -25,6 +30,18 @@ function AdminVenue() {
         } catch (error) {
         }
     };
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav('/home');
+        }
+        else if(currentUser.accountType === "organizer"){
+            nav('/organizer/dashboard')
+        }
+    }, []);
 
     useEffect(() => {
 

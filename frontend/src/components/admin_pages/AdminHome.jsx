@@ -9,10 +9,15 @@ import './styles/Dashboard.css';
 import "../styles/FontStyle.css";
 import OrganizerService from "../../services/OrganizerService.jsx";
 
-
+import { getAuth } from "../../utils/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
+    const nav = useNavigate();
+    const { currentUser, setCurrentUser } = getAuth();
+
     const [topOrganizers, setTopOrganizers] = useState([]);
+
     const [pendingEvents, setPendingEvents] = useState([
         { name: 'Event A', date: '2024-12-10', organizer: 'John Doe' },
         { name: 'Event B', date: '2024-12-12', organizer: 'Jane Smith' }
@@ -34,6 +39,18 @@ export default function AdminDashboard() {
 
         return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
     };
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav('/home');
+        }
+        else if(currentUser.accountType === "organizer"){
+            nav('/organizer/dashboard')
+        }
+    }, []);
 
     useEffect(() => {
         OrganizerService.getTopOrganizers()

@@ -117,7 +117,7 @@ function RegisterModal({ open, onClose, switchModal, label }) {
     return (
         <div className="register-modal">
             <Modal open={open} onClose={onClose}>
-                <Box sx={{ flex: 1, display: 'flex', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 750, height: '500px', backgroundColor: '#F3F3F3', boxShadow: 24, padding: 4}}>
+                <Box sx={{ flex: 1, display: 'flex', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 750, height: '500px', backgroundColor: '#F3F3F3', boxShadow: 24, padding: 4, borderRadius: 5 }}>
                     <Box sx={{ display: 'flex', alignContent: 'center' }}>
                         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }}>
                             <Typography variant="h6" component="h2">

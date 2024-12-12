@@ -4,10 +4,20 @@ const FeedbackService = {
   // Create a new feedback
   createFeedback: async (feedback) => {
     try {
-      const response = await axios.post(`/feedback/postFeedback`, feedback);
+      const response = await axios.post(`/feedback/createFeedback`, feedback);
       return response.data;
     } catch (error) {
       console.error("Error creating feedback:", error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+
+  createFeedbackByUserAndEvent: async (user_id, event_id, feedback) => {
+    try{
+      const response = await axios.post(`/feedback/createFeedbackByUserAndEvent?user_id=${user_id}&event_id=${event_id}`, feedback);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating feedback by user and event:", error);
       throw error.response ? error.response.data : error.message;
     }
   },
@@ -54,6 +64,48 @@ const FeedbackService = {
       throw error.response ? error.response.data : error.message;
     }
   },
+
+  // Get feedbacks by event ID
+  getFeedbacksByEvent: async (id) => {
+    try {
+      const response = await axios.get(`/feedback/getFeedbacksByEvent?id=${id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching feedbacks for event with ID ${id}:`, error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+
+  getFeedbackByUserAndEvent: async (user_id, event_id) => {
+    try {
+      const response = await axios.get(`/feedback/getFeedbackByUserAndEvent?user_id=${user_id}&event_id=${event_id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching feedback for user ID ${userId} and event ID ${eventId}:`, error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+
+  updateFeedbackByUserAndEvent: async (user_id, event_id, feedback) => {
+    try {
+      const response = await axios.put(`/feedback/updateFeedbackByUserAndEvent?user_id=${user_id}&event_id=${event_id}`, feedback);
+      return response.data;
+    } catch (error) {
+      console.error(`Error updating feedback for user ID ${user_id} and event ID ${event_id}:`, error);
+      throw error.response ? error.response.data : error.message;
+    }
+  },
+
+  findByUserIdAndEventId: async (user_id, event_id) => {
+    try {
+      const response = await axios.get(`/feedback/findByUserIdAndEventId?user_id=${user_id}&event_id=${event_id}`);
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching feedback for user ID ${user_id} and event ID ${event_id}:`, error);
+      throw error.response ? error.response.data : error.message;
+    }
+  }
+
 };
 
 export default FeedbackService;

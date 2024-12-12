@@ -4,11 +4,15 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.appdev.wue.entity.BookingEntity;
 import com.appdev.wue.entity.TicketEntity;
 import com.appdev.wue.repository.TicketRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class TicketService {
@@ -59,4 +63,25 @@ public class TicketService {
         delete.IsDeleted(1);
         return tRepo.save(delete);
     }
+
+    public List<TicketEntity> getAllTicketsFromOrganizer(int id) {
+        return tRepo.getAllTicketsFromOrganizer(id);
+    }
+
+    public List<TicketEntity> getTicketByEventId(int eventId) {
+        try {
+            return tRepo.findTicketsByEventId(eventId);
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding tickets with event ID " + eventId + ": " + e.getMessage(), e);
+        }
+    }
+
+    public int getRemainingTicketQuantity(int id) {
+        try {
+            return tRepo.getRemainingTicketQuantity(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error calculating remaining ticket quantity for ticket ID " + id + ": " + e.getMessage(), e);
+        }
+    }
+
 }

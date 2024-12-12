@@ -21,8 +21,6 @@ function OrganizerSidebar() {
 
     const { currentUser, setCurrentUser } = getAuth();
 
-    const { profilePicture, setProfilePicture } = getAuth();
-
     const [openConfirmLogoutDialog, setOpenConfirmLogoutDialog] = useState(false);
 
     const handleClickLogoutButton = () => {
@@ -41,7 +39,6 @@ function OrganizerSidebar() {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
             setCurrentUser(null);
-            setProfilePicture(null);
             nav("/");
         }
     };
@@ -72,7 +69,7 @@ function OrganizerSidebar() {
                         </ListItemButton>
                     </ListItem>
                     <ListItem>
-                        <ListItemButton component={Link} to="/organizer/my_events">
+                        <ListItemButton component={Link} to="/organizer/events">
                             <ListItemText>
                                 <span>MY EVENTS</span>
                             </ListItemText>

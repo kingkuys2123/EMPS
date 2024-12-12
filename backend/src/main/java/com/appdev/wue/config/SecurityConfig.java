@@ -40,7 +40,19 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/user/register", "/api/user/login").permitAll()
+                        .requestMatchers(
+                                "/api/user/register",
+                                "/api/user/login",
+                                "/api/feedback/getFeedbacksByEvent/**",
+                                "/api/user/getProfilePicture/**",
+                                "/api/ticket/getTicketsByEventId/**",
+                                "/api/event/getAllEvents",
+                                "/api/organizer/getOrganizerWithUser/**",
+                                "/api/event/getRandomUpcomingEvents",
+                                "/api/event/getFeaturedEvents",
+                                "/api/event/getEvent/**",
+                                "/api/ticket/getRemainingTicketQuantity/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(httpSecurityConfigurer -> {})

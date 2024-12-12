@@ -3,6 +3,7 @@ package com.appdev.wue.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.appdev.wue.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,7 @@ public class OrganizerService {
     public String deleteOrganizer(int id) {
         String msg;
         try {
-            if (oRepo.findById(id).isPresent()) {
+            if (oRepo.existsById(id)) {
                 oRepo.deleteById(id);
                 msg = "Organizer deleted successfully";
             } else {
@@ -80,6 +81,29 @@ public class OrganizerService {
         }
     
         return oRepo.save(organizer);
+    }
+
+    public OrganizerEntity getOrganizerWithUser(int id) {
+        try {
+            return oRepo.findOrganizerWithUserByUserId(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error finding organizer with user ID " + id + ": " + e.getMessage(), e);
+        }
+    }
+
+    public OrganizerEntity applyForOrganizer(OrganizerEntity organizer, int userId) {
+        try {
+            UserEntity user = userRepo.findById(userId).orElseThrow(() -> new NoSuchElementException("User with ID " + userId + " not found!"));
+
+            organizer.setUser(user);
+            organizer.setOrganizerId(userId);
+
+            organizer.setApprovalStatus("Pending");
+
+            return oRepo.save(organizer);
+        } catch (Exception e) {
+            throw new RuntimeException("Error applying for organizer: " + e.getMessage(), e);
+        }
     }
 
 }

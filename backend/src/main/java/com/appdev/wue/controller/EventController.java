@@ -45,8 +45,8 @@ public class EventController {
     }
 
     // Get Event By Id
-    @GetMapping("/getEvent")
-    public EventEntity getEvent(@RequestParam int id) {
+    @GetMapping("/getEvent/{id}")
+    public EventEntity getEvent(@PathVariable int id) {
         return eServ.getEvent(id);
     }
 

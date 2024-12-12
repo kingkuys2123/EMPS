@@ -72,14 +72,14 @@ const OrganizerService = {
             throw error.response ? error.response.data : error.message;
         }
     },
-    
+
     // Delete organizer
     deleteOrganizer: async (organizerId) => {
         try {
             const response = await axios.delete(`/organizer/deleteOrganizer/${organizerId}`);
             return response.data;
         } catch (error) {
-            console.error(`Error deleting organizer with ID ${id}:`, error);
+            console.error(`Error deleting organizer with ID ${organizerId}:`, error);
             throw error.response ? error.response.data : error.message;
         }
     },
@@ -113,7 +113,27 @@ const OrganizerService = {
             console.error("Error fetching top organizers:", error);
             throw error.response ? error.response.data : error.message;
         }
-    }
+    },
+
+    getOrganizerWithUser: async (userID) => {
+        try {
+            const response = await axios.get(`/organizer/getOrganizerWithUser/${userID}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching organizer data:', error);
+            throw error;
+        }
+    },
+
+    applyForOrganizer: async (organizerData, userId) => {
+        try {
+            const response = await axios.post(`/organizer/applyForOrganizer?userId=${userId}`, organizerData);
+            return response.data;
+        } catch (error) {
+            console.error("Error applying for organizer:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 
 };
 

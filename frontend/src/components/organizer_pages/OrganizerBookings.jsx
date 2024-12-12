@@ -1,15 +1,41 @@
 import { useState, useEffect } from "react";
 import OrganizerSidebar from "./OrganizerSidebar.jsx";
 import TemplateComponent from "../TemplateComponent.jsx";
+
 import BookingService from "../../services/BookingService.jsx";
 import { Button } from "@mui/material";
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import '../../components/organizer_pages/styles/OrganizerBookings.css'
+
+import { getAuth } from "../../utils/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
+
 function OrganizerBookings() {
+    const nav = useNavigate();
+    const { currentUser, setCurrentUser, toggleOrganizer } = getAuth();
+
     const [rows, setRows] = useState([]);
     const [activeTab, setActiveTab] = useState("All");
     const [checker, checked] = useState(true);
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav("/home")
+        }
+        else if(currentUser.accountType === "admin"){
+            nav("/admin/dashboard");
+        }
+        else if (currentUser.accountType === "organizer") {
+            if(!toggleOrganizer) {
+                nav('/home');
+            }
+        }
+    }, []);
+
     const columns = [
         { field: 'booking', headerName: 'Booking'},
         { field: 'customerName', headerName: 'Customer Name', display: "flex", flex: 1},

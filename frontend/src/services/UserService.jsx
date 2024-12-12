@@ -147,6 +147,17 @@ const UserService = {
         }
     },
 
+    // Delete Profile Picture
+    deleteProfilePicture: async (userId) => {
+        try {
+            const response = await axios.delete(`/user/deleteProfilePicture/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error deleting profile picture for user with ID ${userId}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
 };
 
 export default UserService;

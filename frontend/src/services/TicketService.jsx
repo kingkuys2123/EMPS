@@ -75,6 +75,31 @@ const TicketService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    // Get Tickets by Event ID
+    getTicketsByEventId: async (eventId) => {
+        try {
+            const response = await axios.get(`/ticket/getTicketsByEventId/${eventId}`);
+            console.log(`Fetched tickets for event ID ${eventId}:`, response.data);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching tickets for event ID ${eventId}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get Remaining Tickets by Event ID
+    getRemainingTicketQuantity: async (ticketId) => {
+        try {
+            const response = await axios.get(`/ticket/getRemainingTicketQuantity/${ticketId}`);
+            console.log(`Fetched remaining ticket quantity for ticket ID ${ticketId}:`, response.data);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching remaining ticket quantity for ticket ID ${ticketId}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    }
+
 };
 
 export default TicketService;

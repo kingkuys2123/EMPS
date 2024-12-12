@@ -1,18 +1,22 @@
 package com.appdev.wue.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "payment_details")
-public class PaymentDetailsEntity {
+@Table(name = "payment_method")
+public class PaymentMethodEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int payment_details_id;
+    private int payment_method_id;
 
-    @Column(name = "payment_method")
-    private String payment_method;
+    @Column(name = "payment_type")
+    private String payment_type;
+
+    @Column(name = "credit_card_holder_name")
+    private String credit_card_holder_name;
 
     @Column(name = "credit_card_number")
     private String credit_card_number;
@@ -34,22 +38,23 @@ public class PaymentDetailsEntity {
 
     @OneToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private UserEntity user;
 
-    public int getPaymentDetailsId() {
-        return payment_details_id;
+    public int getPaymentMethodId() {
+        return payment_method_id;
     }
 
-    public void setPaymentDetailsId(int payment_details_id) {
-        this.payment_details_id = payment_details_id;
+    public void setPaymentMethodId(int payment_details_id) {
+        this.payment_method_id = payment_details_id;
     }
 
-    public String getPaymentMethod() {
-        return payment_method;
+    public String getPaymentType() {
+        return payment_type;
     }
 
-    public void setPaymentMethod(String payment_method) {
-        this.payment_method = payment_method;
+    public void setPaymentType(String payment_method) {
+        this.payment_type = payment_method;
     }
 
     public String getCreditCardNumber() {
@@ -84,6 +89,10 @@ public class PaymentDetailsEntity {
         this.gcash_name = gcash_name;
     }
 
+    public void setGCashNumber(String gcash_number) {
+        this.gcash_number = gcash_number;
+    }
+
     public String getGCashNumber() {
         return gcash_number;
     }
@@ -102,5 +111,13 @@ public class PaymentDetailsEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public void setCreditCardHolderName(String credit_card_holder_name) {
+        this.credit_card_holder_name = credit_card_holder_name;
+    }
+
+    public String getCreditCardHolderName() {
+        return credit_card_holder_name;
     }
 }

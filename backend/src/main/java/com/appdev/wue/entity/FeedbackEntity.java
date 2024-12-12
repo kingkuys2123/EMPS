@@ -2,6 +2,7 @@ package com.appdev.wue.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,7 +21,7 @@ public class FeedbackEntity {
     @Column(name = "datetime_created")
     private LocalDateTime datetime_created;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
 

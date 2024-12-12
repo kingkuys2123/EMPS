@@ -8,7 +8,7 @@ const EventService = {
     return await axios.get(`/event/getAllEvents`);
   },
   getEvent: async (id) => {
-    return await axios.get(`/event/getEvent?id=${id}`);
+    return await axios.get(`/event/getEvent/${id}`);
   },
   updateEvent: async (id, events) => {
     return await axios.put(`/event/updateEvent/${id}`, events);

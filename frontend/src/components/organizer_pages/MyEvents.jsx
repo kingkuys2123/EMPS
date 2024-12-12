@@ -11,7 +11,11 @@ import EventService from '../../services/EventService';
 import "./styles/FontStyle.css";
 import "./styles/EventList.css";
 
+import { getAuth } from "../../utils/AuthContext.jsx";
+
 function MyEvents() {
+    const { currentUser, toggleOrganizer } = getAuth();
+
     const [events, setEvents] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [error, setError] = useState(null);
@@ -20,7 +24,7 @@ function MyEvents() {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [tabValue, setTabValue] = useState(0); 
 
-    const navigate = useNavigate();
+    const nav = useNavigate();
 
     const fetchEvents = async () => {
         try {
@@ -31,6 +35,23 @@ function MyEvents() {
             setError('Error fetching events. Please try again later');
         }
     };
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav("/home")
+        }
+        else if(currentUser.accountType === "admin"){
+            nav("/admin/dashboard");
+        }
+        else if (currentUser.accountType === "organizer") {
+            if(!toggleOrganizer) {
+                nav('/home');
+            }
+        }
+    }, []);
 
     useEffect(() => {
         fetchEvents();
@@ -65,7 +86,7 @@ function MyEvents() {
     };
 
     const handleViewEvent = async (eventId) => {
-        navigate(`/organizer/my_events/${eventId}`);
+        nav(`/organizer/events/view/${eventId}`);
     };
 
     const handleUpdateEvent = async (eventId, updatedEvent) => {
@@ -78,7 +99,7 @@ function MyEvents() {
                     )
                 );
                 fetchEvents();
-                //navigate(`/myevents/${eventId}`);
+                //nav(`/myevents/${eventId}`);
             } else {
                 console.error('Failed to update event:', response);
             }

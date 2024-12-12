@@ -4,8 +4,13 @@ import TemplateComponent from "../TemplateComponent.jsx";
 import TicketService from "../../services/TicketService.jsx";
 import { Button, Modal, Box, TextField, Checkbox, FormControlLabel, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
+import { getAuth } from "../../utils/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Tickets() {
+    const nav = useNavigate();
+    const { currentUser, setCurrentUser, toggleOrganizer } = getAuth();
+
     const [rows, setRows] = useState([]);
     const [activeTab, setActiveTab] = useState("All");
     const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -85,6 +90,23 @@ function Tickets() {
             )
         },
     ];
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav("/home")
+        }
+        else if(currentUser.accountType === "admin"){
+            nav("/admin/dashboard");
+        }
+        else if (currentUser.accountType === "organizer") {
+            if(!toggleOrganizer) {
+                nav('/home');
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const fetchTickets = async () => {

@@ -44,17 +44,17 @@ public class UserEntity {
     @JsonIgnore
     private List<BookingEntity> bookings;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
-    private FeedbackEntity feedback;
+    private List<FeedbackEntity> feedbacks;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
     @JsonIgnore
     private OrganizerEntity organizer;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user")
     @JsonIgnore
-    private PaymentDetailsEntity payment_details;
+    private PaymentMethodEntity payment_method;
 
     public int getUserID() {
         return user_id;
@@ -136,12 +136,12 @@ public class UserEntity {
         this.bookings = bookings;
     }
 
-    public FeedbackEntity getFeedback() {
-        return feedback;
+    public List<FeedbackEntity> getFeedbacks() {
+        return feedbacks;
     }
 
-    public void setFeedback(FeedbackEntity feedback) {
-        this.feedback = feedback;
+    public void setFeedbacks(List<FeedbackEntity> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 
     public OrganizerEntity getOrganizer() {
@@ -152,12 +152,12 @@ public class UserEntity {
         this.organizer = organizer;
     }
 
-    public PaymentDetailsEntity getPaymentDetails() {
-        return payment_details;
+    public PaymentMethodEntity getPaymentMethod() {
+        return payment_method;
     }
 
-    public void setPaymentDetails(PaymentDetailsEntity payment_details) {
-        this.payment_details = payment_details;
+    public void setPaymentMethod(PaymentMethodEntity payment_details) {
+        this.payment_method = payment_details;
     }
 
     public String getProfilePicture() {

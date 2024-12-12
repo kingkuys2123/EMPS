@@ -6,7 +6,6 @@ import UserSidebar from "./user_pages/UserSidebar.jsx";
 import CustomAppBar from "./CustomAppBar.jsx";
 import CustomSnackbar from "./CustomSnackbar.jsx";
 import UserService from "../services/UserService.jsx";
-import { getAuth } from "../utils/AuthContext.jsx";
 import ChangeEmailModal from "./user_pages/ChangeEmailModal.jsx";
 import ChangePasswordModal from "./user_pages/ChangePasswordModal.jsx";
 
@@ -14,6 +13,8 @@ import './styles/FontStyle.css';
 import ConfirmDialog from "./ConfirmDialog.jsx";
 import AdminSidebar from "./admin_pages/AdminSidebar.jsx";
 import OrganizerSidebar from "./organizer_pages/OrganizerSidebar.jsx";
+
+import { getAuth } from "../utils/AuthContext.jsx";
 
 function MyAccount() {
     const nav = useNavigate();
@@ -96,7 +97,7 @@ function MyAccount() {
         <div className="my-account-page">
             <Box sx={{ display: "flex" }}>
 
-                {Sidebars[currentUser.accountType] || null}
+                {currentUser && Sidebars[currentUser.accountType] || null}
 
                 <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 

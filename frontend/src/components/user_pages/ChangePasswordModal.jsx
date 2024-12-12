@@ -110,6 +110,7 @@ function ChangePasswordModal({ open, onClose }) {
                         backgroundColor: "#F3F3F3",
                         boxShadow: 24,
                         padding: 4,
+                        borderRadius: 5,
                     }}
                 >
                     <Box sx={{ display: "flex", alignContent: "center", width: "100%" }}>

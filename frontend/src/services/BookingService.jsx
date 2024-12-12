@@ -143,6 +143,51 @@ const BookingService = {
             throw error.response ? error.response.data : error.message;
         }
     },
+
+    // Get Transaction History
+    getTransactionHistory: async (userId) => {
+        try {
+            const response = await axios.get(`/booking/getTransactionHistory/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching transaction history for user with ID ${userId}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Create Booking with userId and ticketId
+    createBookingByUserAndTicket: async (userId, ticketId, bookingData) => {
+        try {
+            const response = await axios.post(`/booking/createBookingByUserAndTicket?user_id=${userId}&ticket_id=${ticketId}`, bookingData);
+            return response.data;
+        } catch (error) {
+            console.error("Error creating booking:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get All User Bookings
+    getAllUserBookings: async (userId) => {
+        try {
+            const response = await axios.get(`/booking/getAllUserBookings/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error fetching all bookings for user with ID ${userId}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Pay booking by ID
+    payBooking: async (id) => {
+        try {
+            const response = await axios.put(`/booking/payBooking/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error(`Error paying for booking with ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
 };
 
 export default BookingService;

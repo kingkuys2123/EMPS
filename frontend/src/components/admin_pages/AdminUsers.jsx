@@ -47,6 +47,18 @@ function AdminUsers() {
     };
 
     useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav('/home');
+        }
+        else if(currentUser.accountType === "organizer"){
+            nav('/organizer/dashboard')
+        }
+    }, []);
+
+    useEffect(() => {
         fetchData();
     }, [currentUser, nav]);
 

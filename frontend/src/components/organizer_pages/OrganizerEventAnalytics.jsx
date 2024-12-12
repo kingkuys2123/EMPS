@@ -7,12 +7,35 @@ import EventService from "../../services/EventService";
 import BookingService from "../../services/BookingService";
 import FeedbackService from "../../services/FeedbackServices";
 
+import { getAuth } from "../../utils/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
+
 function OrganizerEventAnalytics() {
+    const nav = useNavigate();
+    const { currentUser, toggleOrganizer } = getAuth();
+
     const { eventId } = useParams();
     const [eventDetails, setEventDetails] = useState(null);
     const [bookings, setBookings] = useState([]);
     const [feedbacks, setFeedbacks] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav("/home")
+        }
+        else if(currentUser.accountType === "admin"){
+            nav("/admin/dashboard");
+        }
+        else if (currentUser.accountType === "organizer") {
+            if(!toggleOrganizer) {
+                nav('/home');
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const fetchEventAnalytics = async () => {

@@ -9,7 +9,13 @@ import FeedbackServices from "../../services/FeedbackServices";
 
 import "../styles/FontStyle.css";
 
+import { getAuth } from "../../utils/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
+
 function ViewEventModal() {
+    const nav = useNavigate();
+    const { currentUser, setCurrentUser } = getAuth();
+
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
     const [feedbacks, setFeedbacks] = useState([]);

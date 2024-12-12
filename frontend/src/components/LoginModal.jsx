@@ -115,7 +115,7 @@ function LoginModal({ open, onClose, switchModal }) {
     return (
         <div className="login-modal">
             <Modal open={open} onClose={onClose}>
-                <Box sx={{ flex: 1, display: 'flex', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 750, height: '450px', backgroundColor: '#F3F3F3', boxShadow: 24, padding: 4 }}>
+                <Box sx={{ flex: 1, display: 'flex', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 750, height: '450px', backgroundColor: '#F3F3F3', boxShadow: 24, padding: 4, borderRadius: 5 }}>
                     <Box sx={{ display: 'flex', alignContent: 'center', width: '100%' }}>
                         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <img className="login-modal-logo" src='/assets/images/login-modal-image.png' alt="homepage-image" />

@@ -94,13 +94,6 @@ public class OrganizerController {
         }
     }
 
-//    @GetMapping("/getTopOrganizers")
-//    public ResponseEntity<List<Map<String, Object>>> getTopOrganizers() {
-//        List<Map<String, Object>> topOrganizers = oServ.getTopOrganizers();
-//        return ResponseEntity.ok(topOrganizers);
-//    }
-//
-//
    @GetMapping("/getDummyData")
    public ResponseEntity<List<Map<String, Object>>> getDummyData() {
        List<Map<String, Object>> dummyOrganizers = new ArrayList<>();
@@ -131,5 +124,25 @@ public class OrganizerController {
 
        return ResponseEntity.ok(dummyOrganizers);
    }
+
+    @GetMapping("/getOrganizerWithUser/{id}")
+    public ResponseEntity<OrganizerEntity> getOrganizerWithUser(@PathVariable int id) {
+        try {
+            OrganizerEntity organizer = oServ.getOrganizerWithUser(id);
+            return new ResponseEntity<>(organizer, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/applyForOrganizer")
+    public ResponseEntity<?> applyForOrganizer(@RequestBody OrganizerEntity organizer, @RequestParam int userId) {
+        try {
+            OrganizerEntity newOrganizer = oServ.applyForOrganizer(organizer, userId);
+            return ResponseEntity.ok(newOrganizer);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
 }

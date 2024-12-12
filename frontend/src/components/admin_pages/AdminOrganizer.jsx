@@ -39,6 +39,18 @@ function AdminOrganizer() {
     const [openOrganizerConfirm, setOrganizerConfirm] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav('/home');
+        }
+        else if(currentUser.accountType === "organizer"){
+            nav('/organizer/dashboard')
+        }
+    }, []);
+
     // Fetch data for organizers and users
     useEffect(() => {
         if (!currentUser) {

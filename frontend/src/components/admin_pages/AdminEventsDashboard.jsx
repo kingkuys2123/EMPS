@@ -12,7 +12,11 @@ import ConfirmationDialog from './ConfirmationDialog.jsx';
 import "../styles/FontStyle.css";
 import "./styles/EventList.css";
 
+import { getAuth } from "../../utils/AuthContext.jsx";
+
 function AdminEventsDashboard() {
+    const { currentUser, setCurrentUser } = getAuth();
+
     const [events, setEvents] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [error, setError] = useState(null);
@@ -22,7 +26,19 @@ function AdminEventsDashboard() {
     const [tabValue, setTabValue] = useState(0);
     const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
     
-    const navigate = useNavigate();
+    const nav = useNavigate();
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav('/home');
+        }
+        else if(currentUser.accountType === "organizer"){
+            nav('/organizer/dashboard')
+        }
+    }, []);
 
     const fetchEvents = async () => {
         try {
@@ -67,7 +83,7 @@ function AdminEventsDashboard() {
     };
 
     const handleViewEvent = async (eventId) => {
-        navigate(`/organizer/my_events/${eventId}`);
+        nav(`/organizer/my_events/${eventId}`);
     };
 
     const handleOpenEditEventModal = (event) => {
@@ -139,7 +155,7 @@ function AdminEventsDashboard() {
             <AdminSidebar />
             <Box component="main" sx={{ flexGrow: 1, backgroundColor: "#F3F3F3", width: "100%", height: "100vh", display: "flex", flexDirection: "column" }}>
 
-                <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
+                <Box sx={{ flexGrow: 1, backgroundColor: "#F3F3F3" }}>
 
                     <CustomAppBar title={"My Events"} />
                     <div className="content">

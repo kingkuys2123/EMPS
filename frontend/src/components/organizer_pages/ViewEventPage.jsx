@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Box, Tabs, Tab, Button } from "@mui/material";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
 import OrganizerSidebar from "./OrganizerSidebar";
 import CustomAppBar from "../CustomAppBar";
@@ -11,13 +11,29 @@ import "./styles/FontStyle.css";
 import ViewTicketById from "./ViewTicketById";
 import ViewBookingById from "./ViewBookingById";
 import VenueService from "../../services/VenueService.jsx";
+import {getAuth} from "../../utils/AuthContext.jsx";
 
 function ViewEventPage() {
+    const nav = useNavigate();
+    const { currentUser, toggleOrganizer } = getAuth();
+
     const { eventId } = useParams();
     const [event, setEvent] = useState(null);
     const [venues, setVenues] = useState([]); // State to store available venues
     const [feedbacks, setFeedbacks] = useState([]);
     const [tabValue, setTabValue] = useState(0);
+
+    useEffect(() => {
+        if (!currentUser) {
+            nav('/');
+        }
+        else if(currentUser.accountType === "user"){
+            nav("/home")
+        }
+        else if(currentUser.accountType === "admin"){
+            nav("/admin/dashboard");
+        }
+    }, []);
 
     const fetchEvent = async () => {
         try {

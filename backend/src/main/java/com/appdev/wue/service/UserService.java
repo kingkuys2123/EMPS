@@ -83,7 +83,6 @@ public class UserService {
         try {
             user = uRepo.findById(id).get();
 
-            user.setUsername(newUserDetails.getUsername());
             user.setFirstName(newUserDetails.getFirstName());
             user.setLastName(newUserDetails.getLastName());
             user.setPhoneNumber(newUserDetails.getPhoneNumber());
@@ -198,6 +197,24 @@ public class UserService {
         } else {
             throw new NoSuchElementException("Profile picture not found");
         }
+    }
+
+    // Delete Profile Picture
+    public String deleteProfilePicture(int id) throws IOException {
+        UserEntity user = uRepo.findById(id).orElseThrow(() -> new NoSuchElementException("User with ID " + id + " not found!"));
+
+        String profilePicture = user.getProfilePicture();
+        if (profilePicture == null) {
+            throw new NoSuchElementException("Profile picture not found for user with ID " + id);
+        }
+
+        Path filePath = Paths.get(uploadDir).resolve(profilePicture).normalize();
+        Files.deleteIfExists(filePath);
+
+        user.setProfilePicture(null);
+        uRepo.save(user);
+
+        return "Profile picture deleted successfully!";
     }
 
 }

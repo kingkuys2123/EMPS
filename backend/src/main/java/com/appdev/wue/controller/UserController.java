@@ -158,4 +158,17 @@ public class UserController {
         }
     }
 
+    // Delete Profile Picture
+    @DeleteMapping("/deleteProfilePicture/{id}")
+    public ResponseEntity<?> deleteProfilePicture(@PathVariable int id) {
+        try {
+            String message = uServ.deleteProfilePicture(id);
+            return ResponseEntity.ok(message);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error deleting profile picture: " + e.getMessage());
+        }
+    }
+
 }

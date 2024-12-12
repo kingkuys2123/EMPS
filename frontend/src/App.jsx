@@ -14,7 +14,6 @@ import AdminOrganizer from './components/admin_pages/AdminOrganizer.jsx';
 import { AuthProvider } from './utils/AuthContext.jsx';
 import AdminVenue from './components/admin_pages/AdminVenue.jsx';
 import AdminEventsDashboard from './components/admin_pages/AdminEventsDashboard.jsx';
-import UserFeedback from './components/user_pages/UserFeedback.jsx';
 import ViewEventModal from './components/admin_pages/ViewEventModal.jsx'
 import Ticket from './components/organizer_pages/Ticket.jsx'
 import OrganizerBookings from './components/organizer_pages/OrganizerBookings.jsx';
@@ -34,27 +33,25 @@ function App() {
 
                 <Route path="/home" element={<UserHome />} />
                 <Route path="/about_us" element={<AboutUs />} />
-                <Route path="/events/:eventId" element={<UserViewEvent />} />
+                <Route path="/events/view/:eventId" element={<UserViewEvent />} />
+                <Route path="/events" element={<UserEvents />} />
 
                 {/* Account */}
                 <Route path="/profile" element={<Profile />} />
-                <Route path="/my_account" element={<MyAccount />} />
-                <Route path="/events" element={<UserEvents />} />
+                <Route path="/account" element={<MyAccount />} />
                 <Route path="/billing" element={<Billing />} />`
 
                 {/* User Routes */}
                 <Route path="/user/bookings" element={<UserBookings />} />
-                <Route path="/user/feedbacks" element={<UserFeedback />} />
 
                 {/* Organizer Routes */}
                 <Route path="/organizer" element={<MyEvents />} />
-                <Route path="/organizer/my_events" element={<MyEvents />} />
-                <Route path="/organizer/my_events/:eventId" element={<ViewEventPage />} />
+                <Route path="/organizer/events" element={<MyEvents />} />
+                <Route path="/organizer/events/view/:eventId" element={<ViewEventPage />} />
                 <Route path='/organizer/bookings' element={<OrganizerBookings/>} />
                 <Route path='/organizer/tickets' element={<Ticket/>} />
                 <Route path='/organizer/dashboard/' element={<OrganizerDashboard />} />
-                <Route path='/organizer/dashboard/:eventId' element={<OrganizerEventAnalytics />}/>
-                <Route path="/organizer/my_events" element={<ViewEventModal />} />
+                <Route path='/organizer/dashboard/event/:eventId' element={<OrganizerEventAnalytics />}/>
 
                 {/* Admin Routes */}
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
