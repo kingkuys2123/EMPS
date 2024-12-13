@@ -20,7 +20,12 @@ public class EventService {
     public List<EventEntity> getPendingEvents() {
         return eRepo.findByStatus("Pending");
     }
-
+    
+    public List<EventEntity> getEventsByOrganizer(int id) {
+        return eRepo.findByOrganizerId(id);
+        
+    }
+    
     // Create Event
     public EventEntity createEvent(EventEntity event) {
         event.setDateCreated(LocalDateTime.now());

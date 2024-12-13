@@ -13,4 +13,7 @@ public interface EventRepository extends JpaRepository<EventEntity, Integer >{
 	
 	@Query("SELECT e FROM EventEntity e WHERE e.confirmation_status = :status")
 	List<EventEntity> findByStatus(@Param("status") String status);
+	
+	 @Query("SELECT e FROM EventEntity e WHERE e.organizer.organizer_id = :organizer_id")
+	 List<EventEntity> findByOrganizerId(@Param("organizer_id") int organizer_id);
 }

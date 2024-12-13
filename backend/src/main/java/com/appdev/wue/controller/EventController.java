@@ -3,6 +3,7 @@ package com.appdev.wue.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.appdev.wue.entity.EventEntity;
@@ -47,6 +48,11 @@ public class EventController {
     @GetMapping("/getPendingEvents")
     public List<EventEntity> getPendingEvents() {
         return eServ.getPendingEvents();
+    }
+    
+    @GetMapping("/getEventsByOrganizer")
+    public List<EventEntity> getEventsByOrganizer(@RequestParam int id) {
+    	return  eServ.getEventsByOrganizer(id);
     }
 
 }

@@ -49,44 +49,51 @@ export default function AdminDashboard() {
 
     const navigate = useNavigate();
 
-    // const valueFormatter = (value) => {
-    //     if (value === null || value === undefined) return '-';
-
-    //     if (value <= 5) return value.toFixed(1);
-
-    //     return value.toLocaleString('en-US', { maximumFractionDigits: 0 });
-    // };
-
     useEffect(() => {
         // Fetch and process the organizers data
         const fetchOrganizers = async () => {
-          try {
-            const organizers = await OrganizerService.getAllOrganizers();
-    
-            // Calculate the total ticket quantity and other metrics
-            const formattedOrganizers = organizers.map(organizer => {
-                const events = organizer.events || []; // Fallback to an empty array if events is undefined
-                const totalQuantity = events.reduce((sum, event) => sum + (event.ticket?.quantity || 0), 0); // Safe chaining and default
+            try {
+              const organizers = await OrganizerService.getAllOrganizers();
+              
+              // Use Promise.all to handle the async calls inside the map function
+              const formattedOrganizers = await Promise.all(
+                organizers.map(async (organizer) => {
+                  try {
+
+                const events = await EventService.getEventsByOrganizer(organizer.organizerId);
+
+                const tickets = events.map((event) => event.tickets).flat(); 
+                const ticketsCount = tickets.length;
+                  console.log(totalQuantity.length);
                 const eventCount = events.length;
-          
+                console.log(events.length);
                 const totalRating = events.reduce((ratingSum, event) => {
                   const feedbacks = event.feedbacks || []; // Fallback to an empty array if feedbacks is undefined
                   const eventRatings = feedbacks.map(feedback => feedback.rating || 0); // Default rating to 0 if undefined
                   const averageEventRating = eventRatings.length > 0 
                     ? eventRatings.reduce((a, b) => a + b, 0) / eventRatings.length 
                     : 0;
-                  return ratingSum + averageEventRating;
+                  return averageEventRating;
                 }, 0);
 
               return {
                 organizerName: organizer.user.username,
                 eventCount: eventCount,
                 averageTicketsSold: totalQuantity,
-                rating: totalRating/ eventCount,
-              };
-            });
-    
-            // Sort organizers by total ticket quantity in descending order and get top 5
+                rating: 4.5
+            };
+            } catch (innerError) {
+          console.error(`Error processing organizer ${organizer.organizer_id}:`, innerError);
+          return {
+            organizerName: organizer.user.username,
+            eventCount: 0,
+            averageTicketsSold: 0,
+            rating: 0,
+                };
+                }
+            })
+            );
+                    // Sort organizers by total ticket quantity in descending order and get top 5
             const sortedOrganizers = formattedOrganizers.sort((a, b) => b.averageTicketsSold - a.averageTicketsSold);
             const top5 = sortedOrganizers.slice(0, 5);
     
@@ -95,10 +102,12 @@ export default function AdminDashboard() {
             console.error('Error fetching organizers:', error);
           }
         };
+
+        
         fetchOrganizers();
     }, []);
 
-    const calculatedHeight = topOrganizers.length *150; // Example logic for height based on items
+    const calculatedHeight = 700; 
     const safeHeight = isNaN(calculatedHeight) ? 0 : calculatedHeight;
     const styles = { height: `${safeHeight}px` };
 
