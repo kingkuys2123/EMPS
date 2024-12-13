@@ -3,13 +3,15 @@ import OrganizerSidebar from "./OrganizerSidebar.jsx";
 import TemplateComponent from "../TemplateComponent.jsx";
 
 import BookingService from "../../services/BookingService.jsx";
-import { Button } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import '../../components/organizer_pages/styles/OrganizerBookings.css'
 
 import { getAuth } from "../../utils/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+
+import '../../components/organizer_pages/styles/OrganizerBookings.css';
 
 function OrganizerBookings() {
     const nav = useNavigate();
@@ -18,6 +20,9 @@ function OrganizerBookings() {
     const [rows, setRows] = useState([]);
     const [activeTab, setActiveTab] = useState("All");
     const [checker, checked] = useState(true);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [selectedRow, setSelectedRow] = useState(null); // To track the row to delete
+
 
     useEffect(() => {
         if (!currentUser) {
@@ -37,11 +42,11 @@ function OrganizerBookings() {
     }, []);
 
     const columns = [
-        { field: 'booking', headerName: 'Booking'},
-        { field: 'customerName', headerName: 'Customer Name', display: "flex", flex: 1},
-        { field: 'event', headerName: 'Event', display: "flex", flex: 1},
-        { field: 'tickets', headerName: 'Tickets', type: 'number', align: 'left', headerAlign: 'left'},
-        { field: 'totalPrice', headerName: 'Total Price', type: 'number', align: 'left', headerAlign: 'left'},
+        { field: 'booking', headerName: 'Booking' },
+        { field: 'customerName', headerName: 'Customer Name', flex: 1 },
+        { field: 'event', headerName: 'Event', flex: 1 },
+        { field: 'tickets', headerName: 'Tickets', type: 'number', align: 'left', headerAlign: 'left' },
+        { field: 'totalPrice', headerName: 'Total Price', type: 'number', align: 'left', headerAlign: 'left' },
         {
             field: 'dateBooked',
             headerName: 'Date Booked',
@@ -56,24 +61,22 @@ function OrganizerBookings() {
                 });
             },
         },
-
         {
-            field: 'status', headerName: 'Status', width: 150,
-            renderCell: (params) => {
-                return (
-                    <div style={{ color: params.row.status === "Pending" ? "red" : "green", display: "flex", alignItems: "center" }}>
-                        {params.row.status === "Confirmed" ? <CheckCircleIcon sx={{ height: "18px" }} /> : <ReportGmailerrorredIcon sx={{ height: "18px" }} />}
-                        {params.row.status}
-                    </div>
-                )
-            }
+            field: 'status',
+            headerName: 'Status',
+            width: 150,
+            renderCell: (params) => (
+                <div style={{ color: params.row.status === "Pending" || params.row.status === "Cancelled" ? "red" : "green", display: "flex", alignItems: "center" }}>
+                    {params.row.status === "Confirmed" ? <CheckCircleIcon sx={{ height: "18px" }} /> : <ReportGmailerrorredIcon sx={{ height: "18px" }} />}
+                    {params.row.status}
+                </div>
+            ),
         },
         {
             field: 'actions',
             headerName: 'Actions',
             width: 180,
             renderCell: (params) => {
-                // Display buttons only for "Pending" bookings
                 if (params.row.status === "Pending") {
                     return (
                         <>
@@ -86,7 +89,7 @@ function OrganizerBookings() {
                                 Accept
                             </Button>
                             <Button
-                                onClick={() => handleDeleteClick(params)}
+                                onClick={() => handleDeleteModalOpen(params)}
                                 variant="contained"
                                 color="error"
                                 size="small"
@@ -97,7 +100,7 @@ function OrganizerBookings() {
                         </>
                     );
                 }
-                return <></>; // Return nothing for other statuses
+                return null;
             },
         },
     ];
@@ -124,16 +127,9 @@ function OrganizerBookings() {
     }, [activeTab, checker]);
 
     const handleAcceptClick = async (data) => {
-        console.log("rowStatus is: ", data.row.status);
-
         try {
-            // Step 1: Update booking quantity
             const updatedBooking = await BookingService.updateTicketQuantity(data.row.booking);
-            console.log("Booking quantity updated successfully:", updatedBooking);
-
-            // Step 2: Update booking status
             const statusUpdatedBooking = await BookingService.updateBookingStatus(data.row.booking);
-            console.log("Booking status updated to Confirmed:", statusUpdatedBooking);
 
             setRows((prevRows) =>
                 prevRows.map((row) =>
@@ -147,28 +143,61 @@ function OrganizerBookings() {
         }
     };
 
+    const handleDeleteModalOpen = (data) => {
+        setSelectedRow(data.row);
+        setDeleteModalOpen(true);
+    };
 
-    const handleDeleteClick = async (data) => {
+    const handleDeleteModalClose = () => {
+        setDeleteModalOpen(false);
+        setSelectedRow(null);
+    };
+
+    const handleDeleteConfirm = async () => {
+        if (!selectedRow) return;
         try {
-            const deleteRow = await BookingService.deleteBooking(data.row.booking);
-            checked((prevChecker) => !prevChecker);
+            await BookingService.deleteBooking(selectedRow.booking);
+            checked(!checker);
+            handleDeleteModalClose();
         } catch (error) {
-            console.error("Error deleting booking: ", error);
+            console.error("Error deleting booking:", error);
         }
     };
 
     return (
-        <TemplateComponent
-            SidebarComponent={OrganizerSidebar}
-            title="Bookings"
-            tabs={["All", "Confirmed", "Pending"]}
-            fetchRows={rows}
-            columns={columns}
-            onEditClick={handleAcceptClick}
-            onDeleteClick={handleDeleteClick}
-            setActiveTab={setActiveTab}
-            searchLabel={"Search bookings by name..."}
-        />
+        <>
+            <TemplateComponent
+                SidebarComponent={OrganizerSidebar}
+                title="Bookings"
+                tabs={["All", "Confirmed", "Pending"]}
+                fetchRows={rows}
+                columns={columns}
+                onEditClick={handleAcceptClick}
+                onDeleteClick={handleDeleteModalOpen}
+                setActiveTab={setActiveTab}
+                searchLabel={"Search bookings by name..."}
+            />
+
+            <Dialog
+                open={deleteModalOpen}
+                onClose={handleDeleteModalClose}
+            >
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete this booking?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteModalClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteConfirm} color="error" variant="contained">
+                        Confirm
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 }
 

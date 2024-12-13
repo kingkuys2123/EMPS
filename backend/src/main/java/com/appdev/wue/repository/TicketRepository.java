@@ -10,6 +10,8 @@ import java.util.List;
 
 @Repository
 public interface TicketRepository extends JpaRepository<TicketEntity, Integer> {
+    @Query("SELECT t FROM TicketEntity t JOIN t.event e JOIN e.organizer o WHERE o.organizer_id = :id")
+    List<TicketEntity> getAllTicketsFromOrganizer(@Param("id") int id);
 
     @Query("SELECT t FROM TicketEntity t JOIN t.event e JOIN e.organizer o WHERE o.organizer_id = :id")
     List<TicketEntity> getAllTicketsFromOrganizer(@Param("id") int id);

@@ -27,6 +27,9 @@ public class TicketService {
     public List<TicketEntity> getAllTickets() {
         return tRepo.findAll();
     }
+    public List<TicketEntity> getAllTicketsFromOrganizer(int id) {
+        return tRepo.getAllTicketsFromOrganizer(id);
+    }
 
     public TicketEntity getTicket(int id) {
         return tRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Ticket with ID " + id + " not found!"));
