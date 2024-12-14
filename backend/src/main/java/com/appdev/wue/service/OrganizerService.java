@@ -42,12 +42,15 @@ public class OrganizerService {
 
     // Update Organizer (PUT)
     public OrganizerEntity updateOrganizer(int id, OrganizerEntity newOrganizer) {
+        UserEntity user = userRepo.findById(id).orElseThrow(() -> new NoSuchElementException("User with ID " + id + " not found!"));
         OrganizerEntity existingOrganizer;
         try {
             existingOrganizer = oRepo.findById(id).get();
+            user.setAccountType("organizer");
             existingOrganizer.setApprovalStatus(newOrganizer.getApprovalStatus());
             existingOrganizer.setDateTimeApproved(newOrganizer.getDateTimeApproved());
 
+            userRepo.save(user);
             return oRepo.save(existingOrganizer);
         } catch (Exception e) {
             throw new RuntimeException("Error updating organizer with ID " + id + ": " + e.getMessage(), e);
@@ -60,6 +63,7 @@ public class OrganizerService {
         try {
             if (oRepo.existsById(id)) {
                 oRepo.deleteById(id);
+                userRepo.deleteById(id);
                 msg = "Organizer deleted successfully";
             } else {
                 msg = "Organizer with ID " + id + " not found.";
@@ -104,6 +108,10 @@ public class OrganizerService {
         } catch (Exception e) {
             throw new RuntimeException("Error applying for organizer: " + e.getMessage(), e);
         }
+    }
+
+    public List<OrganizerEntity> findApprovedOrganizers() {
+        return oRepo.findApprovedOrganizers();
     }
 
 }

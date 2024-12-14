@@ -48,9 +48,6 @@ function OrganizerMenu({ onRefuse, onEdit, onDelete, onApprove, activeTab }) {
                 ) : (
                     // Show Edit and Delete for other tabs
                     <div>
-                        <MenuItem onClick={() => { onEdit(); handleClose(); }}>
-                            Edit Organizer
-                        </MenuItem>
                         <MenuItem onClick={() => { onDelete(); handleClose(); }}>
                             Delete Organizer
                         </MenuItem>

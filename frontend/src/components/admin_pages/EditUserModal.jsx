@@ -98,9 +98,9 @@ function EditUserModal({ open, onClose, user, onSuccess }) {
             if (accountType === 'organizer' && user.accountType !== 'organizer') {
                 const newOrganizer = {
                     user: { userID: user.userID },
+                    organizer: { organizerId: user.userID },
                     approvalStatus: 'approved',
                 };
-
 
                 console.log("Organizer Data Sent to API:", newOrganizer);
                 await OrganizerService.addOrganizer(newOrganizer);

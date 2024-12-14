@@ -6,7 +6,7 @@ import UserService from "../../services/UserService.jsx";
 
 import '../styles/FontStyle.css'
 
-function RegisterModal({ open, onClose, switchModal, label }) {
+function RegisterModal({ open, onClose, switchModal, label, fetchData }) {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [username, setUsername] = useState('');
@@ -83,8 +83,8 @@ function RegisterModal({ open, onClose, switchModal, label }) {
             setSnackbarMessage('Registration successful!');
             setOpenSnackbar(true);
             onClose();
-        }
-        catch (e) {
+            await fetchData();
+        } catch (e) {
             const validErrors = {};
 
             if (e === 'Username already taken!') {
@@ -104,7 +104,7 @@ function RegisterModal({ open, onClose, switchModal, label }) {
                 setOpenSnackbar(true);
             }
         }
-    }
+    };
 
     return (
         <div className="register-modal">

@@ -135,6 +135,16 @@ const OrganizerService = {
         }
     },
 
+    getApprovedOrganizers: async () => {
+        try {
+            const response = await axios.get(`/organizer/approvedOrganizers`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching approved organizers:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
 };
 
 export default OrganizerService;

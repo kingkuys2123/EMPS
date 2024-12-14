@@ -61,9 +61,7 @@ function AdminOrganizer() {
                 const data = await OrganizerService.getAllOrganizers();
 
                 // Filter to include only organizers with valid user data
-                const organizers = data.filter((organizer) => {
-                    return organizer.user && organizer.user.accountType;
-                });
+                const organizers = data;
 
                 setUsers(organizers);
                 setFilteredUsers(organizers);
@@ -83,20 +81,16 @@ function AdminOrganizer() {
     const filterUsersByTab = (tab) => {
         let filtered;
         if (tab === 0) {
-            filtered = users.filter(
-                (user) => user.user?.accountType?.toLowerCase() === "organizer"
-            );
+            filtered = users; // Show all users
         } else if (tab === 1) {
             filtered = users.filter(
                 (user) =>
-                    (user.approvalStatus?.toLowerCase() === "approved" || user.approvalStatus === undefined) &&
-                    user.user?.accountType?.toLowerCase() === "organizer"
+                    (user.approvalStatus?.toLowerCase() === "approved" || user.approvalStatus === undefined)
             );
         } else if (tab === 2) {
             filtered = users.filter(
                 (user) =>
-                    (user.approvalStatus?.toLowerCase() === "pending" || user.approvalStatus === undefined) &&
-                    user.user?.accountType?.toLowerCase() === "organizer"
+                    (user.approvalStatus?.toLowerCase() === "pending" || user.approvalStatus === undefined)
             );
         }
         setFilteredUsers(filtered);
@@ -193,7 +187,6 @@ function AdminOrganizer() {
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <OrganizerMenu
                         organizer={params.row}
-                        onEdit={() => handleEditClick(params.row)}
                         onDelete={() => handleDeleteClick(params.row.userID)}
                         activeTab={tabValue}
                         onApprove={() => handleOpenConfirmationDialog(params.row)}
@@ -218,12 +211,6 @@ function AdminOrganizer() {
             dateTimeCreated: organizer.user?.dateTimeCreated || "N/A",
         }))
         : [];
-
-    // Handle edit click
-    const handleEditClick = (user) => {
-        setSelectedUser(user);
-        setOpenEditModal(true);
-    };
 
     // Handle delete click
     const handleDeleteClick = (userID) => {
@@ -280,17 +267,6 @@ function AdminOrganizer() {
                                     onChange={handleSearch}
                                     sx={{ marginRight: "10px", backgroundColor: "#FFFFFF" }}
                                 />
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        backgroundColor: "#D32F2F",
-                                        color: "#FFFFFF",
-                                        "&:hover": { backgroundColor: "#B71C1C" },
-                                    }}
-                                    onClick={() => setOpenRegisterModal(true)}
-                                >
-                                    + Add User
-                                </Button>
                             </Box>
                         </Box>
                         <Box sx={{
@@ -304,7 +280,6 @@ function AdminOrganizer() {
                     </Box>
                 </Box>
             </Box>
-            <AddOrganizerModal open={openRegisterModal} onClose={() => setOpenRegisterModal(false)} />
             <EditUserModal
                 open={openEditModal}
                 onClose={() => setOpenEditModal(false)}

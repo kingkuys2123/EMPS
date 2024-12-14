@@ -145,4 +145,10 @@ public class OrganizerController {
         }
     }
 
+    @GetMapping("/approvedOrganizers")
+    public ResponseEntity<List<OrganizerEntity>> getApprovedOrganizers() {
+        List<OrganizerEntity> approvedOrganizers = oServ.findApprovedOrganizers();
+        return new ResponseEntity<>(approvedOrganizers, HttpStatus.OK);
+    }
+
 }

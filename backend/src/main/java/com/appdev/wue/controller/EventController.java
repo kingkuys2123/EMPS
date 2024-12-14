@@ -119,4 +119,9 @@ public class EventController {
     public EventEntity createEventWithOrganizer(@PathVariable int organizerId, @RequestBody EventEntity event) {
         return eServ.createEventWithOrganizer(organizerId, event);
     }
+
+    @GetMapping("/getAllByConfirmationStatusPending")
+    public List<EventEntity> getAllByConfirmationStatusPending() {
+        return eServ.getAllByConfirmationStatusPending();
+    }
 }

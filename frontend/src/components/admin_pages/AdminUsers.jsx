@@ -86,11 +86,13 @@ function AdminUsers() {
             setSnackbarMessage("User has been deleted successfully.");
             setOpenSnackbar(true);
             setOpenDeleteDialog(false);
-            await fetchData(); // Refresh data
+            setUserToDelete(null);
+            await fetchData();
         } catch (e) {
             setSnackbarMessage("Failed to delete user.");
             setOpenSnackbar(true);
             setOpenDeleteDialog(false);
+            setUserToDelete(null);
         }
     };
 
@@ -230,6 +232,7 @@ function AdminUsers() {
                 open={openRegisterModal}
                 onClose={() => setOpenRegisterModal(false)}
                 onSuccess={handleRegisterUserSuccess}
+                fetchData={fetchData} // Pass fetchData as a prop
             />
 
             {/* Edit User Modal */}

@@ -23,6 +23,7 @@ import MyAccount from "./components/MyAccount.jsx";
 import UserEvents from "./components/user_pages/UserEvents.jsx";
 import UserViewEvent from "./components/user_pages/UserViewEvent.jsx";
 import Billing from "./components/Billing.jsx";
+import AdminViewEventPage from "./components/admin_pages/AdminViewEventPage.jsx";
 
 function App() {
     return (
@@ -59,6 +60,7 @@ function App() {
                 <Route path='/admin/users' element={<AdminUsers/>} />
                 <Route path='/admin/organizers' element={<AdminOrganizer/>} />
                 <Route path='/admin/events' element={<AdminEventsDashboard/>} />
+                <Route path='/admin/events/view/:eventId' element={<AdminViewEventPage/>} />
 
             </Routes>
         </AuthProvider>

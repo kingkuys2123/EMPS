@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Grid, MenuItem, Select, FormControl, InputLabel, Menu } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, TextField, Button, Grid, MenuItem, Select, FormControl, InputLabel, Typography, Autocomplete } from '@mui/material';
 import EventService from "../../services/EventService.jsx"; // Service to handle adding event
+import OrganizerService from "../../services/OrganizerService.jsx"; // Service to fetch organizers
+import { getAuth } from '../../utils/AuthContext.jsx'
 
 const AddEventModal = ({ open, onClose, onEventAdded }) => {
+    const { currentUser } = getAuth();
     const [name, setName] = useState('');
     const [type, setType] = useState('');
     const [description, setDescription] = useState('');
@@ -10,8 +13,45 @@ const AddEventModal = ({ open, onClose, onEventAdded }) => {
     const [endDateTime, setEndDateTime] = useState('');
     const [eventStatus, setEventStatus] = useState('');
     const [confirmationStatus, setConfirmationStatus] = useState('');
+    const [coverPhoto, setCoverPhoto] = useState(null);
+    const [coverPhotoPreview, setCoverPhotoPreview] = useState('/assets/placeholders/1280x720-image-placeholder.png');
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [organizers, setOrganizers] = useState([]);
+    const [selectedOrganizer, setSelectedOrganizer] = useState(null);
 
-    const handleAddEvent = async () => {
+    useEffect(() => {
+        const fetchOrganizers = async () => {
+            try {
+                const response = await OrganizerService.getApprovedOrganizers();
+                const mappedOrganizers = response.map(org => ({
+                    name: `${org.user.firstName} ${org.user.lastName}`,
+                    organizerId: org.organizerId
+                }));
+                setOrganizers(mappedOrganizers);
+            } catch (error) {
+                console.error("Error fetching organizers:", error);
+            }
+        };
+        fetchOrganizers();
+    }, []);
+
+    const handleCoverPhotoChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const maxSize = 15 * 1024 * 1024;
+            if (file.size > maxSize) {
+                setSnackbarMessage('File size must be under 15MB.');
+                setOpenSnackbar(true);
+                return;
+            }
+            setCoverPhoto(file);
+            setCoverPhotoPreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleAddEvent = async (event) => {
+        event.preventDefault();
         const eventData = {
             name,
             type,
@@ -23,10 +63,13 @@ const AddEventModal = ({ open, onClose, onEventAdded }) => {
         };
 
         try {
-            const response = await EventService.createEvent(eventData); // Assuming your service call
+            const response = await EventService.createEventWithOrganizer(selectedOrganizer.organizerId, eventData);
             if (response && response.data) {
-                onEventAdded(response.data); // This should call the function passed from the parent
-                onClose(); // Close the modal
+                if (coverPhoto) {
+                    await EventService.uploadCoverPhoto(response.data.eventId, coverPhoto);
+                }
+                onEventAdded(response.data);
+                handleClose();
             } else {
                 console.error("Error: Response is not in the expected format");
             }
@@ -35,90 +78,166 @@ const AddEventModal = ({ open, onClose, onEventAdded }) => {
         }
     };
 
+    const handleClose = () => {
+        setName('');
+        setType('');
+        setDescription('');
+        setStartDateTime('');
+        setEndDateTime('');
+        setEventStatus('');
+        setConfirmationStatus('');
+        setCoverPhoto(null);
+        setCoverPhotoPreview('/assets/placeholders/1280x720-image-placeholder.png');
+        onClose();
+    };
+
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={open} onClose={handleClose}>
             <DialogTitle>Add Event</DialogTitle>
             <DialogContent>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Event Name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Description"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            multiline
-                            rows={4}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                            <InputLabel>Event Type</InputLabel>
-                            <Select
-                                value={type}
-                                onChange={(e) => setType(e.target.value)}
-                                label="Event Type"
+                <form onSubmit={handleAddEvent}>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <div style={{
+                                    width: '320px',
+                                    height: '180px',
+                                    overflow: 'hidden',
+                                    borderRadius: '10px',
+                                    flexShrink: 0
+                                }}>
+                                    <img
+                                        src={coverPhotoPreview}
+                                        alt="cover-photo-preview"
+                                        style={{width: '320px', height: '180px', objectFit: 'cover'}}
+                                    />
+                                </div>
+                                <div style={{display: 'flex', justifyContent: 'center', paddingLeft: '15px'}}>
+                                    <Button
+                                        variant="contained"
+                                        component="label"
+                                        sx={{
+                                            backgroundColor: "#C63f47",
+                                            color: "#FFFFFF",
+                                            textTransform: 'none',
+                                            borderRadius: "0"
+                                        }}
+                                    >
+                                        <Typography>
+                                            <span>Upload Cover Photo</span>
+                                        </Typography>
+                                        <input
+                                            type="file"
+                                            hidden
+                                            accept="image/png, image/jpeg"
+                                            onChange={handleCoverPhotoChange}
+                                        />
+                                    </Button>
+                                </div>
+                            </div>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Event Name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                required
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Description"
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                multiline
+                                rows={4}
+                                required
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Autocomplete
+                                options={organizers}
+                                getOptionLabel={(option) => option.name}
+                                value={selectedOrganizer}
+                                onChange={(event, newValue) => setSelectedOrganizer(newValue)}
+                                renderInput={(params) => <TextField {...params} label="Organizer" required />}
+                                noOptionsText="No Organizers Found"
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth>
+                                <InputLabel>Event Type</InputLabel>
+                                <Select
+                                    value={type}
+                                    onChange={(e) => setType(e.target.value)}
+                                    label="Event Type"
+                                    required
+                                >
+                                    <MenuItem value="Public">Public</MenuItem>
+                                    <MenuItem value="Private">Private</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Event Status"
+                                value={eventStatus}
+                                onChange={(e) => setEventStatus(e.target.value)}
+                                select
+                                required
                             >
-                                <MenuItem value="Public">Public</MenuItem>
-                                <MenuItem value="Private">Private</MenuItem>
-                            </Select>
-                        </FormControl>
+                                <MenuItem value="Completed">Completed</MenuItem>
+                                <MenuItem value="Upcoming">Upcoming</MenuItem>
+                                <MenuItem value="Ongoing">Ongoing</MenuItem>
+                                <MenuItem value="Cancelled">Cancelled</MenuItem>
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Start Date & Time"
+                                type="datetime-local"
+                                value={startDateTime}
+                                onChange={(e) => setStartDateTime(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    max: endDateTime,
+                                }}
+                                required
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="End Date & Time"
+                                type="datetime-local"
+                                value={endDateTime}
+                                onChange={(e) => setEndDateTime(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                inputProps={{
+                                    min: startDateTime,
+                                }}
+                                required
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Event Status"
-                            value={eventStatus}
-                            onChange={(e) => setEventStatus(e.target.value)}
-                            select
-                        >
-                            <MenuItem value="Completed">Completed</MenuItem>
-                            <MenuItem value="Upcoming">Upcoming</MenuItem>
-                            <MenuItem value="Ongoing">Ongoing</MenuItem>
-                            <MenuItem value="Cancelled">Cancelled</MenuItem>
-                        </TextField>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Start Date & Time"
-                            type="datetime-local"
-                            value={startDateTime}
-                            onChange={(e) => setStartDateTime(e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="End Date & Time"
-                            type="datetime-local"
-                            value={endDateTime}
-                            onChange={(e) => setEndDateTime(e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                    </Grid>
-                </Grid>
+                    <DialogActions>
+                        <Button onClick={handleClose} sx={{ backgroundColor: '#B71C1C', color: "white" }}>
+                            Cancel
+                        </Button>
+                        <Button type="submit" sx={{ backgroundColor: '#B71C1C', color: "white" }}>
+                            Add Event
+                        </Button>
+                    </DialogActions>
+                </form>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} sx={{color:"white",backgroundColor:"#B71C1C"}}>
-                    Cancel
-                </Button>
-                <Button onClick={handleAddEvent} sx={{color:"white",backgroundColor:"#B71C1C"}}>
-                    Add Event
-                </Button>
-            </DialogActions>
         </Dialog>
     );
 };

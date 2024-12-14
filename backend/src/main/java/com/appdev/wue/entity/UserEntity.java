@@ -48,7 +48,7 @@ public class UserEntity {
     @JsonIgnore
     private List<FeedbackEntity> feedbacks;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private OrganizerEntity organizer;
 

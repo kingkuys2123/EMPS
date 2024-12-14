@@ -74,6 +74,8 @@ export default function EditOrganizerModal(){
                 phoneNumber,
             }
             await OrganizerService.updateOrganizer()
+        }catch (e){
+
         }
     }
     return(

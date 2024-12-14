@@ -170,4 +170,8 @@ public class EventService {
         event.setDateCreated(LocalDateTime.now());
         return eRepo.save(event);
     }
+
+    public List<EventEntity> getAllByConfirmationStatusPending() {
+        return eRepo.findAllByConfirmationStatusPending();
+    }
 }

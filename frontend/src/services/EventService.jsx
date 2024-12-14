@@ -48,7 +48,10 @@ const EventService = {
   },
   deleteCoverPhoto: async (id) => {
     return await axios.delete(`/event/deleteCoverPhoto/${id}`);
-  }
+  },
+  getAllByConfirmationStatusPending: async () => {
+    return await axios.get(`/event/getAllByConfirmationStatusPending`);
+  },
 };
 
 export default EventService;

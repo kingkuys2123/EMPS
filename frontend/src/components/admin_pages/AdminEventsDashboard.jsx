@@ -83,7 +83,7 @@ function AdminEventsDashboard() {
     };
 
     const handleViewEvent = async (eventId) => {
-        nav(`/organizer/my_events/${eventId}`);
+        nav(`/admin/events/view/${eventId}`);
     };
 
     const handleOpenEditEventModal = (event) => {
