@@ -41,10 +41,10 @@ function CustomAppBar({ title, newProfilePicture }) {
         if (currentUser) {
             UserService.getProfilePicture(currentUser.profilePicture)
                 .then((url) => {
-                    setProfilePicture(url || '/assets/placeholders/avatar-photo-placeholder.png');
+                    setProfilePicture(url);
+                    localStorage.setItem('profilePicture', url);
                 })
                 .catch(() => {
-                    setProfilePicture('/assets/placeholders/avatar-photo-placeholder.png');
                 });
         }
     }, [currentUser]);
@@ -68,7 +68,17 @@ function CustomAppBar({ title, newProfilePicture }) {
                                                 setToggleOrganizer(!toggleOrganizer);
                                                 nav(toggleOrganizer ? '/home' : '/organizer/dashboard');
                                             }}
-                                            color="primary"
+                                            sx={{
+                                                '& .MuiSwitch-switchBase.Mui-checked': {
+                                                    color: '#C63F47',
+                                                    '&:hover': {
+                                                        backgroundColor: 'rgba(198, 63, 71, 0.08)',
+                                                    },
+                                                },
+                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                                                    backgroundColor: '#C63F47',
+                                                },
+                                            }}
                                         />
                                     </Box>
                                 )}

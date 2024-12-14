@@ -34,7 +34,7 @@ public class UserService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Value("${upload.dir}")
+    @Value("${upload.dir}/profile_pictures/")
     private String uploadDir;
 
     // Create User

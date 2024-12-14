@@ -3,22 +3,22 @@ package com.appdev.wue.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.appdev.wue.entity.EventEntity;
+import com.appdev.wue.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.appdev.wue.entity.BookingEntity;
 import com.appdev.wue.entity.TicketEntity;
 import com.appdev.wue.repository.TicketRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @Service
 public class TicketService {
 
     @Autowired
     private TicketRepository tRepo;
+
+    @Autowired
+    private EventRepository eRepo;
 
     public TicketService(TicketRepository ticketRepository) {
         this.tRepo = ticketRepository;
@@ -27,8 +27,13 @@ public class TicketService {
     public List<TicketEntity> getAllTickets() {
         return tRepo.findAll();
     }
+
     public List<TicketEntity> getAllTicketsFromOrganizer(int id) {
         return tRepo.getAllTicketsFromOrganizer(id);
+    }
+
+    public List<TicketEntity> getAllTicketsFromOrganizerAndEvent(int organizerId, int eventId) {
+        return tRepo.getAllTicketsFromOrganizerAndEvent(organizerId, eventId);
     }
 
     public TicketEntity getTicket(int id) {
@@ -39,6 +44,13 @@ public class TicketService {
         if (ticket.getQuantity() <= 0) {
             ticket.setQuantity(1);
         }
+        return tRepo.save(ticket);
+    }
+
+    public TicketEntity createTicketWithEvent(int eventId, TicketEntity ticket) {
+        EventEntity event = eRepo.findById(eventId)
+                .orElseThrow(() -> new NoSuchElementException("Event with ID " + eventId + " not found!"));
+        ticket.setEvent(event);
         return tRepo.save(ticket);
     }
 
@@ -60,15 +72,19 @@ public class TicketService {
         }
     }
 
-    public TicketEntity deleteTicket(int id) {
-        TicketEntity delete = tRepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
-        delete.IsDeleted(1);
-        return tRepo.save(delete);
-    }
-
-    public List<TicketEntity> getAllTicketsFromOrganizer(int id) {
-        return tRepo.getAllTicketsFromOrganizer(id);
+    public String deleteTicket(int id) {
+        String msg;
+        try {
+            if (tRepo.existsById(id)) {
+                tRepo.deleteById(id);
+                msg = "Payment Details deleted successfully!";
+            } else {
+                msg = "Payment Details not found!";
+            }
+        } catch (Exception e) {
+            msg = "Error occurred while deleting the payment details with ID " + id + ": " + e.getMessage();
+        }
+        return msg;
     }
 
     public List<TicketEntity> getTicketByEventId(int eventId) {

@@ -21,9 +21,6 @@ public class   VenueEntity {
 
      @Column(name = "address")
      private String address;
-
-     @Column(name = "capacity")
-     private int capacity;
      
      @Column(name = "status")
      private String status;
@@ -62,14 +59,6 @@ public class   VenueEntity {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
     }
 
     public String getStatus() {

@@ -150,4 +150,12 @@ public class BookingService {
         }
     }
 
+    public Double getTotalPaidPriceSumByEvent(int eventId) {
+        return bRepo.findTotalPaidPriceSumByEvent(eventId);
+    }
+
+    public Integer getTotalPaidTicketQuantitySumByEvent(int eventId) {
+        return bRepo.findTotalPaidTicketQuantitySumByEvent(eventId);
+    }
+
 }

@@ -59,7 +59,6 @@ public class VenueService {
 			venue.setDescription(updatedVenue.getDescription());
 			venue.setAddress(updatedVenue.getAddress());
 			venue.setStatus(updatedVenue.getStatus());
-			venue.setCapacity(updatedVenue.getCapacity());
 			
 		} catch(NoSuchElementException nex) {
 			throw new NameNotFoundException ("Venue "+ id +" not found");

@@ -281,7 +281,7 @@ const EditBookingModal = ({ open, onClose, bookingId, onUpdateBooking }) => {
                         <Grid item xs={2} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                             <Typography variant="body1" sx={{ textAlign: 'center' }}>Quantity</Typography>
                             <Box display="flex" alignItems="center" justifyContent="center" sx={{ height: "50px", flexGrow: 1 }}>
-                                {bookingDetails && bookingDetails.status.toLowerCase() !== "paid" && bookingDetails.ticket.event.eventStatus.toLowerCase() !== "completed" ? (
+                                {bookingDetails && bookingDetails.status.toLowerCase() !== "paid" && bookingDetails.ticket.event.eventStatus.toLowerCase() !== "completed" && bookingDetails.status.toLowerCase() !== "cancelled"  ? (
                                     <>
                                         <IconButton onClick={handleDecrease}>
                                             <Remove />

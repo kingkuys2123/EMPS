@@ -69,23 +69,32 @@ function UserViewEvent() {
         const fetchEvent = async () => {
             try {
                 const response = await EventService.getEvent(eventId);
-                if (!response.data || response.data.eventId.toString() !== eventId.toString()) {
+                const event = response.data;
+                if (!event || event.eventId.toString() !== eventId.toString()) {
                     nav("/events");
                     return;
                 }
-                setEvent(response.data);
-                const organizerResponse = await OrganizerService.getOrganizerWithUser(response.data.organizer.organizerId);
-                setOrganizer(organizerResponse);
-                const ticketsResponse = await TicketService.getTicketsByEventId(eventId);
+                if(!event || event.confirmationStatus === "Pending"){
+                    nav("/events");
+                    return;
+                }
+                if (event.coverPhoto) {
+                    const coverPhotoResponse = await EventService.getCoverPhoto(event.coverPhoto);
+                    event.coverPhotoUrl = URL.createObjectURL(coverPhotoResponse.data);
+                }
+                setEvent(event);
 
+                const organizerResponse = await OrganizerService.getOrganizerWithUser(event.organizer.organizerId);
+                setOrganizer(organizerResponse);
+
+                const ticketsResponse = await TicketService.getTicketsByEventId(eventId);
                 const ticketsWithRemainingQuantity = await Promise.all(ticketsResponse.map(async (ticket) => {
                     const remainingQuantityResponse = await TicketService.getRemainingTicketQuantity(ticket.ticketId);
                     return { ...ticket, remainingQuantity: remainingQuantityResponse.remainingQuantity };
                 }));
-
                 setTickets(ticketsWithRemainingQuantity);
-                const feedbacksResponse = await FeedbackService.getFeedbacksByEvent(eventId);
 
+                const feedbacksResponse = await FeedbackService.getFeedbacksByEvent(eventId);
                 const feedbacksWithProfilePictures = await Promise.all(feedbacksResponse.map(async feedback => {
                     if (feedback.user.profilePicture) {
                         const profilePictureUrl = await UserService.getProfilePicture(feedback.user.profilePicture);
@@ -93,7 +102,6 @@ function UserViewEvent() {
                     }
                     return feedback;
                 }));
-
                 setFeedbacks(feedbacksWithProfilePictures);
 
                 if (currentUser) {
@@ -328,9 +336,17 @@ function UserViewEvent() {
                                                                             <Typography variant="body2" sx={{ color: '#777' }}>{ticket.description}</Typography>
                                                                         </Box>
                                                                         <Box sx={{ textAlign: 'right' }}>
-                                                                            <Typography variant="body1" sx={{ color: '#555' }}>Price: ₱{ticket.price.toFixed(2)}</Typography>
-                                                                            <Typography variant="body2" sx={{ color: '#777' }}>Quantity: {ticket.quantity}</Typography>
-                                                                            <Typography variant="body2" sx={{ color: '#777' }}>Available: {ticket.remainingQuantity}</Typography>
+                                                                            {ticket.isAvailable ? (
+                                                                                <>
+                                                                                    <Typography variant="body1" sx={{ color: '#555' }}>Price: ₱{ticket.price.toFixed(2)}</Typography>
+                                                                                    <Typography variant="body2" sx={{ color: '#777' }}>Quantity: {ticket.quantity}</Typography>
+                                                                                    <Typography variant="body2" sx={{ color: '#777' }}>Available: {ticket.remainingQuantity}</Typography>
+                                                                                </>
+                                                                            ) : (
+                                                                                <>
+                                                                                    <Typography variant="body2" sx={{ color: '#777' }}>Unavailable</Typography>
+                                                                                </>
+                                                                            )}
                                                                         </Box>
                                                                     </Grid>
                                                                 </Box>
@@ -343,21 +359,38 @@ function UserViewEvent() {
                                             </Box>
                                         </Grid>
                                         <Grid item xs={12} md={6}>
-                                            <img
-                                                src="/assets/placeholders/1280x720-image-placeholder.png"
-                                                alt="Event"
-                                                style={{ width: "100%", height: "auto", objectFit: "cover" }}
-                                            />
-                                            <Button variant="contained" color="primary" fullWidth sx={{ marginTop: 2, backgroundColor: "#C63f47", borderRadius: 0 }} onClick={handleBookTicketClick}>
-                                                Book Ticket
-                                            </Button>
+                                            <Box>
+                                                <Box>
+                                                    <img
+                                                        src={event.coverPhotoUrl || "/assets/placeholders/1280x720-image-placeholder.png"}
+                                                        alt="Event"
+                                                        style={{width: "100%", height: "425px", objectFit: "cover"}}
+                                                    />
+                                                </Box>
+                                                <Box>
+                                                    <Button variant="contained" color="primary" fullWidth
+                                                            sx={{marginTop: 2, backgroundColor: "#C63f47", borderRadius: 0}}
+                                                            onClick={handleBookTicketClick}>
+                                                        Book Ticket
+                                                    </Button>
+                                                </Box>
+                                            </Box>
                                             {organizer && (
-                                                <Box sx={{ marginTop: 5, backgroundColor: '#fff' }}>
-                                                    <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: 'bold', color: '#C63f47' }}>Organizer</Typography>
-                                                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                                        <Typography variant="body1"><strong>Name:</strong> {organizer.user.firstName} {organizer.user.lastName}</Typography>
-                                                        <Typography variant="body1"><strong>Email:</strong> {organizer.user.email}</Typography>
-                                                        <Typography variant="body1"><strong>Contact #:</strong> {organizer.user.phoneNumber}</Typography>
+                                                <Box sx={{marginTop: 5, backgroundColor: '#fff'}}>
+                                                    <Typography variant="h5" sx={{
+                                                        marginBottom: 2,
+                                                        fontWeight: 'bold',
+                                                        color: '#C63f47'
+                                                    }}>Organizer</Typography>
+                                                    <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+                                                        <Typography
+                                                            variant="body1"><strong>Name:</strong> {organizer.user.firstName} {organizer.user.lastName}
+                                                        </Typography>
+                                                        <Typography
+                                                            variant="body1"><strong>Email:</strong> {organizer.user.email}
+                                                        </Typography>
+                                                        <Typography variant="body1"><strong>Contact
+                                                            #:</strong> {organizer.user.phoneNumber}</Typography>
                                                     </Box>
                                                 </Box>
                                             )}
@@ -387,20 +420,14 @@ function UserViewEvent() {
                                     </Grid>
                                 )}
                                 {tabValue === 2 && event && (
-                                    <Grid container spacing={2} sx={{ height: "71vh" }}>
+                                    <Grid container spacing={2} sx={{ height: "71vh", padding: 3, backgroundColor: "#f9f9f9", borderRadius: 2, boxShadow: "0 4px 8px rgba(0,0,0,0.1)" }}>
                                         <Grid item xs={12} md={6}>
                                             {event.venue ? (
-                                                <Box sx={{ padding: 2, backgroundColor: '#f3f3f3', boxShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>
-                                                    <img
-                                                        src="/assets/placeholders/1280x720-image-placeholder.png"
-                                                        alt="Event"
-                                                        style={{ width: "100%", height: "auto", objectFit: "cover", marginTop: "10px", marginBottom: "10px", borderRadius: 2 }}
-                                                    />
-                                                    <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#C63f47', marginBottom: 1 }}>Venue Details</Typography>
+                                                <Box sx={{ padding: 3, backgroundColor: '#fff', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', borderRadius: 2 }}>
+                                                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#C63f47', marginBottom: 2 }}>Venue Details</Typography>
                                                     <Typography variant="body1" sx={{ marginBottom: 1 }}><strong>Name:</strong> {event.venue.name}</Typography>
                                                     <Typography variant="body1" sx={{ marginBottom: 1 }}><strong>Description:</strong> {event.venue.description}</Typography>
                                                     <Typography variant="body1" sx={{ marginBottom: 1 }}><strong>Address:</strong> {event.venue.address}</Typography>
-                                                    <Typography variant="body1" sx={{ marginBottom: 1 }}><strong>Capacity:</strong> {event.venue.capacity}</Typography>
                                                 </Box>
                                             ) : (
                                                 <Typography variant="body1" sx={{ color: 'gray' }}>No venue assigned</Typography>

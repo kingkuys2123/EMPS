@@ -60,9 +60,9 @@ function Profile() {
             UserService.getProfilePicture(currentUser.profilePicture)
                 .then((url) => {
                     setProfilePicture(url);
+                    localStorage.setItem('profilePicture', url);
                 })
                 .catch(() => {
-                    setProfilePicture('/assets/placeholders/avatar-photo-placeholder.png');
                 });
         }
     }, [currentUser, nav]);
@@ -155,13 +155,13 @@ function Profile() {
                 setOpenSnackbar(true);
                 return;
             }
-            const newProfilePictureUrl = URL.createObjectURL(file);
-            setNewProfilePicture(newProfilePictureUrl);
             try {
-                const updatedUser = await UserService.uploadProfilePicture(currentUser.userID, file);
+                await UserService.uploadProfilePicture(currentUser.userID, file);
+                const updatedUser = await UserService.getUser(currentUser.userID);
                 setCurrentUser(updatedUser);
-                setProfilePicture(newProfilePictureUrl);
-                localStorage.setItem('profilePicture', newProfilePictureUrl);
+                const profilePictureUrl = await UserService.getProfilePicture(updatedUser.profilePicture);
+                setProfilePicture(profilePictureUrl);
+                localStorage.setItem('profilePicture', profilePictureUrl);
                 setSnackbarMessage('Profile picture updated successfully.');
                 setOpenSnackbar(true);
             } catch (error) {

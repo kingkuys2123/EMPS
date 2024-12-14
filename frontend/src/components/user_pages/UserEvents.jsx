@@ -39,8 +39,15 @@ function UserEvents() {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await EventService.getAllEvent();
-                setEvents(response.data);
+                const response = await EventService.getAllByConfirmationStatusConfirmed();
+                const eventsWithPhotos = await Promise.all(response.data.map(async (event) => {
+                    if (event.coverPhoto) {
+                        const coverPhotoResponse = await EventService.getCoverPhoto(event.coverPhoto);
+                        event.coverPhotoUrl = URL.createObjectURL(coverPhotoResponse.data);
+                    }
+                    return event;
+                }));
+                setEvents(eventsWithPhotos);
             } catch (error) {
                 console.error("Error fetching events:", error);
             }
@@ -133,15 +140,15 @@ function UserEvents() {
                                 {currentEvents.map(event => (
                                     <Grid item xs={12} sm={6} md={4} lg={3} key={event.eventId}>
                                         <Card sx={{ display: "flex", flexDirection: "column" }}>
-                                            <Box sx={{ flexShrink: 0, width: "100%", height: "auto" }}>
+                                            <Box sx={{flexShrink: 0, width: "100%", height: "auto"}}>
                                                 <img
-                                                    src="/assets/placeholders/1280x720-image-placeholder.png"
+                                                    src={event.coverPhotoUrl || "/assets/placeholders/1280x720-image-placeholder.png"}
                                                     alt="Event"
-                                                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                                                    style={{width: "100%", height: "250px", objectFit: "cover"}}
                                                 />
                                             </Box>
-                                            <CardContent sx={{ flexGrow: 1, padding: 2 }}>
-                                                <Box sx={{ height: "125px", display: "flex", flexDirection: "column" }}>
+                                            <CardContent sx={{flexGrow: 1, padding: 2}}>
+                                                <Box sx={{height: "125px", display: "flex", flexDirection: "column" }}>
                                                     <Typography
                                                         sx={{ paddingBottom: "5px", textTransform: "uppercase", color: "text.secondary", fontSize: "12px", whiteSpace: "normal" }}
                                                     >

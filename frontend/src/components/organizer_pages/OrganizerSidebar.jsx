@@ -71,7 +71,7 @@ function OrganizerSidebar() {
                     <ListItem>
                         <ListItemButton component={Link} to="/organizer/events">
                             <ListItemText>
-                                <span>MY EVENTS</span>
+                                <span>EVENTS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>
@@ -85,7 +85,7 @@ function OrganizerSidebar() {
                     <ListItem>
                         <ListItemButton component={Link} to="/organizer/tickets">
                             <ListItemText>
-                                <span>MY TICKETS</span>
+                                <span>TICKETS</span>
                             </ListItemText>
                         </ListItemButton>
                     </ListItem>

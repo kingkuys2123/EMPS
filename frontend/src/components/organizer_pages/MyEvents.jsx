@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Button, Tabs, Tab, Box, Typography} from "@mui/material";
+import {Button, Tabs, Tab, Box, Typography, TextField, InputAdornment} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import EventMenu from './EventMenu'; 
 import AddEventModal from "./AddEventModal.jsx";
@@ -12,6 +12,7 @@ import "./styles/FontStyle.css";
 import "./styles/EventList.css";
 
 import { getAuth } from "../../utils/AuthContext.jsx";
+import SearchIcon from "@mui/icons-material/Search";
 
 function MyEvents() {
     const { currentUser, toggleOrganizer } = getAuth();
@@ -28,7 +29,7 @@ function MyEvents() {
 
     const fetchEvents = async () => {
         try {
-            const response = await EventService.getAllEvent();
+            const response = await EventService.getEventsByOrganizer(currentUser.userID);
             setEvents(response.data);
         } catch (error) {
             console.error('Error fetching events:', error);
@@ -151,33 +152,42 @@ function MyEvents() {
 
                 <CustomAppBar title={"My Events"}/>
 
-                <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
+                <Box sx={{ flexGrow: 1, backgroundColor: "#F3F3F3" }}>
                     <div className="content">
                         <div className="event-container">
-                            <div className="event-header">
+                            <div className="event-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <div className="filter-links">
-                                    <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary" textColor="primary">
-                                        <Tab label="All" />
-                                        <Tab label="Confirmed" />
-                                        <Tab label="Pending" />
+                                    <Tabs value={tabValue} onChange={handleTabChange} indicatorColor="primary"
+                                          textColor="primary">
+                                        <Tab label="All"/>
+                                        <Tab label="Confirmed"/>
+                                        <Tab label="Pending"/>
                                     </Tabs>
                                 </div>
-                                <input
-                                    type="text"
-                                    placeholder="Search events..."
-                                    value={searchQuery}
-                                    onChange={handleSearchChange}
-                                    className="search-bar"
-                                />
-                                <Button
-                                    className="add-event-button"
-                                    variant="contained"
-                                    color="primary"
-                                    sx={{ marginLeft: "15px", height: "35px", fontSize: "12px", width: "200px" }}
-                                    onClick={handleOpenAddEventModal}
-                                >
-                                    + Add Event
-                                </Button>
+                                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                                    <TextField
+                                        variant="outlined"
+                                        placeholder="Search event name..."
+                                        size="small"
+                                        value={searchQuery}
+                                        onChange={handleSearchChange}
+                                        InputProps={{
+                                            startAdornment: (
+                                                <InputAdornment position="start">
+                                                    <SearchIcon />
+                                                </InputAdornment>
+                                            ),
+                                        }}
+                                    />
+                                    <Button
+                                        className="add-event-button"
+                                        variant="contained"
+                                        sx={{ marginLeft: "15px", height: "35px", fontSize: "12px", width: "200px", backgroundColor: "#C63F47", borderRadius: "0" }}
+                                        onClick={handleOpenAddEventModal}
+                                    >
+                                        + Add Event
+                                    </Button>
+                                </Box>
                             </div>
 
                             {error && <p>{error}</p>}

@@ -10,7 +10,6 @@ import jakarta.persistence.*;
 @Table(name = "organizer")
 public class OrganizerEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int organizer_id;
 
     @Column(name = "approval_status")

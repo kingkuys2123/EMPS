@@ -96,4 +96,24 @@ public class BookingController {
         }
     }
 
+    @GetMapping("/getTotalPaidPriceSumByEvent/{eventId}")
+    public ResponseEntity<Double> getTotalPaidPriceSumByEvent(@PathVariable int eventId) {
+        try {
+            Double totalPaidPriceSum = bServ.getTotalPaidPriceSumByEvent(eventId);
+            return new ResponseEntity<>(totalPaidPriceSum, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/getTotalPaidTicketQuantitySumByEvent/{eventId}")
+    public ResponseEntity<Integer> getTotalPaidTicketQuantitySumByEvent(@PathVariable int eventId) {
+        try {
+            Integer totalPaidTicketQuantitySum = bServ.getTotalPaidTicketQuantitySumByEvent(eventId);
+            return new ResponseEntity<>(totalPaidTicketQuantitySum, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

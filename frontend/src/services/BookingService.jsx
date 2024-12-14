@@ -13,7 +13,7 @@ const BookingService = {
     },
 
     // Get all bookings
-    getAllBookings: async () => {
+    getAllBookings: async (organizerID) => {
         try {
             // Fetching data from the backend
             const response = await axios.get(`/booking/getAllBookings`);
@@ -21,15 +21,17 @@ const BookingService = {
     
             // Mapping the response data to the required structure
             const mappedBookings = response.data
-                .filter((booking) => booking.isDeleted === 0 || (booking.isDeleted === 1 && booking.status === "Cancelled"))
+                .filter((booking) => booking.ticket.event.organizer.organizerId === organizerID)
                 .map((booking) => ({
-                    booking: booking.bookingID,
-                    customerName: booking.user.firstName || "Unknown",
-                    event: booking.ticket.name,
-                    tickets: booking.ticketQuantity,
+                    bookingID: booking.bookingID,
+                    customerName: `${booking.user.firstName} ${booking.user.lastName}` || "Unknown",
+                    ticketName: booking.ticket.name,
+                    ticketsQuantity: booking.ticketQuantity,
                     totalPrice: booking.ticket.price * booking.ticketQuantity,
                     dateBooked: booking.dateTimeBooked,
                     status: booking.status,
+                    eventName: booking.ticket.event.name,
+                    eventID: booking.ticket.event.eventId,
                 }));
     
             console.log("Mapped Booking Data:", mappedBookings);
@@ -42,21 +44,23 @@ const BookingService = {
     },
     
     //get bookings if status is Confirmed
-    getConfirmedBookings: async () => {
+    getPaidBookings: async (organizerID) => {
         try {
             const response = await axios.get(`/booking/getAllBookings`);
             console.log("Raw Booking Data:", response.data);
 
             const confirmedBookings = response.data
-                .filter((booking) => booking.status === "Confirmed")
+                .filter((booking) => booking.status.toLowerCase() === "paid" && booking.ticket.event.organizer.organizerId === organizerID)
                 .map((booking) => ({
-                    booking: booking.bookingID,
-                    customerName: booking.user.firstName || "Unknown",
-                    event: booking.ticket.name || "N/A",
-                    tickets: booking.ticketQuantity,
-                    totalPrice: booking.totalPrice,
-                    date: new Date(booking.dateTimeBooked),
+                    bookingID: booking.bookingID,
+                    customerName: `${booking.user.firstName} ${booking.user.lastName}` || "Unknown",
+                    ticketName: booking.ticket.name,
+                    ticketsQuantity: booking.ticketQuantity,
+                    totalPrice: booking.ticket.price * booking.ticketQuantity,
+                    dateBooked: booking.dateTimeBooked,
                     status: booking.status,
+                    eventName: booking.ticket.event.name,
+                    eventID: booking.ticket.event.name,
                 }));
     
             console.log("Mapped Confirmed Booking Data:", confirmedBookings);
@@ -69,21 +73,23 @@ const BookingService = {
     },
     
     //get bookings if status is Pending
-    getPendingBookings: async () => {
+    getPendingBookings: async (organizerID) => {
         try {
             const response = await axios.get(`/booking/getAllBookings`);
             console.log("Raw Booking Data:", response.data);
             
             const pendingBookings = response.data
-                .filter((booking) => booking.status === "Pending")
+                .filter((booking) => booking.status.toLowerCase() === "pending" && booking.ticket.event.organizer.organizerId === organizerID)
                 .map((booking) => ({
-                    booking: booking.bookingID,
-                    customerName: booking.user.firstName || "Unknown",
-                    event: booking.ticket.name || "N/A",
-                    tickets: booking.ticketQuantity,
-                    totalPrice: booking.totalPrice,
-                    date: new Date(booking.dateTimeBooked),
+                    bookingID: booking.bookingID,
+                    customerName: `${booking.user.firstName} ${booking.user.lastName}` || "Unknown",
+                    ticketName: booking.ticket.name,
+                    ticketsQuantity: booking.ticketQuantity,
+                    totalPrice: booking.ticket.price * booking.ticketQuantity,
+                    dateBooked: booking.dateTimeBooked,
                     status: booking.status,
+                    eventID: booking.ticket.event.eventID,
+                    eventName: booking.ticket.event.name,
                 }));
     
             console.log("Mapped Confirmed Booking Data:", pendingBookings);
@@ -95,6 +101,89 @@ const BookingService = {
         }
     },
 
+    // Get all bookings by EventId
+    getAllBookingsByEventId: async (eventId) => {
+        try {
+            const response = await axios.get(`/booking/getAllBookings`);
+            console.log("Raw Booking Data:", response.data);
+
+            const mappedBookings = response.data
+                .filter((booking) => booking.ticket.event.eventId === eventId)
+                .map((booking) => ({
+                    bookingID: booking.bookingID,
+                    customerName: `${booking.user.firstName} ${booking.user.lastName}` || "Unknown",
+                    ticketName: booking.ticket.name,
+                    ticketsQuantity: booking.ticketQuantity,
+                    totalPrice: booking.ticket.price * booking.ticketQuantity,
+                    dateBooked: booking.dateTimeBooked,
+                    status: booking.status,
+                    eventName: booking.ticket.event.name,
+                    eventID: booking.ticket.event.eventId,
+                }));
+
+            console.log("Mapped Booking Data:", mappedBookings);
+            return mappedBookings;
+        } catch (error) {
+            console.error("Error fetching all bookings by EventId:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get paid bookings by EventId
+    getPaidBookingsByEventId: async (eventId) => {
+        try {
+            const response = await axios.get(`/booking/getAllBookings`);
+            console.log("Raw Booking Data:", response.data);
+
+            const confirmedBookings = response.data
+                .filter((booking) => booking.status.toLowerCase() === "paid" && booking.ticket.event.eventId === eventId)
+                .map((booking) => ({
+                    bookingID: booking.bookingID,
+                    customerName: `${booking.user.firstName} ${booking.user.lastName}` || "Unknown",
+                    ticketName: booking.ticket.name,
+                    ticketsQuantity: booking.ticketQuantity,
+                    totalPrice: booking.ticket.price * booking.ticketQuantity,
+                    dateBooked: booking.dateTimeBooked,
+                    status: booking.status,
+                    eventName: booking.ticket.event.name,
+                    eventID: booking.ticket.event.eventId,
+                }));
+
+            console.log("Mapped Confirmed Booking Data:", confirmedBookings);
+            return confirmedBookings;
+        } catch (error) {
+            console.error("Error fetching paid bookings by EventId:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get pending bookings by EventId
+    getPendingBookingsByEventId: async (eventId) => {
+        try {
+            const response = await axios.get(`/booking/getAllBookings`);
+            console.log("Raw Booking Data:", response.data);
+
+            const pendingBookings = response.data
+                .filter((booking) => booking.status.toLowerCase() === "pending" && booking.ticket.event.eventId === eventId)
+                .map((booking) => ({
+                    bookingID: booking.bookingID,
+                    customerName: `${booking.user.firstName} ${booking.user.lastName}` || "Unknown",
+                    ticketName: booking.ticket.name,
+                    ticketsQuantity: booking.ticketQuantity,
+                    totalPrice: booking.ticket.price * booking.ticketQuantity,
+                    dateBooked: booking.dateTimeBooked,
+                    status: booking.status,
+                    eventID: booking.ticket.event.eventId,
+                    eventName: booking.ticket.event.name,
+                }));
+
+            console.log("Mapped Pending Booking Data:", pendingBookings);
+            return pendingBookings;
+        } catch (error) {
+            console.error("Error fetching pending bookings by EventId:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
 
     // Get booking by ID
     getBookingById: async (id) => {
@@ -187,6 +276,27 @@ const BookingService = {
             return response.data;
         } catch (error) {
             console.error(`Error paying for booking with ID ${id}:`, error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    getTotalPaidPriceSumByEvent: async (eventId) => {
+        try {
+            const response = await axios.get(`/booking/getTotalPaidPriceSumByEvent/${eventId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching total paid price sum by event:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+    // Get total paid ticket quantity sum by event ID
+    getTotalPaidTicketQuantitySumByEvent: async (eventId) => {
+        try {
+            const response = await axios.get(`/booking/getTotalPaidTicketQuantitySumByEvent/${eventId}`);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching total paid ticket quantity sum by event:", error);
             throw error.response ? error.response.data : error.message;
         }
     },

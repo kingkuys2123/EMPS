@@ -1,37 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Box, Paper, Grid, CircularProgress } from "@mui/material";
+import { Typography, Box, Paper, Grid, CircularProgress, Rating, LinearProgress } from "@mui/material";
 import OrganizerSidebar from "./OrganizerSidebar";
 import CustomAppBar from "../CustomAppBar";
 import EventService from "../../services/EventService";
 import BookingService from "../../services/BookingService";
 import FeedbackService from "../../services/FeedbackServices";
-
 import { getAuth } from "../../utils/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import FeedbackServices from "../../services/FeedbackServices.jsx";
+import UserService from "../../services/UserService.jsx";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 function OrganizerEventAnalytics() {
     const nav = useNavigate();
     const { currentUser, toggleOrganizer } = getAuth();
-
     const { eventId } = useParams();
     const [eventDetails, setEventDetails] = useState(null);
     const [bookings, setBookings] = useState([]);
     const [feedbacks, setFeedbacks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [totalRevenue, setTotalRevenue] = useState(0); // Initialize as a number
+    const [totalTicketsSold, setTotalTicketsSold] = useState(0); // Initialize as a number
 
     useEffect(() => {
         if (!currentUser) {
             nav('/');
-        }
-        else if(currentUser.accountType === "user"){
-            nav("/home")
-        }
-        else if(currentUser.accountType === "admin"){
+        } else if (currentUser.accountType === "user") {
+            nav("/home");
+        } else if (currentUser.accountType === "admin") {
             nav("/admin/dashboard");
-        }
-        else if (currentUser.accountType === "organizer") {
-            if(!toggleOrganizer) {
+        } else if (currentUser.accountType === "organizer") {
+            if (!toggleOrganizer) {
                 nav('/home');
             }
         }
@@ -40,20 +40,33 @@ function OrganizerEventAnalytics() {
     useEffect(() => {
         const fetchEventAnalytics = async () => {
             try {
-                // Fetch event details
-                const eventResponse = await EventService.getEvent(eventId);
+                const eventResponse = await EventService.getEvent(parseInt(eventId));
+                if (!eventResponse.data || eventResponse.data.organizer.organizerId !== currentUser.userID) {
+                    nav("/organizer/dashboard");
+                    return;
+                }
+
+                const feedbacksResponse = await FeedbackServices.getFeedbacksByEvent(eventId);
+                const feedbacksWithProfilePictures = await Promise.all(feedbacksResponse.map(async feedback => {
+                    if (feedback.user.profilePicture) {
+                        const profilePictureUrl = await UserService.getProfilePicture(feedback.user.profilePicture);
+                        return { ...feedback, user: { ...feedback.user, profilePictureUrl } };
+                    }
+                    return feedback;
+                }));
+
+                setFeedbacks(feedbacksWithProfilePictures);
+
+                const totalRevenueResponse = await BookingService.getTotalPaidPriceSumByEvent(parseInt(eventId));
+                setTotalRevenue(totalRevenueResponse);
+
+                const totalTicketsSoldResponse = await BookingService.getTotalPaidTicketQuantitySumByEvent(parseInt(eventId));
+                setTotalTicketsSold(totalTicketsSoldResponse);
+
+                const bookingResponse = await BookingService.getAllBookingsByEventId(parseInt(eventId));
+                setBookings(bookingResponse);
+
                 setEventDetails(eventResponse.data);
-
-                // Fetch bookings for the event
-                const bookingResponse = await BookingService.getAllBookings();
-                const eventBookings = (bookingResponse.data || []).filter(
-                    (booking) => String(booking.eventId) === String(eventId) // Ensure type matching
-                );
-                setBookings(eventBookings);
-
-                // Fetch feedbacks by eventId
-                const feedbackResponse = await FeedbackService.getFeedbackByEventId(eventId);
-                setFeedbacks(feedbackResponse.data || []);
 
                 setLoading(false);
             } catch (error) {
@@ -64,12 +77,6 @@ function OrganizerEventAnalytics() {
 
         fetchEventAnalytics();
     }, [eventId]);
-
-
-    // Calculate total revenue
-    const totalRevenue = bookings
-        .filter((booking) => booking.is_paid) // Filter only paid bookings
-        .reduce((sum, booking) => sum + booking.total_price, 0);
 
     if (loading) {
         return (
@@ -86,13 +93,16 @@ function OrganizerEventAnalytics() {
         );
     }
 
+    const averageRating = feedbacks.length ? (feedbacks.reduce((acc, feedback) => acc + feedback.rating, 0) / feedbacks.length).toFixed(1) : 0;
+    const ratingDistribution = [5, 4, 3, 2, 1].map(star => ({
+        star,
+        count: feedbacks.filter(feedback => feedback.rating === star).length
+    }));
+
     return (
         <div className="template-page">
             <Box sx={{ display: "flex", width: "100%" }}>
-                {/* Sidebar */}
                 <OrganizerSidebar />
-
-                {/* Main Content */}
                 <Box
                     component="main"
                     sx={{
@@ -104,10 +114,7 @@ function OrganizerEventAnalytics() {
                         flexDirection: "column",
                     }}
                 >
-                    {/* App Bar */}
                     <CustomAppBar title="Event Analytics" />
-
-                    {/* Body Content */}
                     <Box sx={{ flexGrow: 1, padding: "25px", backgroundColor: "#F3F3F3" }}>
                         {eventDetails && (
                             <Paper sx={{ padding: "20px", marginBottom: "20px" }}>
@@ -115,55 +122,47 @@ function OrganizerEventAnalytics() {
                                 <Typography>{eventDetails.description}</Typography>
                             </Paper>
                         )}
-
                         <Grid container spacing={3}>
-                            {/* Bookings Section */}
                             <Grid item xs={12} md={4}>
                                 <Paper sx={{ padding: "20px", textAlign: "center" }}>
                                     <Typography variant="h6">Total Bookings</Typography>
                                     <Typography variant="h3">{bookings.length}</Typography>
                                 </Paper>
                             </Grid>
-
-                            {/* Revenue Section */}
                             <Grid item xs={12} md={4}>
                                 <Paper sx={{ padding: "20px", textAlign: "center" }}>
                                     <Typography variant="h6">Total Revenue</Typography>
-                                    <Typography variant="h3">${totalRevenue.toFixed(2)}</Typography>
+                                    <Typography variant="h3">Php {totalRevenue || 0 }.00</Typography>
                                 </Paper>
                             </Grid>
-
-                            {/* Tickets Section */}
                             <Grid item xs={12} md={4}>
                                 <Paper sx={{ padding: "20px", textAlign: "center" }}>
-                                    <Typography variant="h6">Total Tickets Sold</Typography>
-                                    <Typography variant="h3">
-                                        {bookings.reduce((total, booking) => total + booking.ticketCount, 0)}
-                                    </Typography>
+                                    <Typography variant="h6">Total Sold</Typography>
+                                    <Typography variant="h3">{totalTicketsSold || 0}</Typography>
                                 </Paper>
                             </Grid>
                         </Grid>
-
-                        {/* Feedback Details */}
                         <Box sx={{ marginTop: "30px" }}>
                             <Typography variant="h6" sx={{ marginBottom: "20px" }}>
-                                Feedback Details
+                                Feedbacks
                             </Typography>
-                            {feedbacks.length > 0 ? (
-                                feedbacks.map((feedback) => (
-                                    <Paper key={feedback.feedbackId} sx={{ padding: "10px", marginBottom: "10px" }}>
-                                        <Typography variant="subtitle1">
-                                            <strong>User:</strong> {feedback.username}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            <strong>Rating:</strong> {feedback.rating}/5
-                                        </Typography>
-                                        <Typography variant="body2">{feedback.comment}</Typography>
-                                    </Paper>
-                                ))
-                            ) : (
-                                <Typography>No feedback available for this event.</Typography>
-                            )}
+                            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: 3 }}>
+                                <Box sx={{ width: "80%" }}>
+                                    <Box sx={{ mt: 4 }}>
+                                        <Typography variant="h6" sx={{ textAlign: 'center', mb: 2 }}>Rating Trend</Typography>
+                                        <ResponsiveContainer width="100%" height={300}>
+                                            <LineChart data={feedbacks.map(feedback => ({ date: feedback.datetime_created, rating: feedback.rating }))}>
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="date" tickFormatter={(date) => new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} />
+                                                <YAxis domain={[0, 5]} />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Line type="monotone" dataKey="rating" stroke="#C63f47" />
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </Box>
+                                </Box>
+                            </Grid>
                         </Box>
                     </Box>
                 </Box>

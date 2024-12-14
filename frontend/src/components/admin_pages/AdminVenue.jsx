@@ -17,7 +17,7 @@ function AdminVenue() {
     const { currentUser, setCurrentUser } = getAuth();
 
     const [openModal, setOpenModal] = useState(false);
-    const [venue, setVenues] = useState({ name: '', address: '', capacity: '', description: '' });
+    const [venue, setVenues] = useState({ name: '', address: '', description: '' });
     const [searchTerm, setSearchTerm] = useState(""); 
     const [filter, setFilter] = useState(""); 
     

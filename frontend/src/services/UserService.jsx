@@ -142,7 +142,6 @@ const UserService = {
             const response = await axios.get(`/user/getProfilePicture/${filename}`, { responseType: 'blob' });
             return URL.createObjectURL(response.data);
         } catch (error) {
-            console.error(`Error fetching profile picture:`, error);
             throw error.response ? error.response.data : error.message;
         }
     },

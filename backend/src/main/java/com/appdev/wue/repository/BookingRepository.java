@@ -19,4 +19,11 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Integer>
             "JOIN t.event e " +
             "WHERE b.user.user_id = :userId")
     List<BookingEntity> findAllBookingsByUserIdJoinedByTicketAndEvent(@Param("userId") int userId);
+
+    @Query("SELECT SUM(b.total_price) FROM BookingEntity b JOIN b.ticket t WHERE b.is_paid = true AND b.isDeleted = 0 AND t.event.event_id = :eventId")
+    Double findTotalPaidPriceSumByEvent(@Param("eventId") int eventId);
+
+    @Query("SELECT SUM(b.ticket_quantity) FROM BookingEntity b JOIN b.ticket t WHERE b.is_paid = true AND b.isDeleted = 0 AND t.event.event_id = :eventId")
+    Integer findTotalPaidTicketQuantitySumByEvent(@Param("eventId") int eventId);
+
 }

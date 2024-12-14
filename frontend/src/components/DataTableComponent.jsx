@@ -12,7 +12,7 @@ const DataTable = ({ rows, columns, onEditClick, onDeleteClick, boxPadding, chec
 
     return (
         <Box sx={{ padding: boxPadding || "50px"}}>
-            <Paper sx={{ height: '550px', width: '100%', boxSizing: 'border-box'}}>
+            <Paper sx={{ height: '100%', width: '100%', boxSizing: 'border-box'}}>
                 <DataGrid
                     rows={rowsWithIds} // Pass rows with unique `id`
                     columns={columns}

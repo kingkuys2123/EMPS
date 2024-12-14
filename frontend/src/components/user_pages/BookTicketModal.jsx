@@ -187,9 +187,11 @@ const BookTicketModal = ({ open, onClose, eventId, onUpdateTicketQuantity }) => 
                                 >
                                     {tickets.length > 0 ? (
                                         tickets.map(ticket => (
-                                            <MenuItem key={ticket.ticketId} value={ticket.ticketId}>
-                                                {ticket.name}
-                                            </MenuItem>
+                                            ticket.isAvailable ? (
+                                                <MenuItem key={ticket.ticketId} value={ticket.ticketId}>
+                                                    {ticket.name}
+                                                </MenuItem>
+                                            ) : null
                                         ))
                                     ) : (
                                         <MenuItem value="None">None</MenuItem>

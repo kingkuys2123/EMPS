@@ -30,14 +30,28 @@ public class TicketController {
     public TicketEntity getTicket(@PathVariable int id) {
         return tServ.getTicket(id);
     }
+
     @GetMapping("/getAllTicketsFromOrganizer/{id}")
     public List<TicketEntity> getAllTicketsFromOrganizer(@PathVariable int id) {
         return tServ.getAllTicketsFromOrganizer(id);
     }
+
+    // Get All Tickets From Organizer And Event
+    @GetMapping("/getAllTicketsFromOrganizerAndEvent")
+    public List<TicketEntity> getAllTicketsFromOrganizerAndEvent(@RequestParam int organizerId, @RequestParam int eventId) {
+        return tServ.getAllTicketsFromOrganizerAndEvent(organizerId, eventId);
+    }
+
     // Create Ticket
     @PostMapping("/createTicket")
     public TicketEntity createTicket(@RequestBody TicketEntity ticket) {
         return tServ.createTicket(ticket);
+    }
+
+    // Create Ticket with Event ID
+    @PostMapping("/createTicketWithEvent/{eventId}")
+    public TicketEntity createTicketWithEvent(@PathVariable int eventId, @RequestBody TicketEntity ticket) {
+        return tServ.createTicketWithEvent(eventId, ticket);
     }
 
     // Update Ticket
@@ -47,14 +61,8 @@ public class TicketController {
     }
     // Dalete Ticket
     @DeleteMapping("/deleteTicket/{id}")
-    public TicketEntity deleteTicket(@PathVariable int id) {
+    public String deleteTicket(@PathVariable int id) {
         return tServ.deleteTicket(id);
-    }
-
-    // Get all Tickets from Organizer
-    @GetMapping("/getAllTicketsFromOrganizer/{id}")
-    public List<TicketEntity> getAllTicketsFromOrganizer(@PathVariable int id) {
-        return tServ.getAllTicketsFromOrganizer(id);
     }
 
     // Get Tickets By Event Id

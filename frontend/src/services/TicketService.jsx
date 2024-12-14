@@ -31,7 +31,7 @@ const TicketService = {
     
 
     // Get Ticket by ID
-    getTicketById: async (id) => {
+    getAllTicketsFromOrganizer: async (id) => {
         try {
             const response = await axios.get(`/ticket/getAllTicketsFromOrganizer/${id}`);
             console.log(`Fetched ticket with ID ${id}:`, response.data);
@@ -98,8 +98,18 @@ const TicketService = {
             console.error(`Error fetching remaining ticket quantity for ticket ID ${ticketId}:`, error);
             throw error.response ? error.response.data : error.message;
         }
-    }
+    },
 
-};
+    createTicketWithEvent: async (eventId, ticketData) => {
+        try {
+            const response = await axios.post(`/ticket/createTicketWithEvent/${eventId}`, ticketData);
+            return response.data;
+        } catch (error) {
+            console.error("Error creating ticket:", error);
+            throw error.response ? error.response.data : error.message;
+        }
+    },
+
+}
 
 export default TicketService;

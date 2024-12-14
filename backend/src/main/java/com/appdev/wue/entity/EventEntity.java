@@ -38,6 +38,9 @@ public class EventEntity {
     @JsonProperty("eventStatus")
     private String event_status;
 
+    @Column(name = "cover_photo")
+    private String cover_photo;
+
     @Column(name = "confirmation_status")
     @JsonProperty("confirmationStatus")
     private String confirmation_status;
@@ -160,5 +163,13 @@ public class EventEntity {
 
     public void setVenue(VenueEntity venue) {
         this.venue = venue;
+    }
+
+    public String getCoverPhoto() {
+        return cover_photo;
+    }
+
+    public void setCoverPhoto(String cover_photo) {
+        this.cover_photo = cover_photo;
     }
 }

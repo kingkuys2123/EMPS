@@ -35,7 +35,14 @@ function UserHome() {
         const fetchFeaturedEvents = async () => {
             try {
                 const response = await EventService.getFeaturedEvents();
-                setFeaturedEvents(response.data.slice(0, 2)); // Get only 2 featured events
+                const eventsWithPhotos = await Promise.all(response.data.slice(0, 2).map(async (event) => {
+                    if (event.coverPhoto) {
+                        const coverPhotoResponse = await EventService.getCoverPhoto(event.coverPhoto);
+                        event.coverPhotoUrl = URL.createObjectURL(coverPhotoResponse.data);
+                    }
+                    return event;
+                }));
+                setFeaturedEvents(eventsWithPhotos);
             } catch (error) {
                 console.error("Error fetching featured events:", error);
             }
@@ -44,7 +51,14 @@ function UserHome() {
         const fetchUpcomingEvents = async () => {
             try {
                 const response = await EventService.getRandomUpcomingEvents();
-                setUpcomingEvents(response.data.slice(0, 3)); // Get only 3 upcoming events
+                const eventsWithPhotos = await Promise.all(response.data.slice(0, 3).map(async (event) => {
+                    if (event.coverPhoto) {
+                        const coverPhotoResponse = await EventService.getCoverPhoto(event.coverPhoto);
+                        event.coverPhotoUrl = URL.createObjectURL(coverPhotoResponse.data);
+                    }
+                    return event;
+                }));
+                setUpcomingEvents(eventsWithPhotos);
             } catch (error) {
                 console.error("Error fetching upcoming events:", error);
             }
@@ -71,8 +85,8 @@ function UserHome() {
                                                 <Card key={event.eventId} sx={{ display: 'flex', flex: "1 1 calc(33.333% - 16px)", height: 250, '@media (max-width: 1200px)': { flexDirection: 'column', height: 'auto' } }}>
                                                     <CardMedia
                                                         component="img"
-                                                        sx={{ width: "50%", '@media (max-width: 1200px)': { width: "100%" } }}
-                                                        image="/assets/placeholders/1280x720-image-placeholder.png"
+                                                        sx={{ width: "50%", '@media (max-width: 1280px)': { width: "100%" } }}
+                                                        image={event.coverPhotoUrl || "/assets/placeholders/1280x720-image-placeholder.png"}
                                                         alt="Event"
                                                     />
                                                     <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
@@ -164,7 +178,7 @@ function UserHome() {
 
                                                             <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", flexGrow: 1 }}>
                                                                 <Typography variant="body2" sx={{ cursor: "pointer", color: "gray" }}>
-                                                                    <Link to={`/events/${event.eventId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                                                    <Link to={`/events/view/${event.eventId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                                                                         More Details
                                                                     </Link>
                                                                 </Typography>

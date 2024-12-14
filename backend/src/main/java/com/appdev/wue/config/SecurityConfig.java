@@ -51,7 +51,8 @@ public class SecurityConfig {
                                 "/api/event/getRandomUpcomingEvents",
                                 "/api/event/getFeaturedEvents",
                                 "/api/event/getEvent/**",
-                                "/api/ticket/getRemainingTicketQuantity/**"
+                                "/api/ticket/getRemainingTicketQuantity/**",
+                                "/api/event/getCoverPhoto/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

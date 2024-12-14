@@ -42,22 +42,37 @@ function OrganizerBookings() {
     }, []);
 
     const columns = [
-        { field: 'booking', headerName: 'Booking' },
+        { field: 'bookingID', headerName: 'ID' },
         { field: 'customerName', headerName: 'Customer Name', flex: 1 },
-        { field: 'event', headerName: 'Event', flex: 1 },
-        { field: 'tickets', headerName: 'Tickets', type: 'number', align: 'left', headerAlign: 'left' },
-        { field: 'totalPrice', headerName: 'Total Price', type: 'number', align: 'left', headerAlign: 'left' },
+        { field: 'ticketName', headerName: 'Ticket', flex: 1 },
+        { field: 'ticketsQuantity', headerName: 'Quantity', type: 'number', align: 'left', headerAlign: 'left', flex: 1 },
+        { field: 'totalPrice', headerName: 'Total Price', type: 'number', align: 'left', headerAlign: 'left', flex: 1 },
+        {
+            field: 'eventName',
+            headerName: 'Event',
+            align: 'left',
+            headerAlign: 'left',
+            flex: 1,
+            renderCell: (params) => (
+                <a href={`/organizer/events/view/${params.row.eventID}`} style={{ textDecoration: 'none', color: 'blue' }}>
+                    {params.row.eventName ? params.row.eventName : 'N/A'}
+                </a>
+            )
+        },
         {
             field: 'dateBooked',
             headerName: 'Date Booked',
-            width: 200,
+            width: 250,
             type: 'date',
             valueFormatter: (params) => {
                 const date = new Date(params);
-                return date.toLocaleDateString('en-US', {
+                return date.toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    hour12: true,
                 });
             },
         },
@@ -67,10 +82,11 @@ function OrganizerBookings() {
             width: 150,
             renderCell: (params) => (
                 <div style={{ color: params.row.status === "Pending" || params.row.status === "Cancelled" ? "red" : "green", display: "flex", alignItems: "center" }}>
-                    {params.row.status === "Confirmed" ? <CheckCircleIcon sx={{ height: "18px" }} /> : <ReportGmailerrorredIcon sx={{ height: "18px" }} />}
+                    {params.row.status === "Paid" ? <CheckCircleIcon sx={{ height: "18px" }} /> : <ReportGmailerrorredIcon sx={{ height: "18px" }} />}
                     {params.row.status}
                 </div>
             ),
+            flex: 1
         },
         {
             field: 'actions',
@@ -80,14 +96,6 @@ function OrganizerBookings() {
                 if (params.row.status === "Pending") {
                     return (
                         <>
-                            <Button
-                                onClick={() => handleAcceptClick(params)}
-                                variant="contained"
-                                color="success"
-                                size="small"
-                            >
-                                Accept
-                            </Button>
                             <Button
                                 onClick={() => handleDeleteModalOpen(params)}
                                 variant="contained"
@@ -102,6 +110,7 @@ function OrganizerBookings() {
                 }
                 return null;
             },
+            flex: 1
         },
     ];
 
@@ -110,11 +119,11 @@ function OrganizerBookings() {
             try {
                 let bookings;
                 if (activeTab === "All") {
-                    bookings = await BookingService.getAllBookings();
-                } else if (activeTab === "Confirmed") {
-                    bookings = await BookingService.getConfirmedBookings();
+                    bookings = await BookingService.getAllBookings(currentUser.userID);
+                } else if (activeTab === "Paid") {
+                    bookings = await BookingService.getPaidBookings(currentUser.userID);
                 } else if (activeTab === "Pending") {
-                    bookings = await BookingService.getPendingBookings();
+                    bookings = await BookingService.getPendingBookings(currentUser.userID);
                 } else {
                     bookings = [];
                 }
@@ -169,13 +178,13 @@ function OrganizerBookings() {
             <TemplateComponent
                 SidebarComponent={OrganizerSidebar}
                 title="Bookings"
-                tabs={["All", "Confirmed", "Pending"]}
+                tabs={["All", "Paid", "Pending"]}
                 fetchRows={rows}
                 columns={columns}
                 onEditClick={handleAcceptClick}
                 onDeleteClick={handleDeleteModalOpen}
                 setActiveTab={setActiveTab}
-                searchLabel={"Search bookings by name..."}
+                searchLabel={"Search bookings by event name..."}
             />
 
             <Dialog

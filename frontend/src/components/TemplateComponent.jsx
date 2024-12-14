@@ -1,31 +1,30 @@
 import React, { useState } from "react";
-import { Box, TextField, Button, Link } from "@mui/material";
+import { Box, TextField, Button, Link, Grid } from "@mui/material";
 import CustomAppBar from "./CustomAppBar.jsx";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import "./styles/FontStyle.css";
 import DataTable from "./DataTableComponent.jsx";
 
 function TemplateComponent({
-    SidebarComponent,
-    title = "Page Title",
-    tabs = [""],
-    fetchRows,
-    columns,
-    setActiveTab,
-    onAcceptClick,
-    onDeleteClick,
-    body,
-    checkBoxTemplate,
-    newButton,
-    onCreateNewTicketClick,
-    searchLabel
-}) {
-    // State for search input
+                               SidebarComponent,
+                               title = "Page Title",
+                               tabs = [""],
+                               fetchRows,
+                               columns,
+                               setActiveTab,
+                               onAcceptClick,
+                               onDeleteClick,
+                               body,
+                               checkBoxTemplate,
+                               newButton,
+                               onCreateNewTicketClick,
+                               searchLabel
+                           }) {
+
     const [searchText, setSearchText] = useState("");
 
-    // Filter rows based on search text
     const filteredRows = fetchRows.filter((row) =>
-        (row.customerName || "").toLowerCase().includes(searchText.toLowerCase())
+        (row.eventName || row.event.name || "").toLowerCase().includes(searchText.toLowerCase())
     );
 
     return (
@@ -42,9 +41,9 @@ function TemplateComponent({
                         display: "flex",
                         flexDirection: "column",
                         boxSizing: "border-box",
+                        height: "100vh",
                     }}
                 >
-                    {/* Add Title */}
                     <CustomAppBar title={title} />
 
                     <Box sx={{ flexGrow: 1, margin: "10px 20px", boxSizing: "border-box" }}>
@@ -52,7 +51,7 @@ function TemplateComponent({
                             sx={{
                                 display: "flex",
                                 flexGrow: 1,
-                                height: "7vh",
+                                height: "6vh",
                                 boxSizing: "border-box",
                                 marginBottom: "10px",
                                 justifyContent: "space-between",
@@ -65,6 +64,7 @@ function TemplateComponent({
                                     boxSizing: "border-box",
                                     width: "200px",
                                     justifyContent: tabs.length ? "space-between" : "center",
+                                    marginLeft: "5px"
                                 }}
                             >
                                 {tabs.length > 0 ? (
@@ -86,31 +86,33 @@ function TemplateComponent({
                                 )}
                             </Box>
 
-                            <Box sx={{ display: "flex", boxSizing: "border-box", gap: "10px" }}>
-                                <TextField
-                                    id="outlined-size-small"
-                                    label={searchLabel}
-                                    type="search"
-                                    size="small"
-                                    sx={{ width: "250px" }}
-                                    value={searchText}
-                                    onChange={(e) => setSearchText(e.target.value)}
-                                />
-                                {newButton === true ?
-                                    <Box sx={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+                            <Grid container spacing={2} alignItems="center" justifyContent="flex-end" sx={{ boxSizing: "border-box" }}>
+                                <Grid item>
+                                    <TextField
+                                        id="outlined-size-small"
+                                        label={searchLabel}
+                                        type="search"
+                                        size="small"
+                                        sx={{ width: "275px" }}
+                                        value={searchText}
+                                        onChange={(e) => setSearchText(e.target.value)}
+                                    />
+                                </Grid>
+                                {newButton === true && (
+                                    <Grid item>
                                         <Button
                                             variant="contained"
                                             color="primary"
                                             onClick={onCreateNewTicketClick}
                                             startIcon={<AddCircleIcon />}
+                                            sx={{ backgroundColor: '#C63F47' }}
                                         >
                                             New Ticket
                                         </Button>
-                                    </Box> : ''
-                                }
-                            </Box>
+                                    </Grid>
+                                )}
+                            </Grid>
                         </Box>
-
 
                         <Box
                             sx={{
@@ -124,14 +126,16 @@ function TemplateComponent({
                             {body ? (
                                 body
                             ) : (
-                                <DataTable
-                                    boxPadding={"0px"}
-                                    rows={filteredRows}
-                                    columns={columns}
-                                    onAcceptClick={onAcceptClick}
-                                    onDeleteClick={onDeleteClick}
-                                    checkBox={checkBoxTemplate}
-                                />
+                                <Box>
+                                    <DataTable
+                                        boxPadding={"0px"}
+                                        rows={filteredRows}
+                                        columns={columns}
+                                        onAcceptClick={onAcceptClick}
+                                        onDeleteClick={onDeleteClick}
+                                        checkBox={checkBoxTemplate}
+                                    />
+                                </Box>
                             )}
                         </Box>
                     </Box>
