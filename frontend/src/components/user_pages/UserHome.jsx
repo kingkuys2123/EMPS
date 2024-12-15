@@ -153,13 +153,12 @@ function UserHome() {
                                         {upcomingEvents.length > 0 ? (
                                             upcomingEvents.map(event => (
                                                 <Card key={event.eventId} sx={{ flex: "1 1 calc(33.333% - 16px)", display: "flex", flexDirection: "column", height: "auto", '@media (max-width: 1200px)': { flexDirection: 'column', height: 'auto' } }}>
-                                                    <Box sx={{ flexShrink: 0, width: "100%", height: "60%", '@media (max-width: 1200px)': { width: "100%" } }}>
-                                                        <img
-                                                            src="/assets/placeholders/1280x720-image-placeholder.png"
-                                                            alt="Event"
-                                                            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                                                        />
-                                                    </Box>
+                                                    <CardMedia
+                                                        component="img"
+                                                        sx={{ width: "100%", height: "60%", '@media (max-width: 1200px)': { width: "100%" } }}
+                                                        image={event.coverPhotoUrl || "/assets/placeholders/1280x720-image-placeholder.png"}
+                                                        alt="Event"
+                                                    />
                                                     <CardContent sx={{ flexGrow: 1, padding: 2 }}>
                                                         <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
                                                             <Typography
@@ -167,7 +166,7 @@ function UserHome() {
                                                             >
                                                                 {isToday(new Date(event.startDatetime))
                                                                     ? `Today | ${format(new Date(event.startDatetime), 'p')}`
-                                                                    : `${format(new Date(event.startDatetime), 'EEE, MMM 1, yyyy | p')}`}
+                                                                    : `${format(new Date(event.startDatetime), 'EEE, MMM d | p')}`}
                                                             </Typography>
                                                             <Typography variant="h6" sx={{ fontWeight: "bold", whiteSpace: "normal" }}>
                                                                 {event.name}

@@ -148,10 +148,10 @@ function LandingPage() {
                         </span>
                                 </Typography>
                                 <Typography variant="h5" sx={{textAlign: 'justify', marginTop: '10px'}} gutterBottom>
-                                    <span>Your one-stop solution for events.</span>
+                                    <span>Your one-stop solution for campus-based events.</span>
                                 </Typography>
                                 <Typography variant="h5" sx={{textAlign: 'justify', marginTop: '10px'}}>
-                                    <span>Whether you are planning a small gathering, a corporate event, or a grand wedding, our system provides you with the tools and features you need to ensure everything runs smoothly.</span>
+                                    <span>Whether you're organizing an exciting acquaintance party, a memorable prom night, a captivating talent show, or any other school gathering, our platform is designed to make your event planning effortless.</span>
                                 </Typography>
                                 <Link to="/home" style={{textDecoration: 'none'}}>
                                     <Box sx={{marginTop: '30px', width: '100%'}}>

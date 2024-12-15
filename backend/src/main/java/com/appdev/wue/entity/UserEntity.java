@@ -52,7 +52,7 @@ public class UserEntity {
     @JsonIgnore
     private OrganizerEntity organizer;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private PaymentMethodEntity payment_method;
 

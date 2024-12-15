@@ -26,4 +26,10 @@ public interface EventRepository extends JpaRepository<EventEntity, Integer> {
     @Query("SELECT e FROM EventEntity e JOIN e.organizer o JOIN o.user u WHERE LOWER(e.confirmation_status) = 'pending'")
     List<EventEntity> findAllByConfirmationStatusPending();
 
+    @Query("SELECT e FROM EventEntity e " +
+            "JOIN e.tickets t " +
+            "JOIN t.bookings b " +
+            "WHERE LOWER(e.confirmation_status) = LOWER('confirmed')")
+    List<EventEntity> findConfirmedEventsWithTicketsAndBookings();
+
 }

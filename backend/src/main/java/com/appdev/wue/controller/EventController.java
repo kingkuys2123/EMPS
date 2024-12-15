@@ -124,4 +124,10 @@ public class EventController {
     public List<EventEntity> getAllByConfirmationStatusPending() {
         return eServ.getAllByConfirmationStatusPending();
     }
+
+    @GetMapping("/confirmedEventsWithTicketsAndBookings")
+    public ResponseEntity<List<EventEntity>> getConfirmedEventsWithTicketsAndBookings() {
+        List<EventEntity> events = eServ.findConfirmedEventsWithTicketsAndBookings();
+        return new ResponseEntity<>(events, HttpStatus.OK);
+    }
 }

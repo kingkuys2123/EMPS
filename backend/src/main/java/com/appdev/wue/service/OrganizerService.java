@@ -114,5 +114,6 @@ public class OrganizerService {
         return oRepo.findApprovedOrganizers();
     }
 
+
 }
 

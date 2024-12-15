@@ -137,7 +137,7 @@ function OrganizerEventAnalytics() {
                             </Grid>
                             <Grid item xs={12} md={4}>
                                 <Paper sx={{ padding: "20px", textAlign: "center" }}>
-                                    <Typography variant="h6">Total Sold</Typography>
+                                    <Typography variant="h6">Total Tickets Sold</Typography>
                                     <Typography variant="h3">{totalTicketsSold || 0}</Typography>
                                 </Paper>
                             </Grid>

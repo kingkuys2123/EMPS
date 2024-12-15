@@ -52,6 +52,7 @@ const EventService = {
   getAllByConfirmationStatusPending: async () => {
     return await axios.get(`/event/getAllByConfirmationStatusPending`);
   },
+
 };
 
 export default EventService;

@@ -174,4 +174,9 @@ public class EventService {
     public List<EventEntity> getAllByConfirmationStatusPending() {
         return eRepo.findAllByConfirmationStatusPending();
     }
+
+    public List<EventEntity> findConfirmedEventsWithTicketsAndBookings() {
+        return eRepo.findConfirmedEventsWithTicketsAndBookings();
+    }
+
 }

@@ -38,6 +38,7 @@ function OrganizerSidebar() {
         if (currentUser) {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
+            localStorage.removeItem('profilePicture');
             setCurrentUser(null);
             nav("/");
         }
