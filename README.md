@@ -154,7 +154,6 @@
 <br>
 
 #### Developers:
-<p align="center">
   <table align="center">
     <tr>
       <td align="center">
@@ -189,7 +188,6 @@
       </td>
     </tr>
   </table>
-</p>
 
 <br>
 
