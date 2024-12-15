@@ -15,7 +15,7 @@
     <strong>Wild-Up Events (WUE)</strong> is platform for managing campus-based events with ease and efficiency. Whether you’re discovering exciting events, booking tickets, organizing memorable events, <strong>WUE</strong> is designed to make every step seamless and enjoyable. With easy to use tools for event management, bookings, payments, feedback, and analytics, WUE connects everyone to create unforgettable experiences for everyone.
 </p>
 
----
+<br>
 
 <!-- Project Table of Contents -->
 
@@ -26,7 +26,7 @@
 - [Links](#links)
 - [Screenshots](#screenshots)
 
----
+<br>
 
 <!-- Project Installation -->
 
@@ -75,7 +75,7 @@
     ```
 4. The backend should now be running at [http://localhost:8080/](http://localhost:8080/).
 
----
+<br>
 
 <!-- Project Features -->
 
@@ -104,7 +104,7 @@
 - **Venue Management:** Add, update, or delete venues.
 - **Bookings Management:** Control bookings, including cancellations and edits.
 
----
+<br>
 
 <!-- Project Info -->
 
@@ -151,7 +151,7 @@
     <a href="#tools"><img src="https://img.shields.io/badge/Canva-%2300C4CC.svg?&style=for-the-badge&logo=Canva&logoColor=white" /></a>
 </p>
 
----
+<br>
 
 #### Developers:
 <p align="center">
@@ -191,7 +191,7 @@
   </table>
 </p>
 
----
+<br>
 
 ## Links
 
@@ -201,8 +201,7 @@
 - [Figma Design](https://www.figma.com/design/q4FtuOOyGLaPqbIhFuncNu/Wild-Up-Events?node-id=1-2&t=7LcuuS5xGaWAED0r-1)
 - [ClickUp Project Management](https://app.clickup.com/9016586534)
 
----
-
+<br>
 
 ## Screenshots
 <img src="https://i.imgur.com/IWQAsX1.png">
